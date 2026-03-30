@@ -19,7 +19,7 @@ AmundWorks projects follow a shared philosophy:
 
 ## **Projects**
 
-### **SENTINEL***
+### **SENTINEL**
 ***The Advanced All-Environment Exosuit Platform designed to extend human capability beyond natural limits.***
 
 *What is SENTINEL?*
@@ -30,17 +30,24 @@ Built as a long-term engineering project under *AmundWorks*, **SENTINEL** serves
 
 With **SENTINEL**, you get:
 - A modular powered exoskeleton designed to enhance human strength, mobility and endurance.
-
 - An integrated helmet and HUD system for real-time information, navigation and communications.
-
 - A complete platform of sensors to ensure complete situational awareness.
-
 - A development platform for advanced robotics, propulsion experiments and life-support technologies.
-
 - **ICARUS**, AmundWorks' own operational and tactical assistant, in charge of ensuring proper and safe use of **SENTINEL**.
 
 ### **TALISMAN**
 ***The Loyal Wingman Hexapod Robot.***
+
+*What is TALISMAN?*
+
+**TALISMAN** is an experimental battery-powered hexapod robotics platform developed as a testbed for autonomous robotics.  
+
+As the first robotics project going to be built under *AmundWorks*, **TALISMAN** serves as *AmundWorks'* intro to robotics, wether autonomous, semi-autonomous, or manual.
+
+With **TALISMAN**, you get:
+- A modular, semi-autonomous, all-enviroment wingman hexapod.
+- A sensor platform, complete with LiDAR, RaDAR, active illumination, thermal vision and regular RGB.
+- an Uplink with **SENTINEL**, enabling instant communications between the two platforms in every situation.
 
 ### **PRODIGY**
 ***The All-In-One Management Assistant for Student-Athletes.***

@@ -1,5 +1,6 @@
 """ Second Iteration - XO Neural Net Series | Matrix-Based Neuronless Neural Net"""
 
+import tensorflow as tf
 import numpy as np
 import typing
 
