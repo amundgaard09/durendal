@@ -1,0 +1,53 @@
+
+    UNICON (control systems theme)
+
+    Transfer function evaluation (s-domain)
+    Step response characteristics (rise time, settling time, overshoot)
+    Critically damped / overdamped / underdamped classifier from damping ratio
+
+    UNIMAKE (mechanical engineering theme)      
+
+    Power from torque and angular velocity P = τω
+    Beam deflection (simply supported, cantilever)
+    Thermal expansion ΔL = αLΔT
+    Pressure from force and area P = F/A
+
+    UNIFLIGHT (you already have this)
+
+    Reynolds number
+    Glide ratio
+    Orbital velocity / escape velocity would fit nicely given you already have Tsiolkovsky
+
+    UNIMATH
+
+    Newton-Raphson root finding
+    Numerical integration (trapezoidal/Simpson's rule)
+    Vector dot and cross product
+    Matrix determinant / inverse (numpy makes this trivial)
+
+    UNISIGNAL (new module idea?)
+
+    dB to linear and back (already in your todo actually)
+    Nyquist frequency from sample rate
+    FFT of a user-supplied list
+    Low/high pass filter cutoff frequency fc = 1/(2πRC)
+
+    UNIFLIGHT — aerodynamics, lift, drag, atmospheric stuff
+    UNISPACE — exoatmospheric, orbital, rocket physics
+
+    UNISPACE additions beyond Tsiolkovsky:
+
+    Orbital velocity v = √(GM/r)
+    Escape velocity v = √(2GM/r)
+    Hohmann transfer delta-v
+    Gravitational force F = GMm/r²
+    Orbital period (Kepler's third law)
+    Surface gravity for any body from mass and radius
+
+    UNISIGNAL additions beyond what I mentioned:
+
+    dB to linear and back (already on your todo)
+    Nyquist frequency
+    Capacitor/inductor reactance (could move from UNIPOWER actually)
+    RC/RL filter cutoff frequency
+    Sampling frequency from period and back

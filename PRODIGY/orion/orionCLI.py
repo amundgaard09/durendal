@@ -1,31 +1,22 @@
 """ORION Engineering Assistant CLI - V.1"""
 
-import os, json, math, numpy, shlex
+import os, json, math, numpy, shlex, inspect
+
+from Libraries.UNIx.UNICrypt import *
+from Libraries.UNIx.UNIMath import *
+from Libraries.UNIx.UNISpace import *
+
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import NestedCompleter
 from typing_extensions import Callable
 from typing import Literal
 
-#UNIMAKE                                                                     .
-
-#dB to linear scale and back                                                 .
-#Significant figures rounding                                                .
-
-# Will be implemented in V2:                                                 .
-
 #UNICON                                                                      .
 
-#PID output from error, integral, derivative terms                           .
+#PID step output from error, integral, derivative terms                      DONE
+#PIDEnv                                                                      .
 #Natural frequency of a spring-mass system                                   .
 #Damping ratio                                                               .
-
-#UNIFLIGHT                                                                   .
-
-#Lift equation from air density, velocity, area, lift coefficient            .
-#Drag equation — same structure as lift                                      .
-#Reynolds number from velocity, length, viscosity                            .
-#Tsiolkovsky rocket equation — delta-v from exhaust velocity and mass ratio  .
-#Dynamic pressure from air density and velocity                              .
 
 #UNIMAKE                                                                     .
 
@@ -335,6 +326,18 @@ def PSI2Pascal(PSI: float) -> float:
 def Pascal2PSI(Pascal: float) -> float:
     return Pascal / 6894,76
 
+### UNICON
+
+def PIDStep(CurrentError: float, TimeInterval: float, Kp: float, Ki: float, Kd: float, LastError: float | None = 0, Integral: float | None = 0) -> str:
+# THIS CODE IS UNUSED UNTIL FURTHER NOTICE!
+    P = Kp * CurrentError
+
+    I = Integral + Ki * CurrentError * TimeInterval
+
+    D = Kd * (CurrentError - LastError) / TimeInterval
+
+    return f"Sum: {P+I+D} - P: {P} - I: {I} - D: {D}"
+ 
 ### UNIFLIGHT
 
 def T2WRatio(Thrust: float, Weight: float) -> float:
@@ -360,142 +363,10 @@ def KMH2MPS(KMH: float) -> float:
 def DynamicPressure(Velocity: float, AirDensity: float | None = 1.225) -> float:
     return 0.5 * Velocity ** 2 * AirDensity
 
-### UNIMATH
-
-def TriExtrapolate(a: float, b: float, c: float, A: float | None = None, B: float | None = None, C: float | None = None) -> str:
-    """Extrapolate the sides of a triangle from the AAAS case (3x Angle + 1x Side)"""
-
-    SinA = math.sin(math.radians(a))
-    SinB = math.sin(math.radians(b))
-    SinC = math.sin(math.radians(c))
-    
-    if A is not None:
-        B = (A * SinB) / SinA
-        C = (A * SinC) / SinA
-        
-    elif B is not None:
-        A = (B * SinA) / SinB
-        C = (B * SinC) / SinB
-        
-    elif C is not None:
-        A = (C * SinA) / SinC
-        B = (C * SinB) / SinC
-        
-    Area = HeronsFormula(A, B, C)
-    
-    return f"""Area: {Area} - Sides: A: {A}, B: {B}, C: {C} - Sin({a}) = {SinA}, Sin({b}) = {SinB}, Sin({c}) = {SinC}"""
-
-def Quadratic(A: float, B: float, C: float) -> tuple[float]:
-    """Solves quadratic equations and returns x-values in a tuple."""
-    if A == 0:
-        return ValueError("Invalid quadratic equation! A cannot be 0.")
-    D = B**2 - 4*A*C
-    if D > 0:
-        x1 = (-B - math.sqrt(D)) / (2 * A)
-        x2 = (-B + math.sqrt(D)) / (2 * A)
-        return (x1, x2)
-    
-    elif D == 0:
-        x1 = -B / (2 * A)
-        return (x1)
-    
-    else:
-        return None
-
-def D2R(Degrees: float) -> float:
-    return Degrees / 180 * math.pi
-def R2D(Radians: float) -> float:
-    return Radians / math.pi * 180
-
-def SineRule(
-    Sides: list[float | None],
-    Angles: list[float | None],
-    AngleMeasurementMode: Literal["Degrees", "Radians"]
-) -> list[list[float], list[float]] | None:
-    """
-    Sine Rule
-
-    Formula: A / sin(a) = B / sin(b) = C / sin(c)
-
-    Return Format: [Angles:[A, B, C], Sides:[A, B, C]]
-    """
-   
-    angles_rad = []
-    for angle in Angles:
-        if angle is not None and AngleMeasurementMode == "Degrees":
-            angles_rad.append(math.radians(angle))
-        else:
-            angles_rad.append(angle)
-
-    known_angle_indices = [i for i in range(3) if angles_rad[i] is not None]
-    if len(known_angle_indices) == 2:
-        missing = next(i for i in range(3) if angles_rad[i] is None)
-        angles_rad[missing] = math.pi - sum(angles_rad[i] for i in known_angle_indices)
-
-    ReferenceRatio = None
-    for idx in range(3):
-        if Sides[idx] is not None and angles_rad[idx] is not None:
-            ReferenceRatio = Sides[idx] / math.sin(angles_rad[idx])
-            break
-
-    ### Return None if no reference ratio could be established, meaning there is not enough information to solve the triangle.
-    if ReferenceRatio is None:
-        return None
-
-    for idx in range(3):
-        if Sides[idx] is None and angles_rad[idx] is not None:
-            Sides[idx] = ReferenceRatio * math.sin(angles_rad[idx])
-        elif angles_rad[idx] is None and Sides[idx] is not None:
-            value = Sides[idx] / ReferenceRatio
-            if not -1 <= value <= 1:
-                return None
-            asin_val = math.asin(value)
-            known_sum = sum(a for a in angles_rad if a is not None)
-            
-            ### Check for the ambiguous case of the sine rule, where there may be two possible angles that satisfy the equation
-            if math.pi - asin_val + known_sum <= math.pi:
-                angles_rad[idx] = math.pi - asin_val
-            else:
-                angles_rad[idx] = asin_val
-
-    if AngleMeasurementMode == "Degrees":
-        Angles_out = [math.degrees(a) if a is not None else None for a in angles_rad]
-    else:
-        Angles_out = angles_rad
-
-    return [Angles_out, Sides]
-
-def CosineRule(LengthA: float, LengthB: float, AngleA: float) -> float:
-    return math.sqrt(LengthA ** 2 + LengthB ** 2 - ((2 * LengthA * LengthB) * math.cos(math.radians(AngleA))))
-def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[float]:
-    """ 
-    Returns a tuple of the three angles in degrees, in the order of AngleA, AngleB, AngleC 
-    
-    Formula: AngleA = arccos((B^2 + C^2 - A^2) / (2BC))
-    """
-
-    return (
-        math.degrees(math.acos((LengthB ** 2 + LengthC ** 2 - LengthA ** 2) / (2 * LengthB * LengthC))),  # AngleA
-        math.degrees(math.acos((LengthC ** 2 + LengthA ** 2 - LengthB ** 2) / (2 * LengthC * LengthA))),  # AngleB
-        math.degrees(math.acos((LengthA ** 2 + LengthB ** 2 - LengthC ** 2) / (2 * LengthA * LengthB)))   # AngleC
-    )
-
-def SASArea(LengthA: float, LengthB: float, AngleC: float) -> float:
-    return (0.5 * LengthA * LengthB * math.sin(math.radians(AngleC)))
-def HeronsFormula(LengthA: float, LengthB: float, LengthC: float) -> float:
-    """
-    Returns the area of a triangle from the side lengths.
-
-    Args:
-        LenghtA (float):
-        LenghtB (float):
-        LenghtC (float):
-
-    Returns:
-        Area (float):
-    """
-    S = (LengthA + LengthB + LengthC) / 2
-    return math.sqrt(S * (S - LengthA) * (S - LengthB) * (S - LengthC))
+def LiftEquation(LiftCoefficient: float, ReferenceArea: float, DynamicPressure: float) -> float:
+    return LiftCoefficient * 0.5 * DynamicPressure * ReferenceArea
+def DragEquation(DragCoefficient: float, ReferenceArea: float, DynamicPressure: float) -> float:
+    return DragCoefficient * 0.5 * DynamicPressure * ReferenceArea
 
 ### UNIALGO
 
@@ -538,116 +409,21 @@ def LovelacesAlgorithm(a: float, b: float, c: float, d: float, e: float, f: floa
     y = Dy / D
     return (x, y)
 
-### UNICRYPT
-
-def BinaryEncrypt(InputString: str) -> str:
-    RawBinary = ''.join(format(ord(i), '08b') for i in InputString)
-    OutputString = ' '.join(RawBinary[i:i+8] for i in range(0, len(RawBinary), 8))
-    return OutputString
-def BinaryDecrypt(InputString: str) -> str:
-    OutputString = ''.join(chr(int(b, 2)) for b in InputString.split())
-    return OutputString
-def CeasarEncrypt(InputString: str, Shift: int) -> str:
-    OutputString = ""
-    for Character in InputString:
-        if Character.isalpha():               
-            Position = ord(Character.lower()) - 96 
-            NewPosition = (Position + Shift - 1) % 26 + 1   
-            NewCharacter = chr(NewPosition + 96)        
-            OutputString += NewCharacter                
-        else:                                
-            OutputString += Character 
-    return OutputString
-def CeasarDecrypt(InputString: str, Shift: int) -> str:
-    OutputString = ""
-    for Character in InputString:
-        if Character.isalpha():               
-            Position = ord(Character.lower()) - 96
-            NewPosition = (Position - Shift - 1) % 26 + 1   
-            NewCharacter = chr(NewPosition + 96)        
-            OutputString += NewCharacter                
-        else:                                 
-            OutputString += Character
-    return OutputString 
-def VigenereEncrypt(InputString: str, KeyString: str) -> str:
-    OutputString = ""
-
-    for idx, Character in enumerate(InputString):
-        if Character.isalpha():
-            if Character.isupper():
-                OutputString += chr((ord(Character) - ord(KeyString[idx % len(KeyString)].upper()) + 26) % 26 + ord("A"))
-            else:
-                OutputString += chr((ord(Character) - ord(KeyString[idx % len(KeyString)].lower()) + 26) % 26 + ord("a"))
-        else:
-            OutputString += Character
-    return OutputString
-def VigenereDecrypt(InputString: str, KeyString: str) -> str:
-    OutputString = ""
-    KeyString = KeyString.lower()
-    KeyIdx = 0
-
-    for Character in InputString:
-        if Character.isalpha():
-            Shift = ord(KeyString[KeyIdx % len(KeyString)]) - ord('a')
-            if Character.isupper():
-                DecryptedCharacter = chr((ord(Character) - ord('A') - Shift + 26) % 26 + ord('A'))
-            else:
-                DecryptedCharacter = chr((ord(Character) - ord('a') - Shift + 26) % 26 + ord('a'))
-            OutputString += DecryptedCharacter
-            KeyIdx += 1
-        else:
-            OutputString += Character
-
-    return OutputString
-def RailfenceEncrypt(InputString: str, Key: int) -> str:
-    Position = 0
-    Direction = 1
-    Rows = [[] for _ in range(Key)]
-
-    for Character in InputString:
-        Rows[Position].append(Character)
-    
-        Position += Direction
-        if Position == 0 or Position == Key - 1:
-            Direction *= -1
-    
-    return ''.join([''.join(Row) for Row in Rows])
-def RailfenceDecrypt(InputString: str, Key: str) -> str:
-    length = len(InputString)
-    pattern = []
-    pos = 0
-    direction = 1
-    for _ in range(length):
-        pattern.append(pos)
-        pos += direction
-        if pos == 0 or pos == Key - 1:
-            direction *= -1
-
-    counts = [pattern.count(r) for r in range(Key)]
-    rows = []
-    index = 0
-    for c in counts:
-        rows.append(list(InputString[index:index + c]))
-        index += c
-
-    plaintext = ''
-    row_pointers = [0] * Key
-    for r in pattern:
-        plaintext += rows[r][row_pointers[r]]
-        row_pointers[r] += 1
-
-    return plaintext
-def OTPEncrypt(InputString: str, KeyString: str) -> str:
-    bitext = ''.join(format(ord(i), '08b') for i in InputString)
-    bikey = ''.join(format(ord(i), '08b') for i in KeyString)
-    cipher = ''.join(str(int(b1) ^ int(b2)) for b1, b2 in zip(bitext, bikey))
-    return ' '.join(cipher[i:i+8] for i in range(0, len(cipher), 8))
-def OTPDecrypt(InputString: str, KeyString: str) -> str:
-    bikey = ''.join(format(ord(i), '08b') for i in KeyString)
-    plaintext_bits = ''.join(str(int(b1) ^ int(b2)) for b1, b2 in zip(InputString, bikey))
-    return ''.join(chr(int(plaintext_bits[i:i+8], 2)) for i in range(0, len(plaintext_bits), 8))
-    
 ### MAPS
+
+def GenerateCompleterDict() -> dict:
+    """Generate nested completer dict with parameter names for each function."""
+    
+    completer_dict = {}
+    
+    for module, commands in COMMANDMAP.items():
+        completer_dict[module] = {}
+        for command_name, command_func in commands.items():
+            sig = inspect.signature(command_func)
+            param_names = list(sig.parameters.keys())
+            completer_dict[module][command_name] = {param: None for param in param_names}
+    
+    return completer_dict
 
 ARGUMENTMAP: dict[str, set] = {
     "unipower": {
@@ -669,6 +445,9 @@ ARGUMENTMAP: dict[str, set] = {
         "kineticenergy": {2},
         "potentialenergy": {3},
     },
+    "unicon": {
+      "pidstep": {0},  
+    },
     "uniflight": {
         "T2Wratio": {2},
         "machnumber": {2},
@@ -677,6 +456,9 @@ ARGUMENTMAP: dict[str, set] = {
         "mps2kmh": {1},
         "kmh2mps": {1},
         "dynamicpressure": {1, 2},
+        "liftequation": {3},
+        "dragequation": {3},
+        "tsiolkovskyrocketequation": {3},
     },
     "unimath": {
         "triextrapolate": {4, 6},
@@ -727,6 +509,9 @@ COMMANDMAP: dict[str, dict[str, callable]] = {
         "kineticenergy": KineticEnergy,
         "potentialenergy": PotentialEnergy,
     },
+    "unicon": {
+      "pidstep": PIDStep,  
+    },
     "uniflight": {
         "T2Wratio": T2WRatio,
         "machnumber": MachNumber,
@@ -735,6 +520,9 @@ COMMANDMAP: dict[str, dict[str, callable]] = {
         "mps2kmh": MPS2KMH,
         "kmh2mps": KMH2MPS,
         "dynamicpressure": DynamicPressure,
+        "liftequation": LiftEquation,
+        "dragequation": DragEquation,
+        "tsiolkovskyrocketequation": TsiolkovskyRocketEquation,
     },
     "unimath": {
         "triextrapolate": TriExtrapolate,
@@ -765,64 +553,7 @@ COMMANDMAP: dict[str, dict[str, callable]] = {
         "otpdecrypt": OTPDecrypt,
     }
 }
-COMPLETER = NestedCompleter.from_nested_dict({
-    "unipower": {
-        "ohmslaw": None,
-        "voltdivider": None,
-        "rctimeconstant": None,
-        "inductorimpedance": None,
-        "powerdissipation": None,
-        "resistorinsight": None,
-        "resistorviz": None,
-        "capacitance": None,
-        "esr": None,
-    },
-    "unimake": {
-        "torque": None,
-        "gearratio": None,
-        "angularvelocityr": None,
-        "angularvelocityd": None,
-        "kineticenergy": None,
-        "potentialenergy": None,
-    },
-    "uniflight": {
-        "T2Wratio": None,
-        "machnumber": None,
-        "kilo2newton": None,
-        "newton2kilo": None,
-        "mps2kmh": None,
-        "kmh2mps": None,
-        "dynamicpressure": None,
-    },
-    "unimath": {
-        "triextrapolate": None,
-        "quadratic": None,
-        "D2R": None,
-        "R2D": None,
-        "sinerule": None,
-        "cosinerule": None,
-        "reversecosinerule": None,
-        "sasarea": None,
-        "herons": None,
-    },
-    "unialgo": {
-        "fibonaccilist": None,
-        "fibonacciinteger": None,
-        "lovelacesalgorithm": None,
-    },
-    "unicrypt": {
-        "binaryencrypt": None,
-        "binarydecrypt": None,
-        "ceasarencrypt": None,
-        "ceasardecrypt": None,
-        "vigenereencrypt": None,
-        "vigeneredecrypt": None,
-        "railfenceencrypt": None,
-        "railfencedecrypt": None,
-        "otpencrypt": None,
-        "otpdecrypt": None,
-    }
-})
+COMPLETER = NestedCompleter.from_nested_dict(GenerateCompleterDict())
 
 ### SYSTEM
 
