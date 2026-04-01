@@ -1,10 +1,6 @@
 """ORION Engineering Assistant CLI - V.1"""
 
-import os, json, math, numpy, shlex, inspect
-
-from Libraries.UNIx.UNICrypt import *
-from Libraries.UNIx.UNIMath import *
-from Libraries.UNIx.UNISpace import *
+import os, time, json, math, numpy, shlex, inspect
 
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import NestedCompleter
@@ -13,8 +9,6 @@ from typing import Literal
 
 #UNICON                                                                      .
 
-#PID step output from error, integral, derivative terms                      DONE
-#PIDEnv                                                                      .
 #Natural frequency of a spring-mass system                                   .
 #Damping ratio                                                               .
 
@@ -23,6 +17,11 @@ from typing import Literal
 #Moment of inertia for common shapes (cylinder, rod, disk)                   .
 #Mechanical advantage of a lever                                             .
 #Stress and strain from force and cross-sectional area                       .
+
+### VERSIONS
+
+MAINENVversion = f"v.1.0.1"
+PIDENVversion = f"v.0.0.1"
 
 ### CONSTANTS
 
@@ -77,6 +76,20 @@ ANSI_COLORS = {
     "silver": "\033[38;5;7m",
 } 
 
+G = 6.6743 * 1e-11 # Gravitational constant (N⋅m²⋅kg⁻²)
+C  = 299792458     # Speed of light (m/s)
+AU = 1.496e+11     # Astronomical unit (m)
+
+M_EARTH = 5.972e+24
+M_SUN   = 1.989e+30
+M_MOON  = 7.342e+22
+M_MARS  = 6.390e+23
+
+EARTHRADIUS = 6.371e+6
+SUNRADIUS   = 6.957e+8
+MOONRADIUS  = 1.737e+6
+MARSRADIUS  = 3.390e+6
+
 ### ERRORS
 
 class InvalidColorCount(Exception):
@@ -115,6 +128,52 @@ class InconsistencyError(Exception):
     """Raises when the VIR-values passed into PowerDissipation() gives inconsistent values for the three formulas."""
     def __init__(self, Function: Callable, Inconsistency: str):
         super().__init__(Function, Inconsistency)
+class ImpossibleTriangleError(Exception):
+    def __init__(self):
+        super().__init__("The sum of the angles of a triangle can't be anything else than 180 degrees!")
+
+### SIGNALS
+
+class ExitEnvironmentSignal(Exception):
+    """Raise when the user wants to return to MAINEnv."""
+    def __init__(self):
+        super().__init__()
+    
+### CONSTRUCTORS
+
+class ContinuousPID:
+    def __init__(self, kp, ki, kd, setpoint=0):
+        self.kp = kp  # Proportional gain
+        self.ki = ki  # Integral gain
+        self.kd = kd  # Derivative gain
+        self.setpoint = setpoint
+
+        self.integral = 0
+        self.prev_error = 0
+        self.prev_time = time.time()
+
+    def update(self, measured_value):
+        now = time.time()
+        dt = now - self.prev_time          # Elapsed time
+
+        error = self.setpoint - measured_value
+
+        # P term
+        P = self.kp * error
+
+        # I term — integrates error over time
+        self.integral += error * dt
+        I = self.ki * self.integral
+
+        # D term — rate of error change
+        derivative = (error - self.prev_error) / dt if dt > 0 else 0
+        D = self.kd * derivative
+
+        # Store state for next iteration
+        self.prev_error = error
+        self.prev_time = now
+
+        return P + I + D  # Control output u(t)
 
 ### UTILS
 
@@ -138,11 +197,19 @@ def ColorText(Text: str, Color: str):
 
 def Tokenize(RawCommandString: str) -> list[str]:
     """Tokenize a raw command string and return token list."""
-    return shlex.split(RawCommandString)
-def dispatcher(RawCommandString: str):
+    Tokens = shlex.split(RawCommandString)
+    ProcessedTokens = []
+    for Token in Tokens:
+        if Token.startswith("[") and Token.endswith("]"):
+            ProcessedValue = [float(x) for x in Token.strip("[]").split(",")]
+            ProcessedTokens.append(ProcessedValue)
+        else:
+            ProcessedTokens.append(Token)
+    return ProcessedTokens
+def dispatcher(RawCommandString: str, CommandMap, ArgMap):
     Tokens = Tokenize(RawCommandString) 
-    VerifyTokens(Tokens)
-    ValidateArgs(Tokens)
+    VerifyTokens(Tokens, CommandMap)
+    ValidateArgs(Tokens, CommandMap, ArgMap)
     Module, Command, RawArgs = Tokens[0], Tokens[1], Tokens[2:]
     Args = []
     for arg in RawArgs:
@@ -154,7 +221,9 @@ def dispatcher(RawCommandString: str):
             except ValueError:
                 Args.append(arg)
             
-    return COMMANDMAP[Module][Command](*Args)
+    return CommandMap[Module][Command](*Args)
+def ExitEnv() -> None:
+    raise ExitEnvironmentSignal
 
 ### UNIPOWER
 
@@ -322,9 +391,9 @@ def PotentialEnergy(Mass: float, Height: float, Gravity: float | None = 9.8) -> 
     return Mass * Gravity * Height
 
 def PSI2Pascal(PSI: float) -> float:
-    return PSI * 6894,76
+    return PSI * 6894.76
 def Pascal2PSI(Pascal: float) -> float:
-    return Pascal / 6894,76
+    return Pascal / 6894.76
 
 ### UNICON
 
@@ -368,6 +437,185 @@ def LiftEquation(LiftCoefficient: float, ReferenceArea: float, DynamicPressure: 
 def DragEquation(DragCoefficient: float, ReferenceArea: float, DynamicPressure: float) -> float:
     return DragCoefficient * 0.5 * DynamicPressure * ReferenceArea
 
+### UNISPACE
+
+def TsiolkovskyRocketEquation(ExhaustVelocity: float, InitialMass: float, Finalmass: float) -> float:
+    return ExhaustVelocity * math.log(InitialMass/Finalmass)
+
+def OrbitalVelocity(OrbitalRadius: float = EARTHRADIUS, Mass: float = M_EARTH) -> float:
+    return math.sqrt((G*Mass) / OrbitalRadius)
+def EscapeVelocity(Radius: float = EARTHRADIUS, Mass: float = M_EARTH) -> float:
+    return math.sqrt(2)*OrbitalVelocity(Radius, Mass)
+
+#Hohmann transfer delta-v env + visuals - COMING SOON
+
+def GravitationalForce(Mass1: float, Mass2: float, Distance: float) -> float:
+    return G * Mass1 * Mass2 / Distance ** 2
+def SurfaceGravity(Mass: float, Radius: float) -> float:
+    return G * Mass / Radius ** 2
+
+def OrbitalPeriod(SemiMajorAxis: float, M: float, m: float) -> float:
+    return 2 * math.pi * math.sqrt(SemiMajorAxis ** 3 / (G * (M + m)))
+
+def EinsteinEnergyEquivalence(Mass: float) -> float:
+    return Mass * C ** 2
+
+### UNIMATH
+
+def TriExtrapolate(a: float, b: float, c: float, A: float | None = None, B: float | None = None, C: float | None = None) -> str:
+    """Extrapolate the sides of a triangle from the AAAS case (3x Angle + 1x Side)"""
+
+    if sum((a, b, c)) != 180:
+        raise ImpossibleTriangleError
+
+    SinA = math.sin(math.radians(a))
+    SinB = math.sin(math.radians(b))
+    SinC = math.sin(math.radians(c))
+    
+    if A is not None:
+        B = (A * SinB) / SinA
+        C = (A * SinC) / SinA
+        
+    elif B is not None:
+        A = (B * SinA) / SinB
+        C = (B * SinC) / SinB
+        
+    elif C is not None:
+        A = (C * SinA) / SinC
+        B = (C * SinB) / SinC
+    
+    Area = HeronsFormula(A, B, C)
+    
+    return f"""Area: {Area} - Sides: A: {A}, B: {B}, C: {C} - Sin({a}) = {SinA}, Sin({b}) = {SinB}, Sin({c}) = {SinC}"""
+
+def Quadratic(A: float, B: float, C: float) -> tuple[float]:
+    """Solves quadratic equations and returns x-values in a tuple."""
+    if A == 0:
+        return ValueError("Invalid quadratic equation! A cannot be 0.")
+    D = B**2 - 4*A*C
+    if D > 0:
+        x1 = (-B - math.sqrt(D)) / (2 * A)
+        x2 = (-B + math.sqrt(D)) / (2 * A)
+        return (x1, x2)
+    
+    elif D == 0:
+        x1 = -B / (2 * A)
+        return (x1)
+    
+    else:
+        return None
+
+def Pythagoras(A: float | None = None, B: float | None = None, C: float | None = None) -> tuple[float]:
+    """Calculates the missing side of a right-angled triangle using either normal or reverse pythagoras."""
+    if (A, B, C).count(None) > 1:
+        return None
+    
+    if A is None:
+        A = math.sqrt(C**2 - B**2)
+    elif B is None:
+        B = math.sqrt(C**2 - A**2)
+    elif C is None:
+        C = math.sqrt(A**2 + B**2)
+    
+    return (A, B, C)
+
+def SineRule(
+    Sides: list[float | None],
+    Angles: list[float | None],
+    AngleMeasurementMode: Literal["Degrees", "Radians"]
+) -> list[list[float], list[float]] | None:
+    """
+    Sine Rule
+
+    Formula: A / sin(a) = B / sin(b) = C / sin(c)
+
+    Return Format: [Angles:[A, B, C], Sides:[A, B, C]]
+    """
+   
+    angles_rad = []
+    for angle in Angles:
+        if angle is not None and AngleMeasurementMode == "Degrees":
+            angles_rad.append(math.radians(angle))
+        else:
+            angles_rad.append(angle)
+
+    known_angle_indices = [i for i in range(3) if angles_rad[i] is not None]
+    if len(known_angle_indices) == 2:
+        missing = next(i for i in range(3) if angles_rad[i] is None)
+        angles_rad[missing] = math.pi - sum(angles_rad[i] for i in known_angle_indices)
+
+    ReferenceRatio = None
+    for idx in range(3):
+        if Sides[idx] is not None and angles_rad[idx] is not None:
+            ReferenceRatio = Sides[idx] / math.sin(angles_rad[idx])
+            break
+
+    ### Return None if no reference ratio could be established, meaning there is not enough information to solve the triangle.
+    if ReferenceRatio is None:
+        return None
+
+    for idx in range(3):
+        if Sides[idx] is None and angles_rad[idx] is not None:
+            Sides[idx] = ReferenceRatio * math.sin(angles_rad[idx])
+        elif angles_rad[idx] is None and Sides[idx] is not None:
+            value = Sides[idx] / ReferenceRatio
+            if not -1 <= value <= 1:
+                return None
+            asin_val = math.asin(value)
+            known_sum = sum(a for a in angles_rad if a is not None)
+            
+            ### Check for the ambiguous case of the sine rule, where there may be two possible angles that satisfy the equation
+            if math.pi - asin_val + known_sum <= math.pi:
+                angles_rad[idx] = math.pi - asin_val
+            else:
+                angles_rad[idx] = asin_val
+
+    if AngleMeasurementMode == "Degrees":
+        Angles_out = [math.degrees(a) if a is not None else None for a in angles_rad]
+    else:
+        Angles_out = angles_rad
+
+    return [Angles_out, Sides]
+def CosineRule(LengthA: float, LengthB: float, AngleA: float) -> float:
+    return math.sqrt(LengthA ** 2 + LengthB ** 2 - ((2 * LengthA * LengthB) * math.cos(math.radians(AngleA))))
+def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[float]:
+    """ 
+    Returns a tuple of the three angles in degrees, in the order of AngleA, AngleB, AngleC 
+    
+    Formula: AngleA = arccos((B^2 + C^2 - A^2) / (2BC))
+    """
+
+    return (
+        math.degrees(math.acos((LengthB ** 2 + LengthC ** 2 - LengthA ** 2) / (2 * LengthB * LengthC))),  # AngleA
+        math.degrees(math.acos((LengthC ** 2 + LengthA ** 2 - LengthB ** 2) / (2 * LengthC * LengthA))),  # AngleB
+        math.degrees(math.acos((LengthA ** 2 + LengthB ** 2 - LengthC ** 2) / (2 * LengthA * LengthB)))   # AngleC
+    )
+
+def SASArea(LengthA: float, LengthB: float, AngleC: float) -> float:
+    return (0.5 * LengthA * LengthB * math.sin(math.radians(AngleC)))
+def HeronsFormula(LengthA: float, LengthB: float, LengthC: float) -> float:
+    """
+    Returns the area of a triangle from the side lengths.
+
+    Args:
+        LenghtA (float):
+        LenghtB (float):
+        LenghtC (float):
+
+    Returns:
+        Area (float):
+    """
+    S = (LengthA + LengthB + LengthC) / 2
+    return math.sqrt(S * (S - LengthA) * (S - LengthB) * (S - LengthC))
+
+def NewtonRaphson(none=1) -> float:
+    return None
+
+def D2R(Degrees: float) -> float:
+    return Degrees / 180 * math.pi
+def R2D(Radians: float) -> float:
+    return Radians / math.pi * 180
+
 ### UNIALGO
 
 def FibonacciList(ListLength: float) -> list[int]:
@@ -399,24 +647,164 @@ def FibonacciInteger(FiboIndex: float) -> int:
 
 def LovelacesAlgorithm(a: float, b: float, c: float, d: float, e: float, f: float) -> tuple:
     """Lovelace's algorithm for solving systems of linear equations"""
-    D = a*e - b*d
-    if D == 0:
+    if (a*e - b*d) == 0:
         raise ValueError("The system has no unique solution.")
     
     Dx = c*e - b*f
     Dy = a*f - c*d
-    x = Dx / D
-    y = Dy / D
+    x = Dx / (a*e - b*d)
+    y = Dy / (a*e - b*d)
     return (x, y)
+
+### UNICRYPT
+
+def BinaryEncrypt(InputString: str) -> str:
+    RawBinary = ''.join(format(ord(i), '08b') for i in InputString)
+    OutputString = ' '.join(RawBinary[i:i+8] for i in range(0, len(RawBinary), 8))
+    return OutputString
+def BinaryDecrypt(InputString: str) -> str:
+    OutputString = ''.join(chr(int(b, 2)) for b in InputString.split())
+    return OutputString
+def CeasarEncrypt(InputString: str, Shift: int) -> str:
+    OutputString = ""
+    for Character in InputString:
+        if Character.isalpha():               
+            Position = ord(Character.lower()) - 96 
+            NewPosition = (Position + Shift - 1) % 26 + 1   
+            NewCharacter = chr(NewPosition + 96)        
+            OutputString += NewCharacter                
+        else:                                
+            OutputString += Character 
+    return OutputString
+def CeasarDecrypt(InputString: str, Shift: int) -> str:
+    OutputString = ""
+    for Character in InputString:
+        if Character.isalpha():               
+            Position = ord(Character.lower()) - 96
+            NewPosition = (Position - Shift - 1) % 26 + 1   
+            NewCharacter = chr(NewPosition + 96)        
+            OutputString += NewCharacter                
+        else:                                 
+            OutputString += Character
+    return OutputString 
+def VigenereEncrypt(InputString: str, KeyString: str) -> str:
+    OutputString = ""
+
+    for idx, Character in enumerate(InputString):
+        if Character.isalpha():
+            if Character.isupper():
+                OutputString += chr((ord(Character) - ord(KeyString[idx % len(KeyString)].upper()) + 26) % 26 + ord("A"))
+            else:
+                OutputString += chr((ord(Character) - ord(KeyString[idx % len(KeyString)].lower()) + 26) % 26 + ord("a"))
+        else:
+            OutputString += Character
+    return OutputString
+def VigenereDecrypt(InputString: str, KeyString: str) -> str:
+    OutputString = ""
+    KeyString = KeyString.lower()
+    KeyIdx = 0
+
+    for Character in InputString:
+        if Character.isalpha():
+            Shift = ord(KeyString[KeyIdx % len(KeyString)]) - ord('a')
+            if Character.isupper():
+                DecryptedCharacter = chr((ord(Character) - ord('A') - Shift + 26) % 26 + ord('A'))
+            else:
+                DecryptedCharacter = chr((ord(Character) - ord('a') - Shift + 26) % 26 + ord('a'))
+            OutputString += DecryptedCharacter
+            KeyIdx += 1
+        else:
+            OutputString += Character
+
+    return OutputString
+def RailfenceEncrypt(InputString: str, Key: int) -> str:
+    Position = 0
+    Direction = 1
+    Rows = [[] for _ in range(Key)]
+
+    for Character in InputString:
+        Rows[Position].append(Character)
+    
+        Position += Direction
+        if Position == 0 or Position == Key - 1:
+            Direction *= -1
+    
+    return ''.join([''.join(Row) for Row in Rows])
+def RailfenceDecrypt(InputString: str, Key: str) -> str:
+    length = len(InputString)
+    pattern = []
+    pos = 0
+    direction = 1
+    for _ in range(length):
+        pattern.append(pos)
+        pos += direction
+        if pos == 0 or pos == Key - 1:
+            direction *= -1
+
+    counts = [pattern.count(r) for r in range(Key)]
+    rows = []
+    index = 0
+    for c in counts:
+        rows.append(list(InputString[index:index + c]))
+        index += c
+
+    plaintext = ''
+    row_pointers = [0] * Key
+    for r in pattern:
+        plaintext += rows[r][row_pointers[r]]
+        row_pointers[r] += 1
+
+    return plaintext
+def OTPEncrypt(InputString: str, KeyString: str) -> str:
+    bitext = ''.join(format(ord(i), '08b') for i in InputString)
+    bikey = ''.join(format(ord(i), '08b') for i in KeyString)
+    cipher = ''.join(str(int(b1) ^ int(b2)) for b1, b2 in zip(bitext, bikey))
+    return ' '.join(cipher[i:i+8] for i in range(0, len(cipher), 8))
+def OTPDecrypt(InputString: str, KeyString: str) -> str:
+    bikey = ''.join(format(ord(i), '08b') for i in KeyString)
+    plaintext_bits = ''.join(str(int(b1) ^ int(b2)) for b1, b2 in zip(InputString, bikey))
+    return ''.join(chr(int(plaintext_bits[i:i+8], 2)) for i in range(0, len(plaintext_bits), 8))
+
+### ENVIROMENTS
+
+def ORIONEnv() -> None:
+    os.system('cls')
+    print(f"ORION Enviroment {MAINENVversion}")
+    while True:        
+        try:
+            CommandString = prompt("ORION >>> ", completer=COMPLETER)
+            ORIONReturn = dispatcher(CommandString, MAINCMDMAP, MAINARGMAP)
+            if ORIONReturn is not None:
+                print(ORIONReturn)
+            
+        except Exception as e:
+            print(e)
+            
+def PIDEnv() -> None:
+    os.system('cls')
+    print(f"ORION PID Testing Environment {PIDENVversion}")
+    while True:
+        try:
+            CommandString = prompt("PIDEnv >>> ", completer=PIDCOMPLETER)
+            PIDReturn = dispatcher(CommandString, PIDCMDMAP, PIDARGMAP)
+            if PIDReturn is not None:
+                print(PIDReturn)    
+        
+        except ExitEnvironmentSignal:
+            os.system('cls')
+            print(f"ORION Environment {MAINENVversion}")
+            break
+        except Exception as e:
+            print(e)
 
 ### MAPS
 
-def GenerateCompleterDict() -> dict:
+def GenerateCompleterDict(Map) -> dict:
     """Generate nested completer dict with parameter names for each function."""
     
     completer_dict = {}
     
-    for module, commands in COMMANDMAP.items():
+    for module, commands in Map.items():
         completer_dict[module] = {}
         for command_name, command_func in commands.items():
             sig = inspect.signature(command_func)
@@ -425,7 +813,7 @@ def GenerateCompleterDict() -> dict:
     
     return completer_dict
 
-ARGUMENTMAP: dict[str, set] = {
+MAINARGMAP: dict[str, set] = {
     "unipower": {
         "ohmslaw": {3},
         "voltdivider": {3},
@@ -434,8 +822,8 @@ ARGUMENTMAP: dict[str, set] = {
         "powerdissipation": {3},
         "resistorinsight": {4, 5},
         "resistorviz": {4, 5},
-        "capacitance": {2},
-        "esr": {2},
+        "totalcapacitance": {2},
+        "totalesr": {2},
     },
     "unimake": {
         "torque": {2},
@@ -445,12 +833,9 @@ ARGUMENTMAP: dict[str, set] = {
         "kineticenergy": {2},
         "potentialenergy": {3},
     },
-    "unicon": {
-      "pidstep": {0},  
-    },
     "uniflight": {
         "T2Wratio": {2},
-        "machnumber": {2},
+        "machnumber": {1, 2},
         "kilo2newton": {1},
         "newton2kilo": {1},
         "mps2kmh": {1},
@@ -458,11 +843,20 @@ ARGUMENTMAP: dict[str, set] = {
         "dynamicpressure": {1, 2},
         "liftequation": {3},
         "dragequation": {3},
+    },
+    "unispace": {
         "tsiolkovskyrocketequation": {3},
+        "orbitalvelocity": {0, 1, 2},
+        "escapevelocity": {0, 1, 2},
+        "gravitationalforce": {3},
+        "surfacegravity": {2},
+        "orbitalperiod": {3},
+        "einsteinenergyequivalence": {1},
     },
     "unimath": {
         "triextrapolate": {4, 6},
         "quadratic": {3},
+        "pythagoras": {2, 3},
         "D2R": {1},
         "R2D": {1},
         "sinerule": {7},
@@ -487,9 +881,12 @@ ARGUMENTMAP: dict[str, set] = {
         "railfencedecrypt": {2},
         "otpencrypt": {2},
         "otpdecrypt": {2},
-    }
+    },
+    "enterenv": {
+        "PIDEnv": {0}
+    },
 }
-COMMANDMAP: dict[str, dict[str, callable]] = {
+MAINCMDMAP: dict[str, dict[str, callable]] = {
     "unipower": {
         "ohmslaw": OhmsLaw,
         "voltdivider": VoltDivider,
@@ -498,8 +895,8 @@ COMMANDMAP: dict[str, dict[str, callable]] = {
         "powerdissipation": PowerDissipation,
         "resistorinsight": ResistorInsight,
         "resistorviz": ResistorViz,
-        "capacitance": TotalCapacitance,
-        "esr": TotalESR,
+        "totalcapacitance": TotalCapacitance,
+        "totalesr": TotalESR,
     },
     "unimake": {
         "torque": Torque,
@@ -508,9 +905,6 @@ COMMANDMAP: dict[str, dict[str, callable]] = {
         "angularvelocityd": AngularVelocityD,
         "kineticenergy": KineticEnergy,
         "potentialenergy": PotentialEnergy,
-    },
-    "unicon": {
-      "pidstep": PIDStep,  
     },
     "uniflight": {
         "T2Wratio": T2WRatio,
@@ -522,11 +916,20 @@ COMMANDMAP: dict[str, dict[str, callable]] = {
         "dynamicpressure": DynamicPressure,
         "liftequation": LiftEquation,
         "dragequation": DragEquation,
+    },
+    "unispace": {
         "tsiolkovskyrocketequation": TsiolkovskyRocketEquation,
+        "orbitalvelocity": OrbitalVelocity,
+        "escapevelocity": EscapeVelocity,
+        "gravitationalforce": GravitationalForce,
+        "surfacegravity": SurfaceGravity,
+        "orbitalperiod": OrbitalPeriod,
+        "einsteinenergyequivalence": EinsteinEnergyEquivalence,
     },
     "unimath": {
         "triextrapolate": TriExtrapolate,
         "quadratic": Quadratic,
+        "pythagoras": Pythagoras,
         "D2R": D2R,
         "R2D": R2D,
         "sinerule": SineRule,
@@ -551,44 +954,47 @@ COMMANDMAP: dict[str, dict[str, callable]] = {
         "railfencedecrypt": RailfenceDecrypt,
         "otpencrypt": OTPEncrypt,
         "otpdecrypt": OTPDecrypt,
+    },
+    "enterenv": {
+        "PIDEnv": PIDEnv
     }
 }
-COMPLETER = NestedCompleter.from_nested_dict(GenerateCompleterDict())
+COMPLETER = NestedCompleter.from_nested_dict(GenerateCompleterDict(MAINCMDMAP))
 
-### SYSTEM
+PIDCMDMAP = {
+    "pidenv": {
+        "exit": ExitEnv
+    }
+}
+PIDARGMAP = {
+    "pidenv": {
+        "exit": {0}
+    }
+}
+PIDCOMPLETER = NestedCompleter.from_nested_dict(GenerateCompleterDict(PIDCMDMAP))
 
-def VerifyTokens(TokenList: list) -> bool:
+### VALIDATION / VERIFICATION
+
+def VerifyTokens(TokenList: list, CommandMap: dict) -> bool:
     """Verify validity of tokens before dispatching."""
     if not TokenList: 
         raise EmptyTokenList
-    elif TokenList[0] not in COMMANDMAP:
+    elif TokenList[0] not in CommandMap:
         raise UnknownModule(TokenList[0])
     elif len(TokenList) < 2:
         raise MissingSubCommand(TokenList[0])
-    elif TokenList[1] not in COMMANDMAP[TokenList[0]]:
+    elif TokenList[1] not in CommandMap[TokenList[0]]:
         raise UnknownSubCommand(TokenList[0], TokenList[1])
     else:
         return True
-def ValidateArgs(TokenList: list) -> bool:
+def ValidateArgs(TokenList: list, CommandMap: dict, ArgMap: dict) -> bool:
     """Validate that the arguments passed into a function are of the correct length."""
     Module, Command, Args = TokenList[0], TokenList[1], TokenList[2:]
-    if len(Args) not in ARGUMENTMAP[Module][Command]:
-        raise IncorrectArgumentCount(COMMANDMAP[Module][Command], len(Args), ARGUMENTMAP[Module][Command])
+    if len(Args) not in ArgMap[Module][Command]:
+        raise IncorrectArgumentCount(CommandMap[Module][Command], len(Args), ArgMap[Module][Command])
     else:
-        return True
-
-### RECIEVE EVAL PRINT LOOP
-
-def REPL() -> None:
-    os.system('cls')
-    while True:        
-        try:
-            CommandString = prompt("ORION >>> ", completer=COMPLETER)
-            print(dispatcher(CommandString))
-            
-        except Exception as e:
-            print(e)   
+        return True 
 
 if __name__ == "__main__":
-    REPL()
+    ORIONEnv()
                                
