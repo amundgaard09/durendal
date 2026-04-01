@@ -383,6 +383,7 @@ def AngularVelocityR(RPM: float) -> float:
 def AngularVelocityD(RPM: float) -> float:
     """Returns angular velocity from RPM in degrees/s"""
     return R2D((RPM * numpy.pi / 30))
+
 def KineticEnergy(Mass: float, Velocity: float) -> float:
     """Returns the kinetic energy from mass in KGs and velocity in meters/s"""
     return (0.5 * Mass * Velocity**2)
@@ -608,7 +609,7 @@ def HeronsFormula(LengthA: float, LengthB: float, LengthC: float) -> float:
     S = (LengthA + LengthB + LengthC) / 2
     return math.sqrt(S * (S - LengthA) * (S - LengthB) * (S - LengthC))
 
-def NewtonRaphson(none=1) -> float:
+def NewtonRaphson() -> float:
     return None
 
 def D2R(Degrees: float) -> float:
@@ -996,5 +997,4 @@ def ValidateArgs(TokenList: list, CommandMap: dict, ArgMap: dict) -> bool:
         return True 
 
 if __name__ == "__main__":
-    ORIONEnv()
-                               
+    ORIONEnv()                       

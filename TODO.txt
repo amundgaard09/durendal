@@ -1,30 +1,30 @@
 
-    UNICON (control systems theme)
+UNICON (control systems theme)
 
     Transfer function evaluation (s-domain)
     Step response characteristics (rise time, settling time, overshoot)
     Critically damped / overdamped / underdamped classifier from damping ratio
 
-    UNIMAKE (mechanical engineering theme)      
+UNIMAKE (mechanical engineering theme)      
 
     Power from torque and angular velocity P = τω
     Beam deflection (simply supported, cantilever)
     Thermal expansion ΔL = αLΔT
     Pressure from force and area P = F/A
 
-    UNIFLIGHT (you already have this)
+UNIFLIGHT (you already have this)
 
     Reynolds number
     Glide ratio
 
-    UNIMATH
+UNIMATH
 
     Newton-Raphson root finding
     Numerical integration (trapezoidal/Simpson's rule)
     Vector dot and cross product
     Matrix determinant / inverse (numpy makes this trivial)
 
-    UNISIGNAL (new module idea?)
+UNISIGNAL (new module idea?)
 
     dB to linear and back (already in your todo actually)
     Nyquist frequency from sample rate
