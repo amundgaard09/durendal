@@ -4,18 +4,6 @@
 #include <stdlib.h>
 #include "AWList.h"
 
-typedef struct Node {
-    int data;
-    struct Node* next;
-    struct Node* prev;
-}Node;
-
-typedef struct DLList {
-    int size;
-    Node* head;
-    Node* tail;
-}DLList; 
-
 void InitList(DLList *l) {
     l->head = NULL;
     l->tail = NULL;
