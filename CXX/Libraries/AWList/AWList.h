@@ -1,7 +1,7 @@
-/*List Library prototype file - AMUNDWORKS DLLIST LIBRARY - V.1*/
+/*AWList prototype file - AMUNDWORKS DLLIST LIBRARY - V.1*/
 
-#ifndef LISTLIBRARY_H
-#define LISTLIBRARY_H
+#ifndef AWLIST_H
+#define AWLIST_H
 
 typedef struct Node {
     int data;

@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "ListLibrary.h"
+#include "AWList.h"
 
 typedef struct Node {
     int data;
@@ -94,9 +94,9 @@ void PrintList(DLList *l) {
     while (CurrentNode != NULL) {
         printf("%d", CurrentNode->data);
         if (CurrentNode->next != NULL) {
-            printf(", ");       // only print comma if there's a next element
+            printf(", "); 
         }
-        CurrentNode = CurrentNode->next; // move to next node — equivalent to i++
+        CurrentNode = CurrentNode->next;
     }
 
     printf("]\n");
