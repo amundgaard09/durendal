@@ -458,7 +458,7 @@ def SurfaceGravity(Mass: float, Radius: float) -> float:
 def OrbitalPeriod(SemiMajorAxis: float, M: float, m: float) -> float:
     return 2 * math.pi * math.sqrt(SemiMajorAxis ** 3 / (G * (M + m)))
 
-def EinsteinEnergyEquivalence(Mass: float) -> float:
+def EinsteinMassEnergyEquivalence(Mass: float) -> float:
     return Mass * C ** 2
 
 ### UNIMATH
@@ -852,7 +852,7 @@ MAINARGMAP: dict[str, set] = {
         "gravitationalforce": {3},
         "surfacegravity": {2},
         "orbitalperiod": {3},
-        "einsteinenergyequivalence": {1},
+        "einsteinmassenergyequivalence": {1},
     },
     "unimath": {
         "triextrapolate": {4, 6},
@@ -925,7 +925,7 @@ MAINCMDMAP: dict[str, dict[str, callable]] = {
         "gravitationalforce": GravitationalForce,
         "surfacegravity": SurfaceGravity,
         "orbitalperiod": OrbitalPeriod,
-        "einsteinenergyequivalence": EinsteinEnergyEquivalence,
+        "einsteinmassenergyequivalence": EinsteinMassEnergyEquivalence,
     },
     "unimath": {
         "triextrapolate": TriExtrapolate,
