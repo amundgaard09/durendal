@@ -1,9 +1,6 @@
 """The first iteration of the Amundworks XO Neural Network series."""
 
-import math
-import time
-import random
-import typing
+import math, time, random, typing
 
 def DotProduct(listA: list, listB: list) -> float:
     """Returns the dot product of two lists of the same length."""
@@ -28,11 +25,6 @@ def DerivativeSigmoid(x: float) -> float:
     s = Sigmoid(x)
     return s * (1 - s)
 
-def Slope(x1: float, y1: float, x2: float, y2: float) -> float:
-    """Returns the slope of the line between two points."""
-    if x2 - x1 == 0:
-        raise ValueError("Cannot calculate slope for vertical line")
-    return (y2 - y1) / (x2 - x1)
 def MSE(ActualValue: float, PredictedValue: float):
     """_Mean Squared Error Function_
     Args:
@@ -82,8 +74,7 @@ class Neuron:
             self.Weights[idx] -= LearningRate * Delta * self.Input[idx]
         
         self.Bias -= LearningRate * Delta
-        return [Delta * Weight for Weight in self.Weights]
-    
+        return [Delta * Weight for Weight in self.Weights]   
 class Layer:
     """_Layer class for NN Layers, containing multiple neurons and handling forward and backward passes for the layer._"""
     def __init__(self, InputCount, NeuronCount, Activation: typing.Callable[[float], float], DerivativeActivation: typing.Callable[[float], float]):
@@ -121,8 +112,7 @@ class Layer:
             for idx, Gradient in enumerate(NeuronGradients):
                 dLoss_dInput[idx] += Gradient
                 
-        return dLoss_dInput
-        
+        return dLoss_dInput     
 class NeuralNetwork:
     def __init__(
         self, 
@@ -189,14 +179,14 @@ XORnet = NeuralNetwork(
     OutputNeuronCount=1, 
     ActivationFunctionsPerLayer = [Sigmoid, Sigmoid], 
     DerivativeActivationFunctionsPerLayer = [DerivativeSigmoid, DerivativeSigmoid],
-    LearningRate=0.005
+    LearningRate=0.01
 )       
 
 while True:
     try:
         EpochCount = int(input("Epoch Count: "))
-        SatisfactionThreshold = float(input("Satisfaction Threshold (standard: 0.001):"))
         break
+    
     except ValueError:
         print("Invalid Variables!")
         continue
@@ -205,10 +195,11 @@ StartTime = time.time()
 
 for Epoch in range(EpochCount):
     TotalLoss = 0
+    
     for X_i, Y_i in zip(X, Y):
         Output = XORnet.Forward(X_i)[0]
         
-        Loss = MSE(PredictedValue=Y_i, ActualValue=Output)
+        Loss = MSE(Output, Y_i)
         TotalLoss += Loss
         
         XORnet.Backward([Y_i])
@@ -216,20 +207,22 @@ for Epoch in range(EpochCount):
         if Epoch % 1000 == 0:
             print(f"Epoch {Epoch}, Loss = {TotalLoss/4}")
             
-    if TotalLoss <= SatisfactionThreshold:
-        break
-    
 EndTime = time.time()
 ElapsedTime = EndTime - StartTime
 
 print("\nPredicted XOR outputs after training:")
+
 CorrectPredictions = 0
 Predictions = 0
+
 for x_i, y_i in zip(X, Y):
     raw_output = XORnet.Forward(x_i)[0]
     predicted = 1 if raw_output > 0.5 else 0
-    print(f"Input: {x_i}, Predicted: {predicted}, Actual: {y_i}, Raw output: {raw_output:.4f}")
+    
+    print(f"Input: {x_i}, Predicted: {predicted}, Actual: {y_i}, Raw: {raw_output:.4f}")
+    
     Predictions += 1
+    
     if predicted == y_i:
         CorrectPredictions += 1
 
@@ -238,3 +231,6 @@ print(f"Time per Epoch: {ElapsedTime/Epoch:.4f} seconds")
 
 if CorrectPredictions == Predictions:
     print("\033[92m -- Successful Training! -- \033[0m")
+    
+else:
+    print("\033[91m -- Unsuccessful Training -- \033[0m")

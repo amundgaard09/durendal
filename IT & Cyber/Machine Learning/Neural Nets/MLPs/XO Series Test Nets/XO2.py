@@ -1,19 +1,17 @@
 """ Second Iteration - XO Neural Net Series | Matrix-Based Neural Net"""
 
 import numpy as np
-import typing
 import time
 
 def _sigmoid(Z):
-    return 1 / (1 + np.exp(-Z))
-     
+    return 1 / (1 + np.exp(-Z))    
 def _dsigmoid(Z):
     s = _sigmoid(Z)
     return s * (1 - s)
 
 ACTIVATIONS = {
     "relu":    (lambda Z: np.maximum(0, Z),  lambda Z: (Z > 0).astype(float)),
-    "sigmoid": (_sigmoid,                     _dsigmoid),
+    "sigmoid": (_sigmoid,                    _dsigmoid),
 }
 
 def MAE(Actual: np.ndarray, Prediction: np.ndarray) -> float:
@@ -29,16 +27,14 @@ def RMSE(Actual: np.ndarray, Prediction: np.ndarray) -> float:
 
 class DenseLayer:
     def __init__(self, NInputs: int, NOutputs: int, activation: str):
-        self.WeightMatrix = np.random.uniform(-1, 1, (NInputs, NOutputs))
-        self.Bias         = np.random.uniform(-1, 1, NOutputs)
+        self.WeightMatrix = np.random.randn(NInputs, NOutputs) * np.sqrt(2.0 / NInputs)
+        self.Bias         = np.zeros(NOutputs)
         self.act, self.dact = ACTIVATIONS[activation]
-
     def Forward(self, Input: np.ndarray) -> np.ndarray:
         self.Input = Input
         self.Z     = Input @ self.WeightMatrix + self.Bias
         self.Output = self.act(self.Z)
         return self.Output
-
     def Backward(self, dA: np.ndarray, LearningRate: float):
         dZ = dA * self.dact(self.Z)
         X   = self.Input if self.Input.ndim > 1 else self.Input.reshape(1, -1)
@@ -49,7 +45,6 @@ class DenseLayer:
         self.WeightMatrix -= LearningRate * dW
         self.Bias         -= LearningRate * dB
         return dIn.reshape(self.Input.shape)
-
 class NeuralNetwork:
     def __init__(
         self, 
@@ -113,12 +108,17 @@ class NeuralNetwork:
             y (np.ndarray): Target labels.
             epochs (int): Number of training epochs.
         """
+        
+        lastloss = float('inf')
+        
         for epoch in range(epochs):
-            prediction = self.Forward(X)
+            self.Forward(X)
             self.Backward(y)
             if (epoch + 1) % 1000 == 0:
                 loss = MSE(y, self.Layers[-1].Output)  # post-update loss
-                print(f"Epoch {epoch + 1}/{epochs}, Loss: {loss:.6f}")       
+                Marker = "\033[92m ### \033[0m" if loss < lastloss else "\033[91m ### \033[0m"
+                print(f"Epoch {epoch + 1}/{epochs}, Loss: {loss:.6f} {Marker}")
+                lastloss = loss     
     def Predict(self, X: np.ndarray) -> np.ndarray:
         """Make predictions on new data.
         
@@ -142,14 +142,31 @@ NEURALNET = NeuralNetwork(
     DenseLayerNeuronCount=4,
     OutputNeuronCount=2,
     ActivationFunctionsPerLayer=["relu", "relu", "sigmoid"],
-    LearningRate=0.01
+    LearningRate=0.1
 )
 
-# TRAINING DATA | 3 Input Neurons, 2 Output Neurons | 8 Training Examples | Binary Classification Task
-X = np.array([[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]])
-Y = np.array([[0, 0], [0, 1], [0, 1], [0, 0], [0, 1], [0, 0], [0, 0], [1, 1]])
+X: np.ndarray = np.array([
+    [0, 0, 0],
+    [0, 0, 1],
+    [0, 1, 0],
+    [0, 1, 1],
+    [1, 0, 0],
+    [1, 0, 1],
+    [1, 1, 0],
+    [1, 1, 1],
+], dtype=np.float64)
+Y: np.ndarray = np.array([
+    [0, 0],
+    [0, 1],
+    [0, 1],
+    [0, 0],
+    [1, 0],
+    [1, 1],
+    [1, 1],
+    [1, 0],
+], dtype=np.float64)
 
-Epochs = int(1e5)
+Epochs = int(1 * 1e6)
 StartTime = time.time()
 
 NEURALNET.Train(X, Y, epochs=Epochs)
