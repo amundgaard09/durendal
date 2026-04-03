@@ -48,3 +48,5 @@ def RMSE(Actual: list, Prediction: list) -> float:
 
 def ConvertToNPArray(ArrayLike) -> np.ndarray:
     return np.array(ArrayLike)
+
+print(1e5)

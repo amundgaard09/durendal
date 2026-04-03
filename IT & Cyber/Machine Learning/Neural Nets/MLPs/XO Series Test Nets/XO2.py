@@ -1,147 +1,55 @@
-""" Second Iteration - XO Neural Net Series | Matrix-Based Neuronless Neural Net"""
+""" Second Iteration - XO Neural Net Series | Matrix-Based Neural Net"""
 
-import tensorflow as tf
 import numpy as np
 import typing
+import time
 
-# Missing components for a complete neural network:
-
-# 1. Implement the Backward() method in NeuralNetwork class     .
-#    - Calculate loss gradient from target output               .
-#    - Propagate gradients backward through all layers          .
-#    - Use chain rule to compute dA for each layer              .
-#
-# 2. Add a loss function (e.g., Mean Squared Error)             DONE (MSE)
-#    - Measures difference between predicted and target output  DONE (MSE)
-#    - Returns scalar loss value                                DONE (MSE)
-#
-# 3. Add a derivative of loss function                          DONE (BinaryCrossEntropy from TensorFlow)
-#    - Needed for backpropagation to start                      DONE (BinaryCrossEntropy from TensorFlow)
-#
-# 4. Implement a training loop/method                           .
-#    - Takes training data and labels                           .
-#    - Calls Forward() then Backward() repeatedly               .
-#    - Tracks loss over epochs                                  .
-#
-# 5. Add a method to make predictions on new data               .
-#    - Calls Forward() and returns predictions                  .
-#    - Optional: add argmax for classification tasks            .
-#
-# 6. Add data preprocessing/loading                             .
-#    - Convert input data to numpy arrays                       DONE (ConvertToNPArray())
-#    - Normalize/scale input features if needed                 .
-#
-# 7. Add evaluation metrics                                     DONE (MSE, MAE, RMSE)
-#    - Accuracy, precision, recall for classification           DONE (MSE, MAE, RMSE)
-#    - Or MAE, RMSE for regression                              DONE (MSE, MAE, RMSE)
-
-def DotProduct(listA: list, listB: list) -> float:
-    """Returns the dot product of two lists of the same length."""
-    
-    if len(listA) != len(listB):
-        raise ValueError("Lists must be of the same length")
-    
-    return sum(x * y for x, y in zip(listA, listB))
-
-def ReLU(x: float) -> float:
-    """Returns the ReLU activation of x."""
-    return max(0, x)
-def Sigmoid(x: float) -> float:
-    """Returns the sigmoid activation of x."""
-    return 1 / (1 + np.exp(-x))
-
-def DerivativeReLU(x: float) -> float:
-    """Returns the derivative of the ReLU activation function."""
-    return 1 if x > 0 else 0
-def DerivativeSigmoid(x: float) -> float:
-    """Returns the derivative of the sigmoid activation function."""
-    s = Sigmoid(x)
+def _sigmoid(Z):
+    return 1 / (1 + np.exp(-Z))
+     
+def _dsigmoid(Z):
+    s = _sigmoid(Z)
     return s * (1 - s)
 
-def ConvertToNPArray(ArrayLike) -> np.ndarray:
-    return np.array(ArrayLike)
+ACTIVATIONS = {
+    "relu":    (lambda Z: np.maximum(0, Z),  lambda Z: (Z > 0).astype(float)),
+    "sigmoid": (_sigmoid,                     _dsigmoid),
+}
 
-def MAE(Actual: list, Prediction: list) -> float:
-    if len(Prediction) != len(Actual):
-        return None
-    
-    return (sum((np.abs(Actual[i] - Prediction[i])) for i in range(len(Actual)))) / len(Actual)
-def MSE(Actual: list, Prediction: list) -> float:
-    return (sum(np.mean((Actual[i] - Prediction[i])**2) for i in range(len(Actual)))) / len(Actual)
-def RMSE(Actual: list, Prediction: list) -> float:
-    return np.sqrt(sum(np.mean((Actual[i] - Prediction[i])**2) for i in range(len(Actual))))
+def MAE(Actual: np.ndarray, Prediction: np.ndarray) -> float:
+    if Actual.shape != Prediction.shape:
+        raise ValueError("Actual and Prediction must have the same shape")
+    return np.mean(np.abs(Actual - Prediction))
+def MSE(Actual: np.ndarray, Prediction: np.ndarray) -> float:
+    if Actual.shape != Prediction.shape:
+        raise ValueError("Actual and Prediction must have the same shape")
+    return np.mean((Actual - Prediction) ** 2)
+def RMSE(Actual: np.ndarray, Prediction: np.ndarray) -> float:
+    return np.sqrt(MSE(Actual, Prediction))
 
 class DenseLayer:
-    """_DenseLayer class for the layers of the network, containing the weight matrix, bias vector, activation function, and methods for forward and backward passes._"""
-    def __init__(
-        self, 
-        NInputs: int, 
-        NOutputs: int, 
-        Activation: typing.Callable[[float], float], 
-        DerivativeActivation: typing.Callable[[float], float]
-    ):
-        """Neuron Initialization with random weights and bias."""
-        self.WeightMatrix = np.random.uniform(-1,1,(NInputs, NOutputs))
-        self.Bias = np.random.uniform(-1, 1, NOutputs)
-        self.Activation = Activation
-        self.DerivativeActivation = DerivativeActivation  
-    def Forward(self, Input: np.ndarray) -> np.ndarray: 
-        """Forward pass for the neuron."""
-        self.Input = Input 
-        self.Z = Input @ self.WeightMatrix + self.Bias
-        self.Output = np.vectorize(self.Activation)(self.Z)
+    def __init__(self, NInputs: int, NOutputs: int, activation: str):
+        self.WeightMatrix = np.random.uniform(-1, 1, (NInputs, NOutputs))
+        self.Bias         = np.random.uniform(-1, 1, NOutputs)
+        self.act, self.dact = ACTIVATIONS[activation]
+
+    def Forward(self, Input: np.ndarray) -> np.ndarray:
+        self.Input = Input
+        self.Z     = Input @ self.WeightMatrix + self.Bias
+        self.Output = self.act(self.Z)
         return self.Output
-    def Backward(self, dA: np.ndarray, LearningRate: float) -> np.ndarray:
-        """Performs the backward pass for the dense layer.
 
-        This function computes the gradients of the loss with respect to the
-        layer's weights, bias, and input using backpropagation. It then updates
-        the weights and bias using gradient descent.
-
-        Parameters
-        ----------
-        dA : numpy.ndarray
-            Gradient of the loss with respect to the layer's output
-            (dLoss/dOutput). Shape: (NOutputs,).
-
-        LearningRate : float
-            Learning rate used for gradient descent weight updates.
-
-        Returns
-        -------
-        numpy.ndarray
-        Gradient of the loss with respect to the layer's input
-        (dLoss/dInput). Shape: (NInputs,).
-
-        Notes
-        -----
-        The backward pass follows these steps:
-
-        1. Compute the gradient after the activation function:
-            dZ = dA * Activation'(Z)
-
-        2. Compute gradients for weights and bias:
-            dW = outer(Input, dZ)
-            dB = dZ
-
-        3. Compute gradient to propagate to the previous layer:
-            dInput = dZ @ WeightMatrix.T
-
-        4. Update parameters using gradient descent:
-            W = W - LearningRate * dW
-            B = B - LearningRate * dB"""
-            
-        dZ = dA * np.vectorize(self.DerivativeActivation)(self.Z)
-
-        dW = np.outer(self.Input, dZ)
-        dB = dZ
-
-        dInput = dZ @ self.WeightMatrix.T
-
+    def Backward(self, dA: np.ndarray, LearningRate: float):
+        dZ = dA * self.dact(self.Z)
+        X   = self.Input if self.Input.ndim > 1 else self.Input.reshape(1, -1)
+        dZm = dZ  if dZ.ndim  > 1 else dZ.reshape(1, -1)
+        dW  = X.T @ dZm / X.shape[0]
+        dB = dZm.mean(axis=0)
+        dIn = dZm @ self.WeightMatrix.T
         self.WeightMatrix -= LearningRate * dW
-        self.Bias -= LearningRate * dB
+        self.Bias         -= LearningRate * dB
+        return dIn.reshape(self.Input.shape)
 
-        return dInput
 class NeuralNetwork:
     def __init__(
         self, 
@@ -149,8 +57,7 @@ class NeuralNetwork:
         DenseLayerCount: int, 
         DenseLayerNeuronCount: int, 
         OutputNeuronCount: int,
-        ActivationFunctionsPerLayer: list[typing.Callable[[float], float]], 
-        DerivativeActivationFunctionsPerLayer: list[typing.Callable[[float], float]],
+        ActivationFunctionsPerLayer: list[str], 
         LearningRate: float
     ):
         
@@ -159,24 +66,20 @@ class NeuralNetwork:
         self.OutputNeuronCount = OutputNeuronCount
         self.LearningRate = LearningRate
         self.Layers: list[DenseLayer] = []
-
-        #Layers 
+ 
         PreviousNeuronCount = InputNeuronCount
-        Counter = 0
         
-        for _ in range(DenseLayerCount):
+        for idx in range(DenseLayerCount):
             layer = DenseLayer(
                 PreviousNeuronCount, 
                 DenseLayerNeuronCount, 
-                ActivationFunctionsPerLayer[Counter], 
-                DerivativeActivationFunctionsPerLayer[Counter]
+                ActivationFunctionsPerLayer[idx]
             )
             self.Layers.append(layer)
             PreviousNeuronCount = DenseLayerNeuronCount
-            Counter += 1
 
         # Output layer
-        self.Layers.append(DenseLayer(PreviousNeuronCount, OutputNeuronCount, ActivationFunctionsPerLayer[len(ActivationFunctionsPerLayer)-1], DerivativeActivationFunctionsPerLayer[len(DerivativeActivationFunctionsPerLayer)-1]))
+        self.Layers.append(DenseLayer(PreviousNeuronCount, OutputNeuronCount, ActivationFunctionsPerLayer[-1]))
     def Forward(self, Input: np.ndarray) -> np.ndarray:
         """_Forward pass for the entire network._
 
@@ -197,18 +100,72 @@ class NeuralNetwork:
             TargetOutput (np.ndarray): Target output values for backpropagation.
         """
         OutputPrediction = self.Layers[-1].Output
-        dA = -(TargetOutput / OutputPrediction - (1 - TargetOutput) / (1 - OutputPrediction))
+        n = TargetOutput.shape[0] if TargetOutput.ndim > 1 else 1
+        dA = 2 * (OutputPrediction - TargetOutput) / n
         
         for layer in reversed(self.Layers):
             dA = layer.Backward(dA, self.LearningRate)
+    def Train(self, X: np.ndarray, y: np.ndarray, epochs: int):
+        """Training loop for the network.
         
-MatrixNet = NeuralNetwork(
-    InputNeuronCount = 2, 
-    DenseLayerCount = 1, 
-    DenseLayerNeuronCount = 8, 
-    OutputNeuronCount = 1, 
-    ActivationFunctionsPerLayer = [Sigmoid, Sigmoid], 
-    DerivativeActivationFunctionsPerLayer = [DerivativeSigmoid, DerivativeSigmoid],
-    LearningRate = 0.005
+        Args:
+            X (np.ndarray): Input data.
+            y (np.ndarray): Target labels.
+            epochs (int): Number of training epochs.
+        """
+        for epoch in range(epochs):
+            prediction = self.Forward(X)
+            self.Backward(y)
+            if (epoch + 1) % 1000 == 0:
+                loss = MSE(y, self.Layers[-1].Output)  # post-update loss
+                print(f"Epoch {epoch + 1}/{epochs}, Loss: {loss:.6f}")       
+    def Predict(self, X: np.ndarray) -> np.ndarray:
+        """Make predictions on new data.
+        
+        Args:
+            X (np.ndarray): Input data.
+        
+        Returns:
+            np.ndarray: Predictions.
+        """
+        return self.Forward(X) 
+    @staticmethod
+    def NormalizeData(X: np.ndarray) -> np.ndarray:
+        mean = np.mean(X, axis=0)
+        std  = np.std(X, axis=0)
+        std  = np.where(std == 0, 1, std)   # avoid div/0
+        return (X - mean) / std
+
+NEURALNET = NeuralNetwork(
+    InputNeuronCount=3,
+    DenseLayerCount=2,
+    DenseLayerNeuronCount=4,
+    OutputNeuronCount=2,
+    ActivationFunctionsPerLayer=["relu", "relu", "sigmoid"],
+    LearningRate=0.01
 )
+
+# TRAINING DATA | 3 Input Neurons, 2 Output Neurons | 8 Training Examples | Binary Classification Task
+X = np.array([[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]])
+Y = np.array([[0, 0], [0, 1], [0, 1], [0, 0], [0, 1], [0, 0], [0, 0], [1, 1]])
+
+Epochs = int(1e5)
+StartTime = time.time()
+
+NEURALNET.Train(X, Y, epochs=Epochs)
+
+Endtime = time.time()
+ElapsedTime = Endtime - StartTime
+
+print(f"\nTotal Training Time: {ElapsedTime:.2f} seconds")
+print(f"Time per Epoch: {ElapsedTime/Epochs:.4f} seconds")
+
+# VERIFYING TRAINING DATA PREDICTIONS
+for i in range(len(X)):
+    pred = NEURALNET.Predict(X[i])
+    print(f"Input: {X[i]}, Target: {Y[i]}, Prediction: {pred}")
+    if np.array_equal(np.round(pred), Y[i]):
+        print("\033[92m -- Correct Prediction! -- \033[0m")
+    else:
+        print("\033[91m -- Incorrect Prediction! -- \033[0m")
 

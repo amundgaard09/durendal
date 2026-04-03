@@ -800,7 +800,7 @@ def PIDEnv() -> None:
 
 ### MAPS
 
-def GenerateCompleterDict(Map) -> dict:
+def GenerateCompleterDict(Map: dict[str, dict]) -> dict:
     """Generate nested completer dict with parameter names for each function."""
     
     completer_dict = {}

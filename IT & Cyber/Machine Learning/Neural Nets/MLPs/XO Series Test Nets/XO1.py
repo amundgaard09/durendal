@@ -1,6 +1,7 @@
 """The first iteration of the Amundworks XO Neural Network series."""
 
 import math
+import time
 import random
 import typing
 
@@ -36,9 +37,19 @@ def MSE(ActualValue: float, PredictedValue: float):
     """_Mean Squared Error Function_
     Args:
         PredictedValue (float): The error value that the neural net predicts will be a good match for the training data.
-        ActualValue (float): The error value that actual"""
+        ActualValue (float): The error value that the neural net is trying to match, based on the training data.
+    Returns:
+        MSE (float): The Mean Squared Error between the predicted and actual values, which is the error value that the neural net is trying to minimize.
+    """
     return (PredictedValue - ActualValue)**2
 def MSEGradient(ActualValue: float, PredictedValue: float):
+    """_Gradient of the Mean Squared Error Function_
+    Args:
+        PredictedValue (float): The error value that the neural net predicts will be a good match for the training data.
+        ActualValue (float): The error value that the neural net is trying to match, based on the training data.
+    Returns:        
+        MSEGradient (float): The Gradient of the Mean Squared Error between the predicted and actual values, which is the value that the neural net uses to adjust its weights and biases in order to minimize the MSE.
+    """
     return 2*(PredictedValue - ActualValue)
 
 class Neuron:
@@ -190,6 +201,8 @@ while True:
         print("Invalid Variables!")
         continue
 
+StartTime = time.time()
+
 for Epoch in range(EpochCount):
     TotalLoss = 0
     for X_i, Y_i in zip(X, Y):
@@ -200,11 +213,14 @@ for Epoch in range(EpochCount):
         
         XORnet.Backward([Y_i])
         
-        if Epoch % 100 == 0:
+        if Epoch % 1000 == 0:
             print(f"Epoch {Epoch}, Loss = {TotalLoss/4}")
             
     if TotalLoss <= SatisfactionThreshold:
         break
+    
+EndTime = time.time()
+ElapsedTime = EndTime - StartTime
 
 print("\nPredicted XOR outputs after training:")
 CorrectPredictions = 0
@@ -216,6 +232,9 @@ for x_i, y_i in zip(X, Y):
     Predictions += 1
     if predicted == y_i:
         CorrectPredictions += 1
-        
+
+print(f"\nTotal Training Time: {ElapsedTime:.2f} seconds")
+print(f"Time per Epoch: {ElapsedTime/Epoch:.4f} seconds")
+
 if CorrectPredictions == Predictions:
     print("\033[92m -- Successful Training! -- \033[0m")
