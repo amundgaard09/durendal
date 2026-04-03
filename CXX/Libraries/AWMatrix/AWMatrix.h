@@ -3,4 +3,11 @@
 #ifndef AWMATRIX.H
 #define AWMATRIX.H
 
+typedef struct {
+    float* data;      // Pointer to the actual matrix on the heap
+    int rows;         // The rows of the matrix
+    int cols;         // The columns of the matrix
+    int capacity;     // How many elements it can hold 
+} Matrix; 
+
 #endif

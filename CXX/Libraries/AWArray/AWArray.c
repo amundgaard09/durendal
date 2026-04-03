@@ -15,7 +15,7 @@ void InitArray(Array *a) {
 void PrintArray(Array *a) {
     printf("[");
     for (int i = 0; i < a->size; i++) {
-        printf("%.2f", a->data[i]);   // %.2f prints 2 decimal places
+        printf("%.2f", a->data[i]);
         if (i < a->size - 1) {
             printf(", ");
         }
@@ -55,6 +55,9 @@ void Remove(Array *a, int Index) {
 }
 void FreeArray(Array *a) {
     free(a->data);
+    a->data = NULL;
+    a->size = 0;
+    a->capacity = 0;
 }
 
 float GetValue(Array *a, int Index) {
@@ -64,7 +67,6 @@ float GetValue(Array *a, int Index) {
     }
     return a->data[Index];
 }
-
 
 int ArraySize(Array *a) {
     return a->size;

@@ -14,3 +14,4 @@ bool IsPrime(int Number) {
     }
     return true;
 }
+
