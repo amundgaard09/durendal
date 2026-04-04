@@ -42,11 +42,10 @@ def MSE(Actual: list, Prediction: list) -> float:
 def RMSE(Actual: list, Prediction: list) -> float:
     if len(Prediction) != len(Actual):
         return None
-    return np.sqrt(sum(np.mean((Actual[i] - Prediction[i])**2) for i in range(len(Actual))))
+    return np.sqrt(MSE(Actual, Prediction))
 
 ### DATA PROCESSING
 
 def ConvertToNPArray(ArrayLike) -> np.ndarray:
     return np.array(ArrayLike)
 
-print(1e5)
