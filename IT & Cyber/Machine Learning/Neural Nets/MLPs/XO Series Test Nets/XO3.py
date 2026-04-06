@@ -114,7 +114,7 @@ class NeuralNetwork:
         """
         OutputPrediction: np.ndarray = self.Layers[-1].Output
         BatchSize = OutputTarget.shape[0] if OutputTarget.ndim > 1 else 1
-        InitialGOL = (OutputPrediction - OutputTarget) / BatchSize 
+        InitialGOL = (_softmax(OutputPrediction) - OutputTarget) / BatchSize 
         
         for layer in reversed(self.Layers):
             InitialGOL = layer.Backward(InitialGOL, self.LearningRate)
@@ -129,7 +129,7 @@ class NeuralNetwork:
         """
         lastloss = float('inf')
         
-        BATCHSIZE = 256
+        BATCHSIZE = 128
         
         for epoch in range(epochs):
             
@@ -146,9 +146,7 @@ class NeuralNetwork:
                 self.Forward(X_batch)
                 self.Backward(y_batch)
                 
-                EpochLoss += _crossEntropyLoss(y_batch, self.Layers[-1].Output)
-                
-            EpochLoss /= (X.shape[0] / BATCHSIZE)
+                EpochLoss += _crossEntropyLoss(y_batch, self.Layers[-1].Output) 
                 
             Marker = "\033[92m ### \033[0m" if EpochLoss < lastloss else "\033[91m ### \033[0m"
             print(f"Epoch {epoch + 1}/{epochs}, Loss: {EpochLoss:.6f} {Marker}")
@@ -178,7 +176,7 @@ MNISTNET = NeuralNetwork(
     DenseLayerNeuronCount=256,
     OutputNeuronCount=10,
     ActivationsPerLayer= ["relu", "relu", "linear"],
-    LearningRate=0.01
+    LearningRate=0.1
 )
 
 #### -- DATA PREPROCESSING -- ####
@@ -207,7 +205,7 @@ Y = TrainingLabels
 
 #### -- TRAINING LOOP -- ####
 
-Epochs = int(5 * 1e1)
+Epochs = int(1.2 * 1e3)
 StartTime = time.time()
 
 MNISTNET.Train(X, Y, epochs=Epochs)
