@@ -1,5 +1,7 @@
 """ Third Iteration - XO Neural Net Series | Matrix-Based Image Classification Neural Net"""
 
+### XO4 -> CUDA OPTIMALIZATION
+
 import keras
 import numpy as np
 import time
@@ -129,7 +131,9 @@ class NeuralNetwork:
         """
         lastloss = float('inf')
         
-        BATCHSIZE = 256
+        BATCHCOUNT = X.shape[0] // BATCHSIZE 
+        
+        print(BATCHCOUNT, "batches per epoch.")
         
         for epoch in range(epochs):
             
@@ -148,7 +152,7 @@ class NeuralNetwork:
                 
                 EpochLoss += _crossEntropyLoss(y_batch, self.Layers[-1].Output)
                 
-            EpochLoss /= (X.shape[0] / BATCHSIZE)
+            EpochLoss /= (X.shape[0] / BATCHCOUNT)
                 
             Marker = "\033[92m ### \033[0m" if EpochLoss < lastloss else "\033[91m ### \033[0m"
             print(f"Epoch {epoch + 1}/{epochs}, Loss: {EpochLoss:.6f} {Marker}")
@@ -207,8 +211,10 @@ Y = TrainingLabels
 
 #### -- TRAINING LOOP -- ####
 
-Epochs = int(5 * 1e1)
+Epochs = 200 
 StartTime = time.time()
+
+BATCHSIZE = 128
 
 MNISTNET.Train(X, Y, epochs=Epochs)
 

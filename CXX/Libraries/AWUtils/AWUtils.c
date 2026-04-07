@@ -1,8 +1,21 @@
+/* UTILITY LIBRARY - AMUNDWORKS - V.1 */
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdint.h>
 
-// recursive functions
+bool IsPrime(int Number) {
+    if (Number <= 1) {
+        return false;
+    }
+
+    for (int i = 2; i * i < Number; ++i) {
+        if (Number % i == 0) {
+            return false;
+        } 
+    }
+    return true;
+}
 
 uint64_t factorial(int i) {
     if (i == 0 || i == 1) {
@@ -21,13 +34,3 @@ uint64_t fibonacci(int i) {
     }
 }
 
-int main() {
-    int f1, f2;
-
-    printf("Enter factorial: ");
-    scanf("%d", &f1);
-    printf("Enter fibonacci: ");
-    scanf("%d", &f2);
-
-    printf("%llu, %llu", factorial(f1), fibonacci(f2));
-}
