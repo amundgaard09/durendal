@@ -116,7 +116,7 @@ class NeuralNetwork:
         """
         OutputPrediction: np.ndarray = self.Layers[-1].Output
         BatchSize = OutputTarget.shape[0] if OutputTarget.ndim > 1 else 1
-        InitialGOL = (OutputPrediction - OutputTarget) / BatchSize 
+        InitialGOL = (_softmax(OutputPrediction) - OutputTarget) / BatchSize 
         
         for layer in reversed(self.Layers):
             InitialGOL = layer.Backward(InitialGOL, self.LearningRate)
@@ -182,7 +182,7 @@ MNISTNET = NeuralNetwork(
     DenseLayerNeuronCount=256,
     OutputNeuronCount=10,
     ActivationsPerLayer= ["relu", "relu", "linear"],
-    LearningRate=0.01
+    LearningRate=0.1
 )
 
 #### -- DATA PREPROCESSING -- ####
