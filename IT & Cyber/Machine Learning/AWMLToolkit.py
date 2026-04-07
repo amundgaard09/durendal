@@ -15,37 +15,47 @@ def DotProduct(listA: list, listB: list) -> float:
 
 ### ACTIVATION FUNCTIONS
 
-def ReLU(x: float) -> float:
+def _ReLU(x: float) -> float:
     """Returns the ReLU activation of x."""
     return max(0, x)
-def Sigmoid(x: float) -> float:
+def _sigmoid(x: float) -> float:
     """Returns the sigmoid activation of x."""
     return 1 / (1 + math.exp(-x))
-def DerivativeReLU(x: float) -> float:
+def _dReLU(x: float) -> float:
     """Returns the derivative of the ReLU activation function."""
     return 1 if x > 0 else 0
-def DerivativeSigmoid(x: float) -> float:
+def _dsigmoid(x: float) -> float:
     """Returns the derivative of the sigmoid activation function."""
-    s = Sigmoid(x)
+    s = _sigmoid(x)
     return s * (1 - s)
+
+def _softmax(Z: np.ndarray) -> np.ndarray:
+    """Softmax activation function for multi-class classification. Converts raw scores (logits) into probabilities."""
+    expZ = np.exp(Z - np.max(Z, axis=-1, keepdims=True))
+    return expZ / np.sum(expZ, axis=-1, keepdims=True)
 
 ### PERFORMANCE METRICS
 
-def MAE(Actual: list, Prediction: list) -> float:
+def _mae(Actual: list, Prediction: list) -> float:
     if len(Prediction) != len(Actual):
         return None
     return (sum((np.abs(Actual[i] - Prediction[i])) for i in range(len(Actual)))) / len(Actual)
-def MSE(Actual: list, Prediction: list) -> float:
+def _mse(Actual: list, Prediction: list) -> float:
     if len(Prediction) != len(Actual):
         return None
     return (sum(np.mean((Actual[i] - Prediction[i])**2) for i in range(len(Actual)))) / len(Actual)
-def RMSE(Actual: list, Prediction: list) -> float:
+def _rmse(Actual: list, Prediction: list) -> float:
     if len(Prediction) != len(Actual):
         return None
-    return np.sqrt(MSE(Actual, Prediction))
+    return np.sqrt(_mse(Actual, Prediction))
+
+def _crossEntropyLoss(Actual: np.ndarray, Prediction: np.ndarray) -> float:
+    """Cross-entropy loss function for multi-class classification."""
+    ArrayLength = Actual.shape[0]
+    SoftmaxedPrediction = _softmax(Prediction) # Ensure predictions are probabilities.
+    ClippedPrediction = np.clip(SoftmaxedPrediction, 1e-15, 1 - 1e-15) # Avoid log of zero = -inf.
+    log_likelihood = -np.log(ClippedPrediction[range(ArrayLength), Actual.argmax(axis=1)])
+    return np.sum(log_likelihood) / ArrayLength
 
 ### DATA PROCESSING
-
-def ConvertToNPArray(ArrayLike) -> np.ndarray:
-    return np.array(ArrayLike)
 

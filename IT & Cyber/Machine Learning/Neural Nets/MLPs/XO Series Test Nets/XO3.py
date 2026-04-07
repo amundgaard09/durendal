@@ -133,8 +133,6 @@ class NeuralNetwork:
         
         BATCHCOUNT = X.shape[0] // BATCHSIZE 
         
-        print(BATCHCOUNT, "batches per epoch.")
-        
         for epoch in range(epochs):
             
             shuffle_indices = np.random.permutation(X.shape[0])
