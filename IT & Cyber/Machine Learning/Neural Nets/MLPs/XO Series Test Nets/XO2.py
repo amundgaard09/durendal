@@ -27,24 +27,26 @@ def RMSE(Actual: np.ndarray, Prediction: np.ndarray) -> float:
 
 class DenseLayer:
     def __init__(self, NInputs: int, NOutputs: int, activation: str):
-        self.WeightMatrix = np.random.randn(NInputs, NOutputs) * np.sqrt(2.0 / NInputs)
-        self.Bias         = np.zeros(NOutputs)
+        self.Weights: np.ndarray = np.random.randn(NInputs, NOutputs) * np.sqrt(2.0 / NInputs)
+        self.Bias: np.ndarray    = np.zeros(NOutputs)
         self.act, self.dact = ACTIVATIONS[activation]
     def Forward(self, Input: np.ndarray) -> np.ndarray:
         self.Input = Input
-        self.Z     = Input @ self.WeightMatrix + self.Bias
+        self.Z     = Input @ self.Weights + self.Bias
         self.Output = self.act(self.Z)
         return self.Output
     def Backward(self, dA: np.ndarray, LearningRate: float):
-        dZ = dA * self.dact(self.Z)
-        X   = self.Input if self.Input.ndim > 1 else self.Input.reshape(1, -1)
-        dZm = dZ  if dZ.ndim  > 1 else dZ.reshape(1, -1)
-        dW  = X.T @ dZm / X.shape[0]
-        dB = dZm.mean(axis=0)
-        dIn = dZm @ self.WeightMatrix.T
-        self.WeightMatrix -= LearningRate * dW
-        self.Bias         -= LearningRate * dB
-        return dIn.reshape(self.Input.shape)
+        dZ: np.ndarray = dA * self.dact(self.Z)
+        X:  np.ndarray  = self.Input if self.Input.ndim > 1 else self.Input.reshape(1, -1)
+        dZ: np.ndarray = dZ  if dZ.ndim  > 1 else dZ.reshape(1, -1)
+        dW: np.ndarray  = X.T @ dZ / X.shape[0]
+        dB: np.ndarray  = dZ.mean(axis=0)
+        dI: np.ndarray = dZ @ self.Weights.T
+        
+        self.Weights -= LearningRate * dW
+        self.Bias    -= LearningRate * dB
+        
+        return dI.reshape(self.Input.shape)
 class NeuralNetwork:
     def __init__(
         self, 
