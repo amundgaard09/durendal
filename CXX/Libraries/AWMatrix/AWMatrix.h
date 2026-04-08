@@ -10,6 +10,6 @@ typedef struct {
     int capacity;     // How many elements it can hold 
 } Matrix; 
 
-void InitMatrix(Matrix *M, int rows, int cols);
+void MatrixInit(Matrix *M, int rows, int cols);
 
 #endif

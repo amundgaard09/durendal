@@ -20,7 +20,7 @@ from typing import Literal
 
 ### VERSIONS
 
-MAINENVversion = f"v.1.0.1"
+MAINENVversion = f"v.1.1.2"
 PIDENVversion = f"v.0.0.1"
 
 ### CONSTANTS
@@ -90,6 +90,25 @@ SUNRADIUS   = 6.957e+8
 MOONRADIUS  = 1.737e+6
 MARSRADIUS  = 3.390e+6
 
+### OBJECTS - unused for now, but may be useful in the future for storing constants with units and error handling
+
+class Result:
+    """Class for storing results and their units."""
+    def __init__(self, value, unit: str | None = None):
+        self.value = value
+        self.unit = unit
+    
+    def __str__(self):
+        return f"{self.value} {self.unit}" if self.unit else f"{self.value}"
+class Constant:
+    """Class for storing constants and their units."""
+    def __init__(self, value, unit: str | None = None):
+        self.value = value
+        self.unit = unit
+    
+    def __str__(self):
+        return f"{self.value} {self.unit}" if self.unit else f"{self.value}"
+    
 ### ERRORS
 
 class InvalidColorCount(Exception):
@@ -118,7 +137,7 @@ class MissingSubCommand(Exception):
         super().__init__(f"Missing subcommand for {module}")    
 class InvalidColors(Exception):
     """Raises when the colors passed into ResistorInsight() are invalid for the given band."""
-    def __init__(self, function: Callable, IndexOfInvalidColors: list):
+    def __init__(self, function: Callable, IndexOfInvalidColors: int):
         super().__init__(f"Invalid colors for {function} at indices {IndexOfInvalidColors}")
 class MissingParameters(Exception):
     """Raises when a function is not given enough parameters."""
@@ -188,7 +207,7 @@ def ExtractJSON(PathToJSON: str) -> dict:
     with open(PathToJSON, 'r', encoding='utf-8') as file:
         ReturnDict = json.load(file)
         return ReturnDict
-def ColorText(Text: str, Color: str):
+def ColorText(Text: str, Color: str) -> str:
         ansi = ANSI_COLORS.get(Color.lower(), "\033[0m")
         reset = "\033[0m"
         return ansi + Text + reset
@@ -206,7 +225,7 @@ def Tokenize(RawCommandString: str) -> list[str]:
         else:
             ProcessedTokens.append(Token)
     return ProcessedTokens
-def dispatcher(RawCommandString: str, CommandMap, ArgMap):
+def dispatcher(RawCommandString: str, CommandMap: dict[str, dict[str, callable]], ArgMap: dict[str, dict[str, set]]):
     Tokens = Tokenize(RawCommandString) 
     VerifyTokens(Tokens, CommandMap)
     ValidateArgs(Tokens, CommandMap, ArgMap)
@@ -233,9 +252,10 @@ def OhmsLaw(V: float | None = None, I: float | None = None, R: float | None = No
     I = V / R
     R = V / I
     """
-    for value in (V, I, R):
-        if value is not None:
-            value = float(value)
+    
+    if V is not None: V = float(V)
+    if I is not None: I = float(I)
+    if R is not None: R = float(R)
             
     if (V, I, R).count(None) > 1:
         MissingParams = []
@@ -433,10 +453,10 @@ def KMH2MPS(KMH: float) -> float:
 def DynamicPressure(Velocity: float, AirDensity: float | None = 1.225) -> float:
     return 0.5 * Velocity ** 2 * AirDensity
 
-def LiftEquation(LiftCoefficient: float, ReferenceArea: float, DynamicPressure: float) -> float:
-    return LiftCoefficient * 0.5 * DynamicPressure * ReferenceArea
-def DragEquation(DragCoefficient: float, ReferenceArea: float, DynamicPressure: float) -> float:
-    return DragCoefficient * 0.5 * DynamicPressure * ReferenceArea
+def LiftEquation(LiftCoefficient: float, DynamicPressure: float, ReferenceArea: float) -> float:
+    return LiftCoefficient * DynamicPressure * ReferenceArea
+def DragEquation(DragCoefficient: float, DynamicPressure: float, ReferenceArea: float) -> float:
+    return DragCoefficient * DynamicPressure * ReferenceArea
 
 ### UNISPACE
 
@@ -501,7 +521,7 @@ def Quadratic(A: float, B: float, C: float) -> tuple[float]:
     
     elif D == 0:
         x1 = -B / (2 * A)
-        return (x1)
+        return (x1,)
     
     else:
         return None
@@ -613,9 +633,47 @@ def NewtonRaphson() -> float:
     return None
 
 def D2R(Degrees: float) -> float:
+    """Return radians from degrees."""
     return Degrees / 180 * math.pi
 def R2D(Radians: float) -> float:
+    """Return degrees from radians."""
     return Radians / math.pi * 180
+
+def Slope(x1: float, y1: float, x2: float, y2: float) -> float:
+    """Returns the slope of a line from two points (x1, y1) and (x2, y2)"""
+    return f"slope = {(y2 - y1) / (x2 - x1)}"
+
+def LineFromPoints(x1: float, y1: float, x2: float, y2: float) -> str:
+    """Returns the equation of a line in the form of y = mx + b from two points (x1, y1) and (x2, y2)"""
+    m = (y2 - y1) / (x2 - x1)
+    b = y1 - m * x1
+    return f"y = {m}x + {b}"
+def LinearZero(m: float, b: float) -> float:
+    """Find the x-value where the line y = mx + b crosses the x-axis"""
+    return -b / m
+
+def QuadraticVertex(a: float, b: float, c: float) -> str:
+    """Returns the vertex (aka the minimum/maximum point) of a quadratic function in the form of (x, y)"""
+    xv = -b / (2*a)
+    yv = a*xv**2 + b*xv + c
+
+    return f"Vertex: ({xv}, {yv}) - {'Minimum' if a > 0 else 'Maximum' if a < 0 else 'Linear'}"
+def QuadraticNumRoots(a: float, b: float, c: float) -> int:
+    """Returns the number of roots of a quadratic function based on the discriminant."""
+    D = b**2 - 4*a*c
+    return 2 if D > 0 else 1 if D == 0 else 0
+def EvaluateQuadratic(a: float, b: float, c: float, x: float) -> str:
+    return f"{a}x^2 + {b}x + {c} = {a*x**2 + b*x + c}"
+
+def LineIntersection(m1: float, b1: float, m2: float, b2: float) -> str:
+    """"Return the point of intersection of two lines in the form of (x, y)"""
+    x = (b2 - b1) / (m1 - m2)
+    y = m1*x + b1
+    return f"Intersection Point: ({x:.3f}, {y:.3f})"
+
+def Distance(x1: float, y1: float, x2: float, y2: float) -> float:
+    """Return the distance between two points (x1, y1) and (x2, y2)"""
+    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
 
 ### UNIALGO
 
@@ -731,7 +789,7 @@ def RailfenceEncrypt(InputString: str, Key: int) -> str:
             Direction *= -1
     
     return ''.join([''.join(Row) for Row in Rows])
-def RailfenceDecrypt(InputString: str, Key: str) -> str:
+def RailfenceDecrypt(InputString: str, Key: int) -> str:
     length = len(InputString)
     pattern = []
     pos = 0
@@ -780,7 +838,6 @@ def ORIONEnv() -> None:
             
         except Exception as e:
             print(e)
-            
 def PIDEnv() -> None:
     os.system('cls')
     print(f"ORION PID Testing Environment {PIDENVversion}")
@@ -814,7 +871,7 @@ def GenerateCompleterDict(Map: dict[str, dict]) -> dict:
     
     return completer_dict
 
-MAINARGMAP: dict[str, set] = {
+MAINARGMAP: dict[str, dict[str, set]] = {
     "unipower": {
         "ohmslaw": {3},
         "voltdivider": {3},
@@ -864,7 +921,16 @@ MAINARGMAP: dict[str, set] = {
         "cosinerule": {3},
         "reversecosinerule": {3},
         "sasarea": {3},
-        "herons": {3}
+        "herons": {3},
+        "slope": {4},
+        "linefrompoints": {4},
+        "linearzero": {2},
+        "quadraticvertex": {3},
+        "quadraticnumroots": {3},
+        "evaluatequadratic": {4},
+        "lineintersection": {4},
+        "distance": {4},
+        
     },
     "unialgo": {
         "fibonaccilist": {1},
@@ -938,6 +1004,14 @@ MAINCMDMAP: dict[str, dict[str, callable]] = {
         "reversecosinerule": ReverseCosineRule,
         "sasarea": SASArea,
         "herons": HeronsFormula,
+        "slope": Slope,
+        "linefrompoints": LineFromPoints,
+        "linearzero": LinearZero,
+        "quadraticvertex": QuadraticVertex,
+        "quadraticnumroots": QuadraticNumRoots,
+        "evaluatequadratic": EvaluateQuadratic,
+        "lineintersection": LineIntersection,
+        "distance": Distance,
     },
     "unialgo": {
         "fibonaccilist": FibonacciList,

@@ -6,7 +6,7 @@
 
 #define INITIAL_CAPACITY 4
 
-void InitMatrix(Matrix *M, int rows, int cols) {
+void MatrixInit(Matrix *M, int rows, int cols) {
     M->data = (float*)malloc(sizeof(float) * INITIAL_CAPACITY);
     if (M->data == NULL) { printf("Error: malloc failed\n"); return; }
     M->rows = rows;
