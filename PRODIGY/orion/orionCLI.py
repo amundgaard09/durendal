@@ -1,27 +1,27 @@
 """ORION Engineering Assistant CLI - V.1"""
 
-import os, time, json, math, numpy, shlex, inspect
+import os, time, json, math, numpy, sympy, shlex, inspect
 
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import NestedCompleter
 from typing_extensions import Callable
 from typing import Literal
+from sympy import symbols, sympify
 
-#UNICON                                                                      .
+
+###TODO:
 
 #Natural frequency of a spring-mass system                                   .
 #Damping ratio                                                               .
-
-#UNIMAKE                                                                     .
-
 #Moment of inertia for common shapes (cylinder, rod, disk)                   .
 #Mechanical advantage of a lever                                             .
 #Stress and strain from force and cross-sectional area                       .
 
 ### VERSIONS
 
-MAINENVversion = f"v.1.1.2"
+MAINENVversion = f"v.1.1.3"
 PIDENVversion = f"v.0.0.1"
+HOHMANNENVversion= f"v.0.0.1"
 
 ### CONSTANTS
 
@@ -76,21 +76,32 @@ ANSI_COLORS = {
     "silver": "\033[38;5;7m",
 } 
 
-G = 6.6743 * 1e-11 # Gravitational constant (N⋅m²⋅kg⁻²)
-C  = 299792458     # Speed of light (m/s)
-AU = 1.496e+11     # Astronomical unit (m)
+G = 6.6743 * 1e-11
+"""Gravitational constant in m^3 kg^-1 s^-2"""
+C  = 299792458
+"""Speed of light in m/s"""
+AU = 1.496e+11
+"""Astronomical unit in meters"""
 
 M_EARTH = 5.972e+24
+"""Mass of the earth in Kg"""
 M_SUN   = 1.989e+30
+"""Mass of the Sun in Kg"""
 M_MOON  = 7.342e+22
+"""Mass of the moon in Kg"""
 M_MARS  = 6.390e+23
+"""Mass of Mars in Kg"""
 
 EARTHRADIUS = 6.371e+6
+"""Radius of the Earth in meters"""
 SUNRADIUS   = 6.957e+8
+"""Radius of the Sun in meters"""
 MOONRADIUS  = 1.737e+6
+"""Radius of the Moon in meters"""
 MARSRADIUS  = 3.390e+6
+"""Radius of Mars in meters"""
 
-### OBJECTS - unused for now, but may be useful in the future for storing constants with units and error handling
+### OBJECTS - unused for now - will be useful in the future for storing constants, units and error handling
 
 class Result:
     """Class for storing results and their units."""
@@ -114,43 +125,43 @@ class Constant:
 class InvalidColorCount(Exception):
     """Raised when the color count passed into a function of the resistor group is invalid."""
     def __init__(self, Function: Callable):
-        super().__init__(f"Invalid Color Count for {Function}")
-class EmptyTokenList(Exception):
-    """Raises when the TokenList passed into VerifyTokens() is empty."""
-    def __init__(self):
-        super().__init__(f"Empty TokenList! Make sure of correct tokens before verification attempt.")
+        super().__init__(f"Invalid Color Count for {ColorText(Function.__name__, 'blue')}")
+class InvalidColors(Exception):
+    """Raises when the colors passed into ResistorInsight() are invalid for the given band."""
+    def __init__(self, Function: Callable, IndexOfInvalidColors: int):
+        super().__init__(f"Invalid colors for {ColorText(Function.__name__, 'blue')} at indices {IndexOfInvalidColors}")
+class InconsistencyError(Exception):
+    """Raises when the VIR-values passed into PowerDissipation() gives inconsistent values for the three formulas."""
+    def __init__(self, Function: Callable, Inconsistency: str):
+        super().__init__(f"Inconsistency error at {ColorText(Function.__name__, 'blue')} with {ColorText(Inconsistency, 'red')}")
 class IncorrectArgumentCount(Exception):
     """Raises when the count of arguments given to a function is incorrect."""
-    def __init__(self, function: Callable, GivenArgumentCount: int, WantedArgumentCount: set):
-        super().__init__(f"Incorrect count of arguments for {function}. {function} takes {WantedArgumentCount} but was given {GivenArgumentCount}")
-class UnknownModule(Exception):
-    """Raises when an unknown module gets caught in VerifyTokens()."""
-    def __init__(self, GivenModule: str):
-        super().__init__(f"Unknown Module: {GivenModule}")
+    def __init__(self, Function: Callable, GivenArgumentCount: int, WantedArgumentCount: set):
+        super().__init__(f"Incorrect count of arguments for {ColorText(Function.__name__, 'blue')}. {ColorText(Function.__name__, 'blue')} takes {ColorText(WantedArgumentCount, 'green')} but was given {ColorText(GivenArgumentCount, 'red')}")
+class ImpossibleTriangleError(Exception):
+    def __init__(self):
+        super().__init__("The sum of the angles of a triangle can't be anything else than 180 degrees!")
 class UnknownSubCommand(Exception):
     """Raises when an unknown subcommand gets caught in VerifyTokens()."""
     def __init__(self, Module: str, GivenCommand: str):
-        super().__init__(f"Unknown command for {Module}: {GivenCommand}")
+        super().__init__(f"Unknown command for {Module}: {ColorText(GivenCommand, 'red')}")
 class MissingSubCommand(Exception):
     """Raises when the subcommand is missing from a command string."""
     def __init__(self, module):
         super().__init__(f"Missing subcommand for {module}")    
-class InvalidColors(Exception):
-    """Raises when the colors passed into ResistorInsight() are invalid for the given band."""
-    def __init__(self, function: Callable, IndexOfInvalidColors: int):
-        super().__init__(f"Invalid colors for {function} at indices {IndexOfInvalidColors}")
 class MissingParameters(Exception):
     """Raises when a function is not given enough parameters."""
     def __init__(self, Function: Callable, MissingParameters: list):
-        super().__init__(f"Missing parameter {MissingParameters} for {Function}.")
-class InconsistencyError(Exception):
-    """Raises when the VIR-values passed into PowerDissipation() gives inconsistent values for the three formulas."""
-    def __init__(self, Function: Callable, Inconsistency: str):
-        super().__init__(Function, Inconsistency)
-class ImpossibleTriangleError(Exception):
+        super().__init__(f"Missing parameter {ColorText(MissingParameters, 'red')} for {ColorText(Function.__name__, 'blue')}.")
+class EmptyTokenList(Exception):
+    """Raises when the TokenList passed into VerifyTokens() is empty."""
     def __init__(self):
-        super().__init__("The sum of the angles of a triangle can't be anything else than 180 degrees!")
-
+        super().__init__(f"Empty TokenList! Make sure of correct tokens before verification attempt.")
+class UnknownModule(Exception):
+    """Raises when an unknown module gets caught in VerifyTokens()."""
+    def __init__(self, GivenModule: str):
+        super().__init__(f"Unknown Module: {ColorText(GivenModule, 'red')}")
+        
 ### SIGNALS
 
 class ExitEnvironmentSignal(Exception):
@@ -197,6 +208,7 @@ class ContinuousPID:
 ### UTILS
 
 def InsertJSON(PathToJSON: str, ContentDict: dict) -> bool:
+    """Inserts a dictionary into a JSON file. If the file does not exist, it creates it. Returns True if the operation was successful, False otherwise."""
     try:
         with open(PathToJSON, 'w') as JSONFile:
             json.dump(ContentDict, JSONFile, indent=4, sort_keys=True)
@@ -204,14 +216,20 @@ def InsertJSON(PathToJSON: str, ContentDict: dict) -> bool:
     except Exception:
         return False
 def ExtractJSON(PathToJSON: str) -> dict:
+    """Extracts a JSON file and returns the content as a dictionary. Returns None if the file is not found or if there is an error during extraction."""
     with open(PathToJSON, 'r', encoding='utf-8') as file:
         ReturnDict = json.load(file)
         return ReturnDict
 def ColorText(Text: str, Color: str) -> str:
-        ansi = ANSI_COLORS.get(Color.lower(), "\033[0m")
-        reset = "\033[0m"
-        return ansi + Text + reset
-    
+    """Returns the given text in the given color using ANSI escape codes. If the color is not found, it returns the text without coloring."""
+    Text = str(Text) # Ensure Text is a string
+    ansi = ANSI_COLORS.get(Color.lower(), "\033[0m")
+    reset = "\033[0m"
+    return ansi + Text + reset
+def GetFunctionName(Function: Callable) -> str:
+    """Returns the name of a function as a string."""
+    return Function.__name__
+
 ### SYSTEM
 
 def Tokenize(RawCommandString: str) -> list[str]:
@@ -226,6 +244,7 @@ def Tokenize(RawCommandString: str) -> list[str]:
             ProcessedTokens.append(Token)
     return ProcessedTokens
 def dispatcher(RawCommandString: str, CommandMap: dict[str, dict[str, callable]], ArgMap: dict[str, dict[str, set]]):
+    """The main dispatcher function that takes in a raw command string, tokenizes it, verifies the tokens, validates the arguments and dispatches the command to the correct function."""
     Tokens = Tokenize(RawCommandString) 
     VerifyTokens(Tokens, CommandMap)
     ValidateArgs(Tokens, CommandMap, ArgMap)
@@ -241,7 +260,27 @@ def dispatcher(RawCommandString: str, CommandMap: dict[str, dict[str, callable]]
                 Args.append(arg)
             
     return CommandMap[Module][Command](*Args)
+def VerifyTokens(TokenList: list, CommandMap: dict) -> bool:
+    """Verify validity of tokens before dispatching."""
+    if not TokenList: 
+        raise EmptyTokenList
+    elif TokenList[0] not in CommandMap:
+        raise UnknownModule(TokenList[0])
+    elif len(TokenList) < 2:
+        raise MissingSubCommand(TokenList[0])
+    elif TokenList[1] not in CommandMap[TokenList[0]]:
+        raise UnknownSubCommand(TokenList[0], TokenList[1])
+    else:
+        return True
+def ValidateArgs(TokenList: list, CommandMap: dict, ArgMap: dict) -> bool:
+    """Validate that the arguments passed into a function are of the correct length."""
+    Module, Command, Args = TokenList[0], TokenList[1], TokenList[2:]
+    if len(Args) not in ArgMap[Module][Command]:
+        raise IncorrectArgumentCount(CommandMap[Module][Command], len(Args), ArgMap[Module][Command])
+    else:
+        return True 
 def ExitEnv() -> None:
+    """Exit the current environment and return to MAINEnv."""
     raise ExitEnvironmentSignal
 
 ### UNIPOWER
@@ -274,12 +313,16 @@ def OhmsLaw(V: float | None = None, I: float | None = None, R: float | None = No
         
     return f"V: {V}, I: {I}, R: {R}"
 def VoltDivider(VIn: float, R1: float, R2: float) -> float:
+    """Calculates the output voltage of a voltage divider from input voltage and the two resistances."""
     return VIn * (R2 / (R1 + R2))
 def RCTimeConstant(Capacitance: float, Resistance: float) -> float:
+    """Calculates the time constant of an RC circuit from capacitance in farads and resistance in ohms."""
     return Capacitance * Resistance
 def InductorImpedance(Hertz: float, Inductance: float) -> float:
+    """Calculates the impedance of an inductor at a given frequency in hertz and inductance in henrys."""
     return 2 * numpy.pi * Hertz * Inductance
 def PowerDissipation(V: float | None = None, I: float | None = None, R: float | None = None) -> float:
+    """Calculates power dissipation from voltage, current and resistance. If all three parameters are given, it checks for consistency between the three formulas P = I^2 * R, P = V^2 / R and P = V * I."""
     if (V, I, R).count(None) > 1:
         MissingParams = []
         for idx, value in enumerate((V, I, R)):
@@ -359,7 +402,9 @@ def ResistorInsight(C1: str, C2: str, C3: str, C4: str, C5: str | None = None) -
 
     return (ResistanceString, RangeString)
 
+###TODO wrap these functions
 def TotalESR(caps: list[tuple], ConnectionType: Literal["parallel", "series"]) -> float:
+    """Calculates total ESR of a list of capacitors based on their connection type. Caps are in the format (capacitance, voltage, esr) for now."""
     if ConnectionType == "series":
         return sum(cap[2] for cap in caps)
     elif ConnectionType == "parallel":
@@ -370,6 +415,7 @@ def TotalESR(caps: list[tuple], ConnectionType: Literal["parallel", "series"]) -
     else:
         raise ValueError("Connection type must be 'parallel' or 'series'")
 def TotalCapacitance(caps: list[tuple], ConnectionType: Literal["parallel", "series"]) -> tuple: ### caps (capacitance, voltage, esr) (for now)
+    """Calculates total capacitance, voltage limit and ESR of a list of capacitors based on their connection type."""
     if ConnectionType == "parallel":
         TotalCapacitance = 0
         for cap in caps:
@@ -458,28 +504,24 @@ def LiftEquation(LiftCoefficient: float, DynamicPressure: float, ReferenceArea: 
 def DragEquation(DragCoefficient: float, DynamicPressure: float, ReferenceArea: float) -> float:
     return DragCoefficient * DynamicPressure * ReferenceArea
 
-### UNISPACE
+### UNISPACE - Hohmann transfer delta-v + visualization env - COMING SOON
 
-def TsiolkovskyRocketEquation(ExhaustVelocity: float, InitialMass: float, Finalmass: float) -> float:
-    return ExhaustVelocity * math.log(InitialMass/Finalmass)
-
+def OrbitalPeriod(SemiMajorAxis: float, M: float, m: float) -> float:
+    return 2 * math.pi * math.sqrt(SemiMajorAxis ** 3 / (G * (M + m)))
 def OrbitalVelocity(OrbitalRadius: float = EARTHRADIUS, Mass: float = M_EARTH) -> float:
     return math.sqrt((G*Mass) / OrbitalRadius)
 def EscapeVelocity(Radius: float = EARTHRADIUS, Mass: float = M_EARTH) -> float:
     return math.sqrt(2)*OrbitalVelocity(Radius, Mass)
-
-#Hohmann transfer delta-v env + visuals - COMING SOON
 
 def GravitationalForce(Mass1: float, Mass2: float, Distance: float) -> float:
     return G * Mass1 * Mass2 / Distance ** 2
 def SurfaceGravity(Mass: float, Radius: float) -> float:
     return G * Mass / Radius ** 2
 
-def OrbitalPeriod(SemiMajorAxis: float, M: float, m: float) -> float:
-    return 2 * math.pi * math.sqrt(SemiMajorAxis ** 3 / (G * (M + m)))
-
 def EinsteinMassEnergyEquivalence(Mass: float) -> float:
     return Mass * C ** 2
+def TsiolkovskyRocketEquation(ExhaustVelocity: float, InitialMass: float, Finalmass: float) -> float:
+    return ExhaustVelocity * math.log(InitialMass/Finalmass)
 
 ### UNIMATH
 
@@ -509,7 +551,7 @@ def TriExtrapolate(a: float, b: float, c: float, A: float | None = None, B: floa
     
     return f"""Area: {Area} - Sides: A: {A}, B: {B}, C: {C} - Sin({a}) = {SinA}, Sin({b}) = {SinB}, Sin({c}) = {SinC}"""
 
-def Quadratic(A: float, B: float, C: float) -> tuple[float]:
+def Quadratic(A: float, B: float, C: float) -> str:
     """Solves quadratic equations and returns x-values in a tuple."""
     if A == 0:
         return ValueError("Invalid quadratic equation! A cannot be 0.")
@@ -517,17 +559,17 @@ def Quadratic(A: float, B: float, C: float) -> tuple[float]:
     if D > 0:
         x1 = (-B - math.sqrt(D)) / (2 * A)
         x2 = (-B + math.sqrt(D)) / (2 * A)
-        return (x1, x2)
+        return f"x1: {x1}, x2: {x2}"
     
     elif D == 0:
         x1 = -B / (2 * A)
-        return (x1,)
-    
-    else:
-        return None
+        return f"x: {x1}"
+    else: 
+        return ColorText('No real solutions', 'red')
 
-def Pythagoras(A: float | None = None, B: float | None = None, C: float | None = None) -> tuple[float]:
+def Pythagoras(A: float | None = None, B: float | None = None, C: float | None = None) -> str:
     """Calculates the missing side of a right-angled triangle using either normal or reverse pythagoras."""
+    
     if (A, B, C).count(None) > 1:
         return None
     
@@ -538,7 +580,7 @@ def Pythagoras(A: float | None = None, B: float | None = None, C: float | None =
     elif C is None:
         C = math.sqrt(A**2 + B**2)
     
-    return (A, B, C)
+    return f"A: {A}, B: {B}, C: {C}"
 
 def SineRule(
     Sides: list[float | None],
@@ -552,7 +594,7 @@ def SineRule(
 
     Return Format: [Angles:[A, B, C], Sides:[A, B, C]]
     """
-   
+    ### VERY UNSTABLE CODE! USE WITH CAUTION! TEST THOROUGHLY BEFORE USE!
     angles_rad = []
     for angle in Angles:
         if angle is not None and AngleMeasurementMode == "Degrees":
@@ -642,7 +684,23 @@ def R2D(Radians: float) -> float:
 def Slope(x1: float, y1: float, x2: float, y2: float) -> float:
     """Returns the slope of a line from two points (x1, y1) and (x2, y2)"""
     return f"slope = {(y2 - y1) / (x2 - x1)}"
+def Distance(x1: float, y1: float, x2: float, y2: float) -> float:
+    """Return the distance between two points (x1, y1) and (x2, y2)"""
+    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
+def Derivative(Function: str, x: float | None = None, h: float = 1e-5) -> float:
+    """Returns f'(x) if x is not given, else returns the numerical derivative of the function at the given x-value using the definition of the derivative."""
+    x_sym = symbols('x')
+    f = sympify(Function)
+    if x is None:
+        return sympy.diff(f, x_sym)
+    else:
+        return (f.subs(x_sym, x + h) - f.subs(x_sym, x - h)) / (2 * h)
 
+def LineIntersection(m1: float, b1: float, m2: float, b2: float) -> str:
+    """"Return the point of intersection of two lines in the form of (x, y)"""
+    x = (b2 - b1) / (m1 - m2)
+    y = m1*x + b1
+    return f"Intersection Point: ({x:.3f}, {y:.3f})"
 def LineFromPoints(x1: float, y1: float, x2: float, y2: float) -> str:
     """Returns the equation of a line in the form of y = mx + b from two points (x1, y1) and (x2, y2)"""
     m = (y2 - y1) / (x2 - x1)
@@ -665,15 +723,25 @@ def QuadraticNumRoots(a: float, b: float, c: float) -> int:
 def EvaluateQuadratic(a: float, b: float, c: float, x: float) -> str:
     return f"{a}x^2 + {b}x + {c} = {a*x**2 + b*x + c}"
 
-def LineIntersection(m1: float, b1: float, m2: float, b2: float) -> str:
-    """"Return the point of intersection of two lines in the form of (x, y)"""
-    x = (b2 - b1) / (m1 - m2)
-    y = m1*x + b1
-    return f"Intersection Point: ({x:.3f}, {y:.3f})"
+### UNSTABLE - ALPHA 
+def TangentFormula(Function1: str, Function2: str) -> list[str]:
+    """Returns the tangent(s) between two functions by finding the points where the derivatives are equal and then calculating the slope of the tangent line at those points."""
+    x = symbols('x')
+    f1 = sympify(Function1)
+    f2 = sympify(Function2)
 
-def Distance(x1: float, y1: float, x2: float, y2: float) -> float:
-    """Return the distance between two points (x1, y1) and (x2, y2)"""
-    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
+    df1 = sympy.diff(f1, x)
+    df2 = sympy.diff(f2, x)
+
+    slope_eq = sympy.Eq(df1, df2)
+    tangent_points = sympy.solve(slope_eq, x)
+
+    tangents = []
+    for idx, point in enumerate(tangent_points, 1):
+        string = f"Tangent {idx} - point: {point} - y: {f1.subs(x, point)} - slope: {df1.subs(x, point)}"
+        tangents.append(string) 
+
+    return tangents
 
 ### UNIALGO
 
@@ -777,6 +845,7 @@ def VigenereDecrypt(InputString: str, KeyString: str) -> str:
 
     return OutputString
 def RailfenceEncrypt(InputString: str, Key: int) -> str:
+    Key = int(Key)
     Position = 0
     Direction = 1
     Rows = [[] for _ in range(Key)]
@@ -790,6 +859,7 @@ def RailfenceEncrypt(InputString: str, Key: int) -> str:
     
     return ''.join([''.join(Row) for Row in Rows])
 def RailfenceDecrypt(InputString: str, Key: int) -> str:
+    Key = int(Key)
     length = len(InputString)
     pattern = []
     pos = 0
@@ -815,13 +885,13 @@ def RailfenceDecrypt(InputString: str, Key: int) -> str:
 
     return plaintext
 def OTPEncrypt(InputString: str, KeyString: str) -> str:
-    bitext = ''.join(format(ord(i), '08b') for i in InputString)
-    bikey = ''.join(format(ord(i), '08b') for i in KeyString)
-    cipher = ''.join(str(int(b1) ^ int(b2)) for b1, b2 in zip(bitext, bikey))
+    BinaryText = ''.join(format(ord(i), '08b') for i in InputString)
+    BinaryKey = ''.join(format(ord(i), '08b') for i in KeyString)
+    cipher = ''.join(str(int(b1) ^ int(b2)) for b1, b2 in zip(BinaryText, BinaryKey))
     return ' '.join(cipher[i:i+8] for i in range(0, len(cipher), 8))
 def OTPDecrypt(InputString: str, KeyString: str) -> str:
-    bikey = ''.join(format(ord(i), '08b') for i in KeyString)
-    plaintext_bits = ''.join(str(int(b1) ^ int(b2)) for b1, b2 in zip(InputString, bikey))
+    BinaryKey = ''.join(format(ord(i), '08b') for i in KeyString)
+    plaintext_bits = ''.join(str(int(b1) ^ int(b2)) for b1, b2 in zip(InputString, BinaryKey))
     return ''.join(chr(int(plaintext_bits[i:i+8], 2)) for i in range(0, len(plaintext_bits), 8))
 
 ### ENVIROMENTS
@@ -831,13 +901,13 @@ def ORIONEnv() -> None:
     print(f"ORION Enviroment {MAINENVversion}")
     while True:        
         try:
-            CommandString = prompt("ORION >>> ", completer=COMPLETER)
+            CommandString = prompt("ORION >>> ", completer=MAINCOMPLETER)
             ORIONReturn = dispatcher(CommandString, MAINCMDMAP, MAINARGMAP)
             if ORIONReturn is not None:
                 print(ORIONReturn)
             
         except Exception as e:
-            print(e)
+            print(e.__str__())
 def PIDEnv() -> None:
     os.system('cls')
     print(f"ORION PID Testing Environment {PIDENVversion}")
@@ -854,6 +924,22 @@ def PIDEnv() -> None:
             break
         except Exception as e:
             print(e)
+def HohmannEnv() -> None:
+    os.system('cls')
+    print(f"ORION Hohmann Calculation & Visualization Environment {HOHMANNENVversion}")
+    while True:
+        try:
+            CommandString = prompt("PIDEnv >>> ", completer=HOHMANNCOMPLETER)
+            HohmannReturn = dispatcher(CommandString, HOHMANNCMDMAP, HOHMANNARGMAP)
+            if HohmannReturn is not None:
+                print(HohmannReturn)    
+        
+        except ExitEnvironmentSignal:
+            os.system('cls')
+            print(f"ORION Environment {MAINENVversion}")
+            break
+        except Exception as e:
+            print(e.__str__())
 
 ### MAPS
 
@@ -871,7 +957,7 @@ def GenerateCompleterDict(Map: dict[str, dict]) -> dict:
     
     return completer_dict
 
-MAINARGMAP: dict[str, dict[str, set]] = {
+MAINARGMAP:    dict[str, dict[str, set]] = {
     "unipower": {
         "ohmslaw": {3},
         "voltdivider": {3},
@@ -930,7 +1016,8 @@ MAINARGMAP: dict[str, dict[str, set]] = {
         "evaluatequadratic": {4},
         "lineintersection": {4},
         "distance": {4},
-        
+        "derivative": {1, 2},
+        "tangentformula": {2},
     },
     "unialgo": {
         "fibonaccilist": {1},
@@ -953,7 +1040,14 @@ MAINARGMAP: dict[str, dict[str, set]] = {
         "PIDEnv": {0}
     },
 }
-MAINCMDMAP: dict[str, dict[str, callable]] = {
+PIDARGMAP:     dict[str, dict[str, set]] = {
+    "pidenv": {
+        "exit": {0}
+    }
+}
+HOHMANNARGMAP: dict[str, dict[str, set]] = {}
+
+MAINCMDMAP:    dict[str, dict[str, callable]] = {
     "unipower": {
         "ohmslaw": OhmsLaw,
         "voltdivider": VoltDivider,
@@ -1012,6 +1106,8 @@ MAINCMDMAP: dict[str, dict[str, callable]] = {
         "evaluatequadratic": EvaluateQuadratic,
         "lineintersection": LineIntersection,
         "distance": Distance,
+        "derivative": Derivative,
+        "tangentformula": TangentFormula,
     },
     "unialgo": {
         "fibonaccilist": FibonacciList,
@@ -1034,41 +1130,16 @@ MAINCMDMAP: dict[str, dict[str, callable]] = {
         "PIDEnv": PIDEnv
     }
 }
-COMPLETER = NestedCompleter.from_nested_dict(GenerateCompleterDict(MAINCMDMAP))
-
-PIDCMDMAP = {
+PIDCMDMAP:     dict[str, dict[str, callable]] = {
     "pidenv": {
         "exit": ExitEnv
     }
 }
-PIDARGMAP = {
-    "pidenv": {
-        "exit": {0}
-    }
-}
-PIDCOMPLETER = NestedCompleter.from_nested_dict(GenerateCompleterDict(PIDCMDMAP))
+HOHMANNCMDMAP: dict[str, dict[str, callable]] = {}
 
-### VALIDATION / VERIFICATION
-
-def VerifyTokens(TokenList: list, CommandMap: dict) -> bool:
-    """Verify validity of tokens before dispatching."""
-    if not TokenList: 
-        raise EmptyTokenList
-    elif TokenList[0] not in CommandMap:
-        raise UnknownModule(TokenList[0])
-    elif len(TokenList) < 2:
-        raise MissingSubCommand(TokenList[0])
-    elif TokenList[1] not in CommandMap[TokenList[0]]:
-        raise UnknownSubCommand(TokenList[0], TokenList[1])
-    else:
-        return True
-def ValidateArgs(TokenList: list, CommandMap: dict, ArgMap: dict) -> bool:
-    """Validate that the arguments passed into a function are of the correct length."""
-    Module, Command, Args = TokenList[0], TokenList[1], TokenList[2:]
-    if len(Args) not in ArgMap[Module][Command]:
-        raise IncorrectArgumentCount(CommandMap[Module][Command], len(Args), ArgMap[Module][Command])
-    else:
-        return True 
+MAINCOMPLETER    = NestedCompleter.from_nested_dict(GenerateCompleterDict(MAINCMDMAP))
+PIDCOMPLETER     = NestedCompleter.from_nested_dict(GenerateCompleterDict(PIDCMDMAP))
+HOHMANNCOMPLETER = NestedCompleter.from_nested_dict(GenerateCompleterDict(HOHMANNCMDMAP))
 
 if __name__ == "__main__":
     ORIONEnv()                       
