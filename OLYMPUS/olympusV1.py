@@ -6,7 +6,7 @@ The interface is designed to be user-friendly and efficient, enabling athletes t
 
 ### ------------------------------------------------------------------ ###
 
-### TO DO:
+### TODO:
 
 ### 1. Softcode schedule (session classes) and user entry of completed workouts in morning/evening log
 ### 2. Data analysis and visualization
@@ -21,11 +21,7 @@ The interface is designed to be user-friendly and efficient, enabling athletes t
 
 ### ------------------------------------------------------------------ ###
 
-import questionary
-import datetime
-import time
-import json
-import sys
+import sys, json, time, datetime, questionary
 
 from typing import Literal
 from pathlib import Path
@@ -786,5 +782,5 @@ def pr_tracker():
         case "Return":
             mainscreen()
 
-if __name__ == "__main__": # INIT
+if __name__ == "__main__":
     mainscreen() 

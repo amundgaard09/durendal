@@ -4,48 +4,22 @@
 
 *What is AmundWorks?* 
 
-AmundWorks is an independent engineering initiative focused on designing and building advanced technological systems at the intersection of robotics, software and human augmentation. Each project explores a different aspect of capability enhancement — from intelligent management software to autonomous robotics and wearable exosystems.
+The **AmundWorks GitHub repository** is an open-source collection of all projects built by **AmundWorks**. It serves as a central hub for all the work and projects created by AmundWorks, providing a platform for sharing and collaborating on various initiatives. The repository includes a wide range of projects, from software development to scientific research, and is constantly updated with new content. It is intended to be a resource for anyone interested in the work of AmundWorks, as well as a platform for collaboration and innovation. 
 
-## **Projects**
+## PROJECTS
 
-### **SENTINEL**
-***The Advanced All-Environment Exosuit Platform designed to extend human capability beyond natural limits.***
+This is the list of projects currently being built under Amundworks.
 
-*What is SENTINEL?*
+### AWPC - AmundWorks Python Collective
 
-**SENTINEL** is an experimental powered exosuit platform developed to explore the frontier between human ability and machine augmentation. Designed as a modular system combining robotics, wearable mechanics and advanced human-machine interfaces, **SENTINEL** aims to enhance strength, endurance, mobility and situational awareness in extreme environments.
+The **AmundWorks Python Collective** is the complete collection of all python projects built under AmundWorks. It is a collection of various Python libraries, tools, and applications that are designed to be used for a wide range of purposes, including scientific computing, data analysis, machine learning, and more. The **AWPC** is an open-source project that is constantly evolving and growing as new projects are added and existing ones are updated. It is intended to be a resource for developers, researchers, and anyone interested in using Python for their projects. The **AWPC** is organized into various submodules, each of which contains a specific set of tools and libraries that are designed to work together to provide a comprehensive Python ecosystem for a wide range of applications. 
 
-Built as a long-term engineering project under *AmundWorks*, **SENTINEL** serves as a testbed for future technologies in powered exoskeletons, robotics and wearable systems. 
+### UniForge CLI - A STEMP-Engineering Toolkit 
 
-With **SENTINEL**, you get:
-- A modular powered exoskeleton designed to enhance human strength, mobility and endurance.
-- An integrated helmet and HUD system for real-time information, navigation and communications.
-- A complete platform of sensors to ensure complete situational awareness.
-- A development platform for advanced robotics, propulsion experiments and life-support technologies.
-- **ICARUS**, AmundWorks' own operational and tactical assistant, in charge of ensuring proper and safe use of **SENTINEL**.
+**UniForge** is a Python-based CLI toolkit for performing calculations and simulations related to STEMP-engineering. It is built upon the UNIx Library from **AWPC** and provides a user-friendly interface for engineers, scientists, and students to explore and analyze various aspects of science, technology, engineering, mathematics, and physics. UniForge offers a wide range of features, including orbital mechanics calculations, trajectory simulations, and other tools that are essential for understanding the universe and the principles that govern it. Whether you're a student looking to learn more about space science or a professional engineer working on space-related projects, **UniForge** is designed to be a valuable resource for your work and studies.
 
-### **TALISMAN**
-***The Loyal Wingman Hexapod Robot.***
+### XO - MLP-based Neural Net Series
 
-*What is TALISMAN?*
+**XO** is a series of MLP-based neural networks designed for various applications, including image recognition, natural language processing, and more. The **XO** series is built using the latest advancements in machine learning and deep learning techniques, and is designed to be highly efficient and accurate. Each model in the **XO** series is trained on large datasets and optimized for specific tasks, making them suitable for a wide range of applications. Whether you're looking to build a powerful image recognition system or a sophisticated natural language processing model, the **XO** series has you covered with its state-of-the-art MLP-based neural networks.
 
-**TALISMAN** is an experimental battery-powered hexapod robotics platform developed as a testbed for autonomous robotics.  
 
-As the first robotics project going to be built under *AmundWorks*, **TALISMAN** serves as *AmundWorks'* intro to robotics, wether autonomous, semi-autonomous, or manual.
-
-With **TALISMAN**, you get:
-- A modular, semi-autonomous, all-enviroment wingman hexapod.
-- A sensor platform, complete with LiDAR, RaDAR, active illumination, thermal vision and regular RGB.
-- an Uplink with **SENTINEL**, enabling instant communications between the two platforms in every situation.
-
-### **PRODIGY**
-***The All-In-One Management Assistant for Student-Athletes.***
-
-*What is **Prodigy?***
-
-**PRODIGY** was made to make the lives of student athletes easier. It makes planning daily activities, schoolwork and training easier with flexible, customizable and potent management software. 
-
-With **PRODIGY**, you get:
-- A complete set of tools for planning, executing and documenting training, called **OLYMPUS**.
-- An equally complete set of tools for planning and executing schoolwork, called **ORION**.
-- A powerful management suite, made for workflow and ease of use, comprised of **OLYMPUS** and **ORION**.
