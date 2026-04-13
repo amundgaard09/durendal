@@ -26,7 +26,9 @@ jobs:
           pip install build
 
       - name: Build package
-        run: python -m build
+        run: |
+          cd awpc_package
+          python -m build
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
