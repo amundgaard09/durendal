@@ -26,17 +26,11 @@ jobs:
           pip install build
 
       - name: Build package
-        working-directory: awpc_package
+        working-directory: amundworks/awpc_package
         run: python -m build
-
-      - name: Debug full structure
-        run: |
-          pwd
-          ls -R
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
-          packages-dir: dist
-      
+          packages-dir: amundworks/awpc_package/dist
