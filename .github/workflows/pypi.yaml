@@ -24,6 +24,7 @@ jobs:
           pip install build twine
 
       - name: Build package
+        run: cd awpc_package
         run: python -m build
 
       - name: Publish to PyPI
