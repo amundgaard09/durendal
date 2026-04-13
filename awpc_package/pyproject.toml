@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "awpc"
-version = "0.1.5"
+version = "0.1.6"
 description = "AmundWorks Python Collective - STEMP Toolchain and Library for Python Projects"
 license = "MIT"
 license-files = ["LICENSE.txt"]
