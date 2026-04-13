@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: awpc
-Version: 0.1.4
+Version: 0.1.5
 Summary: AmundWorks Python Collective - STEMP Toolchain and Library for Python Projects
 Author-email: Simon Stordal Amundgård <nomispus@icloud.com>
 License-Expression: MIT
@@ -12,10 +12,23 @@ Requires-Dist: prompt-toolkit
 Requires-Dist: typing_extensions
 Dynamic: license-file
 
-
 # AWPC - AmundWorks Python Collective
 
-The AmundWorks Python Collective is the open-source collection of all python projects built under AmundWorks, either by collabarators or AmundWorks itself. It features subpackages like the UNIx collection, a comprehensive toolchain built for STEMP projects. AWPC is part of the dependencies for the UniForge CLI project.
+***Written, Created, Iterated, Evolved and Built by Simon Stordal Amundgård***
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
+
+## What is AWPC?
+
+The AmundWorks Python Collective is the open-source collection of all python projects built under AmundWorks, either by collabarators or AmundWorks itself. It features subpackages like the UNIx collection, a comprehensive toolchain built for STEMP projects. AWPC is part of the dependencies for the coming UniForge CLI project.
+
+## AmundWorks Open Source Philosophy
+
+The AmundWorks Python Collective is part of the AmundWorks Github Repository, and by extension, the AmundWorks Engineering Ecosystem.
+
+While this software and all other software under AmundWorks is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon the AmundWorks repository to remain open source under the MIT License or a similarly permissive license. Projects that follow this philosophy may be recognized as part of the official AmundWorks ecosystem.
+
+By doing so, you help support an open, collaborative engineering ecosystem.
 
 ## Install
 ```shell

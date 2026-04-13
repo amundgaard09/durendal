@@ -1,11 +1,12 @@
 
-venv/
-.venv/
-*.env
-.vscode
-*.md
-!README.md
+__pycache__/
 target/
 Archive/
-__pycache__/
+venv/
+.venv/
+.vscode/
+*.env
+*.md
 *.pyc
+!README.md
+
