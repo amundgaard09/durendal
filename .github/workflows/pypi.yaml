@@ -9,6 +9,9 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,16 +26,10 @@ jobs:
           pip install build
 
       - name: Build package
-        run: |
-          cd awpc_package
-          python -m build
-
-      - name: Move dist to root
-        run: |
-          mv awpc_package/dist dist
+        run: python -m build
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
-          packages-dir: awpc_package/dist
+          packages-dir: dist
