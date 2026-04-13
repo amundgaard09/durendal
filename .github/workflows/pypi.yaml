@@ -1,4 +1,4 @@
-name: Publish AWPC to PyPI
+name: Publish AWPC
 
 on:
   push:
@@ -24,11 +24,12 @@ jobs:
           pip install build twine
 
       - name: Build package
-        run: |
-          cd awpc_package
-          python -m build
+        working-directory: AWPC-Package
+        run: python -m build
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN_MAIN }}
+        working-directory: AWPC-Package
+        env:
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          twine upload dist/* -u __token__ -p $TWINE_PASSWORD
