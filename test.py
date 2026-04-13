@@ -1,3 +1,5 @@
-import awpc
+### PYTHON TESTING ENVIROMENT
 
-print(awpc.PrimeFactorize(100))
+import awpc
+from awpc.unimath import *
+from awpc.unicrypt import *

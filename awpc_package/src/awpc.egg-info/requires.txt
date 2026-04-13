@@ -1,2 +1,3 @@
 numpy
 prompt-toolkit
+typing_extensions

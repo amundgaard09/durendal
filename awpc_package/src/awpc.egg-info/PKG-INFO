@@ -3,17 +3,19 @@ Name: awpc
 Version: 0.1.2
 Summary: AmundWorks Python Collective - STEMP Toolchain and Library for Python Projects
 Author-email: Simon Stordal Amundgård <nomispus@icloud.com>
+License-Expression: MIT
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
-License-File: LICENSE
+License-File: LICENSE.txt
 Requires-Dist: numpy
 Requires-Dist: prompt-toolkit
+Requires-Dist: typing_extensions
 Dynamic: license-file
 
 
 # AWPC - AmundWorks Python Collective
 
-Engineering & Math Toolkit
+The AmundWorks Python Collective is the open-source collection of all python projects built under AmundWorks, either by collabarators or AmundWorks itself. It features subpackages like the UNIx collection, a comprehensive toolchain built for STEMP projects. AWPC is part of the dependencies for the UniForge CLI project.
 
 ## Install
 ```shell
@@ -23,5 +25,6 @@ pip install awpc
 ## Example
 ```python
 import awpc
-print(awpc.FibonacciList(10))
+print(awpc.PrimeFactorize(100))
 ```
+

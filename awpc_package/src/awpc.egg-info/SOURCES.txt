@@ -1,4 +1,4 @@
-LICENSE
+LICENSE.txt
 README.md
 pyproject.toml
 src/awpc/__init__.py
