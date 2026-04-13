@@ -24,8 +24,13 @@ jobs:
           pip install build twine
 
       - name: Build package
-        working-directory: AWPC-Package
-        run: python -m build
+        run: |
+          cd AWPC-Package
+          python -m build
+
+      - name: Move dist to root
+        run: |
+          mv AWPC-Package/dist dist
 
       - name: Publish to PyPI
         working-directory: AWPC-Package
