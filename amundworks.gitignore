@@ -1,0 +1,9 @@
+
+*.env
+.vscode
+*.md
+!README.md
+target/
+Archive/
+__pycache__/
+*.pyc

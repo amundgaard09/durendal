@@ -1,4 +1,0 @@
-numpy
-sympy
-prompt_toolkit
-typing_extensions

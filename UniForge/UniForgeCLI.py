@@ -2,9 +2,9 @@
 
 import os, math, json, numpy, shlex, inspect
 
-from AWPC.UniCrypt.unicrypt import *
-from AWPC.UniMath.unimath import *
-from AWPC.Utils.utils import *
+from awpc.unicrypt import *
+from awpc.unimath import *
+from awpc.utils import *
 
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import NestedCompleter

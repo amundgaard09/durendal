@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "awpc"
+version = "0.1.2"
+description = "AmundWorks Python Collective - STEMP Toolchain and Library for Python Projects"
+license = "MIT"
+license-files = ["LICENSE.txt"]
+authors = [
+    { name="Simon Stordal Amundgård", email="nomispus@icloud.com" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy", "prompt-toolkit"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

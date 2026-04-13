@@ -1,7 +1,0 @@
-
-*.env
-.vscode
-*.md
-!README.md
-target/
-Archive/

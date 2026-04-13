@@ -1,9 +1,0 @@
-Metadata-Version: 2.4
-Name: awpc
-Version: 0.1.0
-Summary: The AmundWorks Python Collective
-Requires-Python: >=3.10
-Requires-Dist: numpy
-Requires-Dist: sympy
-Requires-Dist: prompt_toolkit
-Requires-Dist: typing_extensions
