@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: amundworks
+Version: 0.1.0
+Summary: AmundWorks CLI tools
+Author: Simon Stordal Amundgård
+License-File: LICENSE.txt
+Requires-Dist: prompt_toolkit
+Requires-Dist: numpy
+Dynamic: license-file

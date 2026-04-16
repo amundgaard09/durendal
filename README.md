@@ -3,6 +3,8 @@
 ***Written, Created, Iterated, Evolved and Built by Simon Stordal Amundgård***
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
 
 *What is AmundWorks?* 
 
@@ -24,12 +26,18 @@ The **AmundWorks Python Collective** is the complete collection of all python pr
 
 **XO** is a series of MLP-based neural networks designed for various applications, including image recognition, natural language processing, and more. The **XO** series is built using the latest advancements in machine learning and deep learning techniques, and is designed to be highly efficient and accurate. Each model in the **XO** series is trained on large datasets and optimized for specific tasks, making them suitable for a wide range of applications. Whether you're looking to build a powerful image recognition system or a sophisticated natural language processing model, the **XO** series has you covered with its state-of-the-art MLP-based neural networks.
 
+### Vulcan - The All-In-One Life Operating System
+
+**Vulcan** is a personal, modular assistant designed as a “life operating system” for planning and decision-making across training, academics, and other aspects of life. It uses a simple intent-driven pipeline to process user input and route tasks to specialized tool modules, generating structured outputs like training schedules, study plans, and daily priorities. Built with scalability in mind, **Vulcan** starts as a lightweight text-based system but is designed to evolve into a fully integrated GUI and voice-enabled assistant tailored to optimize performance, learning, and long-term progression. Vulcan is built upon **OpenAI Whisper**, **AWPC**, and other smaller projects under **AmundWorks**.
+
 ## AmundWorks Open Source Philosophy
 
 The AmundWorks GitHub Repository is part of the AmundWorks Engineering Ecosystem.
 
-While this software is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon AmundWorks repositories to remain open source under the MIT License or a similarly permissive license. Projects that follow this philosophy may be recognized as part of the official AmundWorks ecosystem.
+While this software is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon AmundWorks repositories to remain open source under the MIT License, GNU License or something similarly permissive. Projects that follow this philosophy may be recognized as part of the official AmundWorks ecosystem.
 
 By doing so, you help support an open, collaborative engineering ecosystem.
+
+### ***AD ASTRA PER ASPERA***
 
 

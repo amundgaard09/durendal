@@ -2,9 +2,9 @@
 
 import os, math, json, numpy, shlex, inspect
 
-from awpc.unicrypt import *
-from awpc.unimath import *
-from awpc.utils import *
+from awpc.unimath.unimath import *
+from awpc.unicrypt.unicrypt import *
+from awpc.utils.utils import *
 
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import NestedCompleter
@@ -551,6 +551,7 @@ MAINARGMAP:    dict[str, dict[str, set]] = {
         "linearzero": {2},
         "quadraticvertex": {3},
         "quadraticnumroots": {3},
+        "cubicevaluation" : {5},
         "evaluatequadratic": {4},
         "lineintersection": {4},
         "distance": {4},
@@ -644,6 +645,7 @@ MAINCMDMAP:    dict[str, dict[str, callable]] = {
         "quadraticvertex": QuadraticVertex,
         "quadraticnumroots": QuadraticNumRoots,
         "quadraticevaluation": QuadraticEvaluation,
+        "cubicevaluation" : CubicEvaluation,
         "lineintersection": LineIntersection,
         "distance": Distance,
         "derivative": Derivative,
