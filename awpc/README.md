@@ -3,6 +3,7 @@
 ***Written, Created, Iterated, Evolved and Built by Simon Stordal Amundgård***
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 ## What is AWPC?
 
@@ -23,7 +24,12 @@ pip install awpc
 
 ## Example
 ```python
-import awpc
-print(awpc.PrimeFactorize(100))
+from awpc.unimath.unimath import *
+print(Pythagoras(3, 4, None)) # From unimath
+```
+Result:
+
+```shell
+>>> A: 3, B: 4, C: 5.0
 ```
 

@@ -4,21 +4,17 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 int main() {
     
     int Difficulty;
     int GuessCount = 0;
     int IncorrectGuessCount = 0;
-
     bool GameComplete = false;
-
     char GuessedLetter;
 
-    string GuessedWord;
-    string ActualWord;
-    unordered_map<int, vector<string>> WordDatabase = {
+    std::string GuessedWord;
+    std::string ActualWord;
+    std::unordered_map<int, std::vector<std::string>> WordDatabase = {
         {3, {"cat", "dog", "sun", "hat", "run", "big", "cup"}},
         {4, {"tree", "frog", "jump", "wind", "fire", "lamp", "duck"}},
         {5, {"apple", "brick", "cloud", "flame", "grape", "piano", "stone"}},
@@ -26,49 +22,49 @@ int main() {
         {7, {"battery", "blanket", "captain", "dolphin", "emperor", "fantasy", "lantern"}},
         {8, {"aircraft", "backpack", "calendar", "dinosaur", "elephant", "firework", "goldfish"}},
         {9, {"adventure", "bookshelf", "chocolate", "dandelion", "evergreen", "flagstone", "grassland"}},
-        {10, {"strawberry", "accomplish", "birthplace", "changeable", "discretion", "earthquake", "floorboard"}}
+        {10,{"strawberry", "accomplish", "birthplace", "changeable", "discretion", "earthquake", "floorboard"}}
     };
 
-    cout << "Welcome to Hangman!\n";
-    cout << "Select the Word Length (3 - 10): ";
-    cin >> Difficulty;
+    std::cout << "Welcome to Hangman!" << std::endl;
+    std::cout << "Select the Word Length (3 - 10): " << std::endl;
+    std::cin >> Difficulty;
 
-    string GuessedLetters;
-    vector<string>& WordList = WordDatabase[Difficulty];
+    std::string GuessedLetters;
+    std::vector<std::string>& WordList = WordDatabase[Difficulty];
     ActualWord = WordList[rand() % WordList.size()];
-    string GuessWord(ActualWord.length(), '_');
+    std::string GuessWord(ActualWord.length(), '_');
 
     while (!GameComplete) {
-        cout << "Input your guess letter: ";
-        cin >> GuessedLetter;
+        std::cout << "Input your guess letter: " << std::endl;
+        std::cin >> GuessedLetter;
 
         GuessedLetters += GuessedLetter;
 
-        if (ActualWord.find(GuessedLetter) != string::npos) {
+        if (ActualWord.find(GuessedLetter) != std::string::npos) {
             for (int i = 0; i < ActualWord.length(); i++) {
                 if (ActualWord[i] == GuessedLetter) {
                     GuessWord[i] = GuessedLetter;
                 }
             }
 
-            cout << "Correct Guess!\n";
-            cout << "Word: " << GuessWord << "\n";
-            cout << "Guessed Letters: " << GuessedLetters << "\n";
+            std::cout << "Correct Guess!"  << std::endl;
+            std::cout << "Word: " << GuessWord << std::endl;
+            std::cout << "Guessed Letters: " << GuessedLetters << std::endl;
 
         } else {
             IncorrectGuessCount += 1;
-            cout << "Incorrect Guess!\n";
-            cout << "Word: " << GuessWord << "\n";
-            cout << "Guessed Letters: " << GuessedLetters << "\n";
+            std::cout << "Incorrect Guess!"  << std::endl;
+            std::cout << "Word: " << GuessWord << std::endl;
+            std::cout << "Guessed Letters: " << GuessedLetters << std::endl;
         }
 
         if (GuessWord == ActualWord && IncorrectGuessCount < 7) {
-            cout << "You won! Word was: " << ActualWord;
+            std::cout << "You won! Word was: " << ActualWord << std::endl;
             GameComplete = true;
         }
 
         if (IncorrectGuessCount > 6) {
-            cout << "Game Over!\n";
+            std::cout << "Game Over!" << std::endl;
             GameComplete = true;
         }
 

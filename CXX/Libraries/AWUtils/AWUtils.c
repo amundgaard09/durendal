@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include "../AWList/AWList.h"
 
+// Check if `Number` is prime 
 bool IsPrime(int Number) {
     if (Number <= 1) {
         return false;
@@ -17,20 +19,47 @@ bool IsPrime(int Number) {
     return true;
 }
 
-uint64_t factorial(int i) {
-    if (i == 0 || i == 1) {
+// Return a `DLList` constisting of the prime factors of `Number`
+DLList PrimeFactorize(int Number) {
+    DLList factors;
+    InitList(&factors);
+
+    if (Number <= 1) return factors;
+
+    int divisor = 2;
+
+    while (divisor * divisor <= Number) {
+        while (Number % divisor == 0) {
+            InsertAtBack(&factors, divisor);
+            Number /= divisor;
+        }
+        divisor++;
+    }
+
+    if (Number > 1) {
+        InsertAtBack(&factors, Number);
+    }
+
+    return factors;
+}
+
+// Return the factorial of `I`
+uint64_t Factorial(int I) {
+    if (I == 0 || I == 1) {
         return 1;
     } else {
-        return (i * factorial(i - 1));
+        return (I * Factorial(I - 1));
     }
 }
-uint64_t fibonacci(int i) {
-    if (i==0) {
+
+// Return the fibonacci number of `I`
+uint64_t Fibonacci(int I) {
+    if (I==0) {
         return 0;
-    } else if (i==1) {
+    } else if (I==1) {
         return 1;
     } else {
-    return fibonacci(i-1) + fibonacci(i-2);
+    return Fibonacci(I-1) + Fibonacci(I-2);
     }
 }
 

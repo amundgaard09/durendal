@@ -1,4 +1,4 @@
-"""The AWPC UNIx UniCrypt module. This module contains all the encryption and decryption functions of the AWPC library, such as binary, ceasar, vigenere, railfence and OTP encryption and decryption."""
+"""The `AWPC` `UNIx` `UniCrypt` module. This module contains all the encryption and decryption functions of the `AWPC` library, such as binary, ceasar, vigenere, railfence and OTP encryption and decryption."""
 
 def BinaryEncrypt(InputString: str) -> str:
     RawBinary = ''.join(format(ord(i), '08b') for i in InputString)

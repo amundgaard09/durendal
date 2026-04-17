@@ -1,12 +1,12 @@
 """
-The UniMath function library for the AWPC library. 
+The UniMath function library for the `AWPC` library. 
 This library contains functions for various mathematical calculations, including geometry, algebra, calculus, and more. The functions are designed to be easy to use and understand, with clear input and output formats. 
 The library is still in development and may contain some unstable functions that are not yet fully tested.
 """
 
-import math, time
+import math, time, sympy
+import matplotlib.pyplot as mpl
 
-from sympy import symbols, sympify, solve, diff, Eq
 from typing import Literal
 from awpc.utils.utils import *
 
@@ -43,6 +43,17 @@ class ContinuousPIDController:
         self.prev_time = now
 
         return P + I + D  # Control output u(t)
+
+def _plotXY(XVals: list[float], YVals: list[float]) -> None:
+    """Initialize a plot where `x[idx]` and `y[idx]` are coordinate pairs of a function."""
+    mpl.plot(XVals, YVals, color='red', linestyle='--')
+    mpl.xlabel('X')
+    mpl.ylabel('Y')
+    mpl.axhline(0, color='black')
+    mpl.axvline(0, color='black')
+    mpl.show()
+    
+    return
 
 def TriExtrapolate(a: float, b: float, c: float, A: float | None = None, B: float | None = None, C: float | None = None) -> str:
     """Extrapolate the sides of a triangle from the AAAS case (3x Angle + 1x Side)"""
@@ -93,9 +104,9 @@ def SineRule(
     Sine Rule
 
     Formula:
-    A / sin(a) = B / sin(b) = C / sin(c)
+    `A / sin(a) = B / sin(b) = C / sin(c)`
 
-    Return Format: [Angles:[A, B, C], Sides:[A, B, C]]
+    Return Format: [Angles: [A, B, C], Sides: [A, B, C]]
     """
     ### VERY UNSTABLE!
     angles_rad = []
@@ -146,9 +157,12 @@ def CosineRule(LengthA: float, LengthB: float, AngleA: float) -> float:
     return math.sqrt(LengthA ** 2 + LengthB ** 2 - ((2 * LengthA * LengthB) * math.cos(math.radians(AngleA))))
 def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[float]:
     """ 
-    Returns a tuple of the three angles in degrees, in the order of AngleA, AngleB, AngleC 
+    Returns a tuple of the three angles in degrees, in the order of AngleA, AngleB, and AngleC.
     
-    Formula: AngleA = arccos((B^2 + C^2 - A^2) / (2BC))
+    Formula::
+
+        AngleA = math.arccos((B**2 + C**2 - A**2) / (2 * B * C))
+        
     """
 
     return (
@@ -162,14 +176,11 @@ def SASArea(LengthA: float, LengthB: float, AngleC: float) -> float:
 def HeronsFormula(LengthA: float, LengthB: float, LengthC: float) -> float:
     """
     Returns the area of a triangle from the side lengths.
+    Formula::
 
-    Args:
-        LenghtA (float):
-        LenghtB (float):
-        LenghtC (float):
+        S: float = (LengthA + LengthB + LengthC) / 2
+        Area: float = math.sqrt(S * (S - LengthA) * (S - LengthB) * (S - LengthC))
 
-    Returns:
-        Area (float):
     """
     S = (LengthA + LengthB + LengthC) / 2
     return math.sqrt(S * (S - LengthA) * (S - LengthB) * (S - LengthC))
@@ -182,38 +193,38 @@ def R2D(Radians: float) -> float:
     return Radians / math.pi * 180
 
 def Slope(x1: float, y1: float, x2: float, y2: float) -> float:
-    """Returns the slope of a line from two points (x1, y1) and (x2, y2)"""
+    """Returns the slope of a line from two points `(x1, y1)` and `(x2, y2)`"""
     return f"slope = {(y2 - y1) / (x2 - x1)}"
 def Distance(x1: float, y1: float, x2: float, y2: float) -> float:
-    """Return the distance between two points (x1, y1) and (x2, y2)"""
+    """Return the distance between two points `(x1, y1)` and `(x2, y2)`"""
     return math.sqrt((x2-x1)**2 + (y2-y1)**2)
 def Derivative(Function: str, x: float | None = None, h: float = 1e-5) -> float:
     """Returns f'(x) if x is not given, else returns the numerical derivative of the function at the given x-value using the definition of the derivative."""
-    x_sym = symbols('x')
-    f = sympify(Function)
+    x_sym = sympy.symbols('x')
+    f = sympy.sympify(Function)
     if x is None:
-        return diff(f, x_sym)
+        return sympy.diff(f, x_sym)
     else:
         return (f.subs(x_sym, x + h) - f.subs(x_sym, x - h)) / (2 * h)
 
 def LineIntersection(m1: float, b1: float, m2: float, b2: float) -> str:
-    """"Return the point of intersection of two lines in the form of (x, y)"""
+    """"Return the point of intersection of two lines in the form of `(x, y)`"""
     x = (b2 - b1) / (m1 - m2)
     y = m1*x + b1
     return f"Intersection Point: ({x:.3f}, {y:.3f})"
 def LineFromPoints(x1: float, y1: float, x2: float, y2: float) -> str:
-    """Returns the equation of a line in the form of y = mx + b from two points (x1, y1) and (x2, y2)"""
+    """Returns the equation of a line in the form of `y = mx + b` from two points `(x1, y1)` and `(x2, y2)`."""
     m = (y2 - y1) / (x2 - x1)
     b = y1 - m * x1
     return f"y = {m}x + {b}"
 def LinearZero(m: float, b: float) -> float:
-    """Find the x-value where the line y = mx + b crosses the x-axis"""
+    """Find the x-value where the line `y = mx + b` crosses the x-axis"""
     return -b / m
 def LinearEvaluation(m: float, b: float, x: float) -> str:
     return f"{m}x + {b} = {m*x + b}"    
 
 def QuadraticVertex(a: float, b: float, c: float) -> str:
-    """Returns the vertex (aka the minimum/maximum point) of a quadratic function in the form of (x, y)"""
+    """Returns the vertex (aka the minimum/maximum point) of a quadratic function in the form of `(x, y)`."""
     xv = -b / (2*a)
     yv = a*xv**2 + b*xv + c
 
@@ -240,21 +251,37 @@ def QuadraticSolutions(A: float, B: float, C: float) -> str:
 def QuadraticEvaluation(a: float, b: float, c: float, x: float) -> str:
     return f"{a}x^2 + {b}x + {c} = {a*x**2 + b*x + c}"
 
-def CubicEvaluation(a: float, b: float, c: float, d: float, x: float) -> str:
-    return f"{a}x^3 + {b}x^2 + {c}x^+ {d} = {a*x**3 + b*x**2 + c*x + d}"
+def CubicEvaluation(a: float, b: float, c: float, d: float, x: float) -> tuple[str, float]:
+    """Cubic Evaluation function"""
+    result = a*x**3 + b*x**2 + c*x + d
+    return (f"f({x}) = {a}x^3 + {b}x^2 + {c}x^+ {d} = {result}", result)
+def CubicEvaluationBruteForce(a: float, b: float, c: float, d: float, LowerBound: int, UpperBound: int) -> str:
+    """Brute Force evaluation of a third-degree polynomial. The function checks all evaluations from `LowerBound` to `UpperBound` and highlights roots as green, as well as plotting the given function."""
+    xvals, yvals, roots = [], [], []
+    
+    for x in range(int(LowerBound), int(UpperBound+1)):
+        string, result = CubicEvaluation(a, b, c, d, x)
+        xvals.append(x)
+        yvals.append(result)
+        roots.append(x) if result == 0 else None
+        print(ColorText(string, 'green' if result == 0 else 'red'))
+        
+    print(f"Roots: {roots}")
+    _plotXY(xvals, yvals)
+    return
 
 ### UNSTABLE - ALPHA - DO NOT USE
 def TangentFormula(Function1: str, Function2: str) -> list[str]:
     """Returns the tangent(s) between two functions by finding the points where the derivatives are equal and then calculating the slope of the tangent line at those points."""
-    x = symbols('x')
-    f1 = sympify(Function1)
-    f2 = sympify(Function2)
+    x = sympy.symbols('x')
+    f1 = sympy.sympify(Function1)
+    f2 = sympy.sympify(Function2)
 
-    df1 = diff(f1, x)
-    df2 = diff(f2, x)
+    df1 = sympy.diff(f1, x)
+    df2 = sympy.diff(f2, x)
 
-    slope_eq = Eq(df1, df2)
-    tangent_points = solve(slope_eq, x)
+    slope_eq = sympy.Eq(df1, df2)
+    tangent_points = sympy.solve(slope_eq, x)
 
     tangents = []
     for idx, point in enumerate(tangent_points, 1):

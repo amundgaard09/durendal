@@ -1,21 +1,23 @@
-"""UniForge Engineering Assistant CLI - v1.1.4-beta"""
+"""UniForge Engineering Assistant CLI - v1.1.5-beta"""
 
 import os, math, json, numpy, shlex, inspect
 
 from awpc.unimath.unimath import *
 from awpc.unicrypt.unicrypt import *
 from awpc.utils.utils import *
+from awpc import moduleTools as mt
 
+from types import MappingProxyType
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import NestedCompleter
 
-MAINVersion = f"UniForge CLI v1.1.4-beta"
-PIDVersion = f"v.0.0.1.alpha"
-HOHMANNVersion= f"v.0.0.1.alpha"
+MAINVersion = "UniForge CLI v1.1.5-beta"
+PIDVersion = "v.0.0.1.alpha"
+HOHMANNVersion= "v.0.0.1.alpha"
 
 ### CONSTANTS
 
-BANDS = {
+BANDS = MappingProxyType({
     "black":  0,
     "brown":  1,
     "red":    2,
@@ -26,8 +28,8 @@ BANDS = {
     "violet": 7,
     "gray":   8,
     "white":  9,
-}
-MULTIPLIERS = {
+})
+MULTIPLIERS = MappingProxyType({
     "black":  1,
     "brown":  10,
     "red":    1e2,
@@ -40,8 +42,8 @@ MULTIPLIERS = {
     "white":  1e9,
     "gold":   0.1,
     "silver": 0.01,
-}
-TOLERANCES = {
+})
+TOLERANCES = MappingProxyType({
     "brown":  1,
     "red":    2,
     "green":  0.5,
@@ -50,7 +52,7 @@ TOLERANCES = {
     "gray":   0.05,
     "gold":   5,
     "silver": 10,
-}
+})
 
 ### ERRORS
 
@@ -130,8 +132,7 @@ def Tokenize(RawCommandString: str) -> list[str]:
 def Dispatcher(RawCommandString: str, CommandMap: dict[str, dict[str, callable]], ArgMap: dict[str, dict[str, set]]) -> callable:
     """The main dispatcher function that takes in a raw command string, tokenizes it, verifies the tokens, validates the arguments and dispatches the command to the correct function."""
     Tokens = Tokenize(RawCommandString) 
-    VerifyTokens(Tokens, CommandMap)
-    ValidateArgs(Tokens, CommandMap, ArgMap)
+    ValidateCommand(Tokens, CommandMap, ArgMap)
     Module, Command, RawArgs = Tokens[0], Tokens[1], Tokens[2:]
     Args = []
     for arg in RawArgs:
@@ -144,26 +145,24 @@ def Dispatcher(RawCommandString: str, CommandMap: dict[str, dict[str, callable]]
                 Args.append(arg)
             
     return CommandMap[Module][Command](*Args)
-def VerifyTokens(TokenList: list, CommandMap: dict) -> bool:
-    """Verify validity of tokens before dispatching."""
-    if not TokenList: 
+def ValidateCommand(tokens: list, cmd_map: dict, arg_map: dict):
+    if not tokens:
         raise EmptyTokenList
-    elif TokenList[0] not in CommandMap:
-        raise UnknownModule(TokenList[0])
-    elif len(TokenList) < 2:
-        raise MissingSubCommand(TokenList[0])
-    elif TokenList[1] not in CommandMap[TokenList[0]]:
-        raise UnknownSubCommand(TokenList[0], TokenList[1])
-    else:
-        return True
-def ValidateArgs(TokenList: list, CommandMap: dict, ArgMap: dict) -> bool:
-    """Validate that the arguments passed into a function are of the correct length."""
-    Module, Command, Args = TokenList[0], TokenList[1], TokenList[2:]
-    if len(Args) not in ArgMap[Module][Command]:
-        raise IncorrectArgumentCount(CommandMap[Module][Command], len(Args), ArgMap[Module][Command])
-    else:
-        return True 
 
+    module = tokens[0]
+    if module not in cmd_map:
+        raise UnknownModule(module)
+
+    if len(tokens) < 2:
+        raise MissingSubCommand(module)
+
+    command = tokens[1]
+    if command not in cmd_map[module]:
+        raise UnknownSubCommand(module, command)
+
+    args = tokens[2:]
+    if len(args) not in arg_map[module][command]:
+        raise IncorrectArgumentCount(cmd_map[module][command], len(args), arg_map[module][command])
 def _exitEnviroment() -> None:
     """Exit the current environment and return to MAINEnv."""
     raise ExitEnvironmentSignal
@@ -173,10 +172,12 @@ def _clearTerminal() -> None:
 ### UNIPOWER
 
 def OhmsLaw(V: float | None = None, I: float | None = None, R: float | None = None) -> str:
-    """Ohms Law calculation for Voltage, Current, and Resistivity.
-    V = I * R
-    I = V / R
-    R = V / I
+    """
+    Ohms Law calculation for Voltage, Current, and Resistivity. \n
+    Formulas:
+    >>> V = I * R \n
+    >>> I = V / R \n 
+    >>> R = V / I \n 
     """
     
     if V is not None: V = float(V)
@@ -294,28 +295,26 @@ def TotalESR(caps: list[tuple], ConnectionType: Literal["parallel", "series"]) -
     """Calculates total ESR of a list of capacitors based on their connection type. Caps are in the format (capacitance, voltage, esr) for now."""
     if ConnectionType == "series":
         return sum(cap[2] for cap in caps)
+    
     elif ConnectionType == "parallel":
         try:
             return 1 / sum(1 / cap[2] for cap in caps if cap[2] != 0)
         except ZeroDivisionError:
             return 0  
+        
     else:
         raise ValueError("Connection type must be 'parallel' or 'series'")
 def TotalCapacitance(caps: list[tuple], ConnectionType: Literal["parallel", "series"]) -> str: ### caps (capacitance, voltage, esr) (for now)
     """Calculates total capacitance, voltage limit and ESR of a list of capacitors based on their connection type."""
         
     if ConnectionType == "parallel":
-        totalCapacitance = 0
-        for cap in caps:
-            totalCapacitance += cap[0]
+        totalCapacitance = sum(cap[0] for cap in caps)
         VoltLimit = min([cap[1] for cap in caps])
         
     elif ConnectionType == "series":
-        RawTotalCapacitance = 0
-        for cap in caps:
-            RawTotalCapacitance += ((cap[0])**(-1))
-        totalCapacitance = RawTotalCapacitance**(-1)
+        totalCapacitance = 1 / sum(1/cap[0] for cap in caps)
         VoltLimit = sum([cap[1] for cap in caps])   
+        
     else:
         raise ValueError("Connection type must be 'parallel' or 'series'")
 
@@ -324,7 +323,7 @@ def TotalCapacitance(caps: list[tuple], ConnectionType: Literal["parallel", "ser
 ### UNIMAKE
 
 def Torque(MomentArmDistance: float, Force: float) -> Quantity:
-    """Returns torque in newtons from moment arm distance and force."""
+    """Returns a `torque` quantity in newtonmeters from moment arm distance in meters and force in newtons."""
     return Quantity((MomentArmDistance * Force), UNITS["Nm"])
 def GearRatio(DrivingGearTeethCount: int, DrivenGearTeethCount: int) -> str:
     """Returns the gear ratio from the driving gear's teeth count and the driven gear's teeth count."""
@@ -335,6 +334,7 @@ def GearRatio(DrivingGearTeethCount: int, DrivenGearTeethCount: int) -> str:
         return f"{Ratio} - {ColorText('Speed+', 'green')} - {ColorText('Torque-', 'red')}"
     else:
         return f"{Ratio} - Same Speed - Same Torque"
+
 def AngularVelocityR(RPM: float) -> Quantity:
     """Returns angular velocity from RPM in radians/s"""
     return Quantity((RPM * math.pi / 30), UNITS["Rad"])
@@ -345,7 +345,7 @@ def AngularVelocityD(RPM: float) -> Quantity:
 def KineticEnergy(Mass: float, Velocity: float) -> Quantity:
     """Returns the kinetic energy from mass in kgs and velocity in m/s"""
     return Quantity((0.5 * Mass * Velocity**2), UNITS["J"])
-def PotentialEnergy(Mass: float, Height: float, Gravity: float | None = EARTH_G) -> Quantity:
+def PotentialEnergy(Mass: float, Height: float, Gravity: float | None = EARTH_G.value) -> Quantity:
     """Returns the potential energy of a mass. Gravity is defaulted to 9.8m /s^2"""
     return Quantity(Mass * Gravity * Height, UNITS["J"])
 
@@ -463,7 +463,7 @@ def _mainEnv() -> None:
                 print(Result)
             
         except Exception as e:
-            print(e.__str__())
+            print(e)
 def _pidEnv() -> None:
     _clearTerminal()
     print(f"ORION PID Testing Environment {PIDVersion}")
@@ -479,7 +479,7 @@ def _pidEnv() -> None:
             print(f"ORION Environment {MAINVersion}")
             break
         except Exception as e:
-            print(e.__str__())
+            print(e)
 def _hohmannEnv() -> None:
     _clearTerminal()
     print(f"ORION Hohmann Calculation & Visualization Environment {HOHMANNVersion}")
@@ -495,7 +495,7 @@ def _hohmannEnv() -> None:
             print(MAINVersion)
             break
         except Exception as e:
-            print(e.__str__())
+            print(e)
 
 ### MAPS
 
@@ -535,47 +535,13 @@ MAINARGMAP:    dict[str, dict[str, set]] = {
         "orbitalperiod": {3},
         "einsteinmassenergyequivalence": {1},
     },
-    "unimath": {
-        "triextrapolate": {4, 6},
-        "quadratic": {3},
-        "pythagoras": {2, 3},
-        "D2R": {1},
-        "R2D": {1},
-        "sinerule": {7},
-        "cosinerule": {3},
-        "reversecosinerule": {3},
-        "sasarea": {3},
-        "herons": {3},
-        "slope": {4},
-        "linefrompoints": {4},
-        "linearzero": {2},
-        "quadraticvertex": {3},
-        "quadraticnumroots": {3},
-        "cubicevaluation" : {5},
-        "evaluatequadratic": {4},
-        "lineintersection": {4},
-        "distance": {4},
-        "derivative": {1, 2},
-        "tangentformula": {2},
-        "convert": {3},
-    },
+    "unimath": mt.UNIMATHARGMAP,
     "unialgo": {
         "fibonaccilist": {1},
         "fibonacciinteger": {1},
         "lovelacesalgorithm": {6},
     },
-    "unicrypt": {
-        "binaryencrypt": {1},
-        "binarydecrypt": {1},
-        "ceasarencrypt": {2},
-        "ceasardecrypt": {2},
-        "vigenereencrypt": {2},
-        "vigeneredecrypt": {2},
-        "railfenceencrypt": {2},
-        "railfencedecrypt": {2},
-        "otpencrypt": {2},
-        "otpdecrypt": {2},
-    },
+    "unicrypt": mt.UNICRYPTARGMAP,
     "enterenv": {
         "PIDEnv": {0},
         "HohmannEnv": {0},
@@ -628,47 +594,13 @@ MAINCMDMAP:    dict[str, dict[str, callable]] = {
         "orbitalperiod": OrbitalPeriod,
         "einsteinmassenergyequivalence": EinsteinMassEnergyEquivalence,
     },
-    "unimath": {
-        "triextrapolate": TriExtrapolate,
-        "pythagoras": Pythagoras,
-        "D2R": D2R,
-        "R2D": R2D,
-        "sinerule": SineRule,
-        "cosinerule": CosineRule,
-        "reversecosinerule": ReverseCosineRule,
-        "sasarea": SASArea,
-        "herons": HeronsFormula,
-        "slope": Slope,
-        "linefrompoints": LineFromPoints,
-        "linearzero": LinearZero,
-        "quadraticsolutions": QuadraticSolutions,
-        "quadraticvertex": QuadraticVertex,
-        "quadraticnumroots": QuadraticNumRoots,
-        "quadraticevaluation": QuadraticEvaluation,
-        "cubicevaluation" : CubicEvaluation,
-        "lineintersection": LineIntersection,
-        "distance": Distance,
-        "derivative": Derivative,
-        "tangentformula": TangentFormula,
-        "convert": CLIConvert,
-    },
+    "unimath": mt.UNIMATHCALLMAP,
     "unialgo": {
         "fibonaccilist": FibonacciList,
         "fibonacciinteger": FibonacciInteger,
         "lovelacesalgorithm": LovelacesAlgorithm,
     },
-    "unicrypt": {
-        "binaryencrypt": BinaryEncrypt,
-        "binarydecrypt": BinaryDecrypt,
-        "ceasarencrypt": CeasarEncrypt,
-        "ceasardecrypt": CeasarDecrypt,
-        "vigenereencrypt": VigenereEncrypt,
-        "vigeneredecrypt": VigenereDecrypt,
-        "railfenceencrypt": RailfenceEncrypt,
-        "railfencedecrypt": RailfenceDecrypt,
-        "otpencrypt": OTPEncrypt,
-        "otpdecrypt": OTPDecrypt,
-    },
+    "unicrypt":  mt.UNICRYPTCALLMAP,
     "enterenv": {
         "PIDEnv": _pidEnv,
         "HohmannEnv": _hohmannEnv,
@@ -694,8 +626,7 @@ def GenerateCompleter(Map: dict[str, dict]) -> NestedCompleter:
         CompleterDict[Module] = {}
         for SubcommandName, CommandFunction in Subcommand.items():
             Signature = inspect.signature(CommandFunction)
-            ParameterNames = list(Signature.parameters.keys())
-            CompleterDict[Module][SubcommandName] = {Parameter: None for Parameter in ParameterNames}
+            CompleterDict[Module][SubcommandName] = {param: None for param in Signature.parameters}
     
     return NestedCompleter.from_nested_dict(CompleterDict)
 

@@ -12,7 +12,9 @@ The **AmundWorks GitHub repository** is an open-source collection of all project
 
 ## PROJECTS
 
-This is the list of projects currently being built under Amundworks.
+This is the list of projects built / currently being built under Amundworks. This list is subject to change. Archived projects can be found below this list. 
+
+*Extensive documentation can be found for each of the projects in their respective Juypiter Notebooks.*
 
 ### AWPC - AmundWorks Python Collective
 
@@ -28,13 +30,25 @@ The **AmundWorks Python Collective** is the complete collection of all python pr
 
 ### Vulcan - The All-In-One Life Operating System
 
-**Vulcan** is a personal, modular assistant designed as a “life operating system” for planning and decision-making across training, academics, and other aspects of life. It uses a simple intent-driven pipeline to process user input and route tasks to specialized tool modules, generating structured outputs like training schedules, study plans, and daily priorities. Built with scalability in mind, **Vulcan** starts as a lightweight text-based system but is designed to evolve into a fully integrated GUI and voice-enabled assistant tailored to optimize performance, learning, and long-term progression. Vulcan is built upon **OpenAI Whisper**, **AWPC**, and other smaller projects under **AmundWorks**.
+**Vulcan** is a personal, modular assistant designed as a “life operating system” for planning and decision-making across training, academics, and other aspects of life. Combined with a GUI, it uses a simple intent-driven pipeline to process user input and route tasks to specialized tool modules, generating structured outputs like training schedules, study plans, and daily priorities. Built with scalability in mind, **Vulcan** starts as a lightweight text-based system but is designed to evolve into a fully integrated GUI and voice-enabled assistant tailored to optimize performance, learning, and long-term progression. Vulcan is built upon **OpenAI Whisper**, **AWPC**, and other smaller projects under **AmundWorks**.
+
+## ARCHIVED PROJECTS
+
+This is the list of old projects no longer being maintained / further developed by AmundWorks. Projects may be restarted again at any time.
+
+### DYSONSPHERE - Math and Cryptography toolchain
+
+**DysonSphere** was designed to be a useful tool to help with general mathematics, cryptography and other tasks. **DysonSphere** was abandoned but partially replaced by its successor **UniForge** as part of the **AWPC** Ecosystem.
+
+### TANGO I - Tactical Aerospace Networked Global Operator
+
+**TANGO I** was the first iteration of what would be the **TANGO** Series. As the title suggests, **TANGO** was supposed to be a useful program for mission planning, featuring a complete suite of tools for communications, navigation, and other neccesseties. **TANGO** was and still is abandoned, but a successor may be built in the future.
 
 ## AmundWorks Open Source Philosophy
 
-The AmundWorks GitHub Repository is part of the AmundWorks Engineering Ecosystem.
+The AmundWorks GitHub Repository is part of the software branch of the AmundWorks Engineering Ecosystem.
 
-While this software is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon AmundWorks repositories to remain open source under the MIT License, GNU License or something similarly permissive. Projects that follow this philosophy may be recognized as part of the official AmundWorks ecosystem.
+While this software is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon AmundWorks repositories to remain open source under the MIT License or something similarly permissive. Projects that follow this philosophy may be recognized as part of the official AmundWorks ecosystem.
 
 By doing so, you help support an open, collaborative engineering ecosystem.
 

@@ -1,4 +1,4 @@
-"""The AWPC dependencies module. This module contains all the dependencies of the AWPC library, such as custom exceptions, constants and other utilities."""
+"""The `AWPC` dependencies module. This module contains all the dependencies of the `AWPC` library, such as custom exceptions, constants and other utilities."""
 
 class ImpossibleTriangleError(Exception):
     """Raise when the sum of the angles of a triangle is not 180 degrees, a mathematical impossibility."""
@@ -23,7 +23,7 @@ ANSI_COLORS = {
     "gold":   "\033[38;5;178m",
     "silver": "\033[38;5;7m",
 } 
-"""The ANSI escape codes for the colors used in the UNIx library. The keys are the color names and the values are the corresponding ANSI escape codes."""
+"""The `ANSI` escape codes for the colors used in the `UNIx` library. The keys are the color names and the values are the corresponding `ANSI` escape codes."""
 
 class Unit:
     """Base class for the unit system - unifying units of measurement along with the dimension of measurement (e.g. length, weight, etc.)"""
@@ -130,8 +130,8 @@ def Convert(GivenQuantity: Quantity, TargetUnit: Unit) -> Quantity:
     
     return Quantity(GivenQuantity.value * CONVERSION_TABLE[key], TargetUnit)
 def ColorText(Text: str, Color: str) -> str:
-    """Returns the given text in the given color using ANSI escape codes. If the color is not found, it returns the text without coloring."""
-    Text = str(Text) # Ensure text is a string
+    """Returns the given text in the given color using `ANSI` escape codes. If the color is not found, it returns the text without coloring."""
+    Text = str(Text)
     ansi = ANSI_COLORS.get(Color.lower(), '\033[0m')
     reset = '\033[0m'
     return ansi + Text + reset

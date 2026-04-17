@@ -1,8 +1,10 @@
-"""OLYMPUS INTERFACE CORE \n
+"""
+OLYMPUS INTERFACE CORE \n
 The Olympus Interface is a tool for elite athletes to log their training, recovery, and overall well-being in a structured way. 
 It provides a comprehensive overview of daily activities, training sessions, and upcoming events, 
 allowing athletes to track their progress and make informed decisions about their training and recovery strategies. 
-The interface is designed to be user-friendly and efficient, enabling athletes to quickly log their data and access"""
+The interface is designed to be user-friendly and efficient, enabling athletes to quickly log their data and access
+"""
 
 ### ------------------------------------------------------------------ ###
 
@@ -26,18 +28,18 @@ import sys, json, time, datetime, questionary
 from typing import Literal
 from pathlib import Path
 
-LOGPATH = "python_\\utilities\\PRODIGY\\olympus\\data\\txt\\olympus_log.txt"
-JSONPATH = "python_\\utilities\\PRODIGY\\olympus\\data\\json\\"
+LOGPATH = "amundwork\\Vulcan\\Olympus\\data\\txt\\olympus_log.txt"
+JSONPATH = "amundwork\\Vulcan\\Olympus\\data\\json"
 
 SCHEDULEPATH = Path(JSONPATH + "schedule.json") 
-SESSIONFILE = Path(JSONPATH + "sessions.json")
-EVENTFILE = Path(JSONPATH + "events.json")
-PRFILE = Path(JSONPATH + "prs.json")
+SESSIONFILE  = Path(JSONPATH + "sessions.json")
+EVENTFILE    = Path(JSONPATH + "events.json")
+PRFILE       = Path(JSONPATH + "prs.json")
 
 SCHEDULEPATH.touch() if not SCHEDULEPATH.exists() else None
-SESSIONFILE.touch() if not SESSIONFILE.exists() else None
-EVENTFILE.touch() if not EVENTFILE.exists() else None
-PRFILE.touch() if not PRFILE.exists() else None
+SESSIONFILE.touch()  if not SESSIONFILE.exists()  else None
+EVENTFILE.touch()    if not EVENTFILE.exists()    else None
+PRFILE.touch()       if not PRFILE.exists()       else None
 
 SCHEDULE = {
     "monday": ["pull day", "zone 2 run"],
