@@ -52,7 +52,7 @@ uint64_t Factorial(int I) {
     }
 }
 
-// Return the fibonacci number of `I`
+// Return the fibonacci number at index `I`
 uint64_t Fibonacci(int I) {
     if (I==0) {
         return 0;
@@ -62,4 +62,3 @@ uint64_t Fibonacci(int I) {
     return Fibonacci(I-1) + Fibonacci(I-2);
     }
 }
-

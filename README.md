@@ -42,7 +42,7 @@ This is the list of old projects no longer being maintained / further developed 
 
 ### TANGO I - Tactical Aerospace Networked Global Operator
 
-**TANGO I** was the first iteration of what would be the **TANGO** Series. As the title suggests, **TANGO** was supposed to be a useful program for mission planning, featuring a complete suite of tools for communications, navigation, and other neccesseties. **TANGO** was and still is abandoned, but a successor may be built in the future.
+**TANGO I** was the first iteration of what would be the **TANGO** Series. As the title suggests, **TANGO** was supposed to be a useful program for aerospace-based planning and control tasks, featuring a complete suite of tools for visualisation, communications, navigation, and other neccessities. **TANGO** was and still is abandoned, but a successor may be built in the future.
 
 ## AmundWorks Open Source Philosophy
 

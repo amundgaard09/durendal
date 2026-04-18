@@ -1,113 +1,28 @@
 """UniForge Engineering Assistant CLI - v1.1.5-beta"""
 
-import os, math, json, numpy, shlex, inspect
+import os, math, json, shlex
 
 from awpc.unimath.unimath import *
 from awpc.unicrypt.unicrypt import *
+from awpc.unipower.unipower import *
+
 from awpc.utils.utils import *
 from awpc import moduleTools as mt
 
-from types import MappingProxyType
 from prompt_toolkit import prompt
-from prompt_toolkit.completion import NestedCompleter
 
 MAINVersion = "UniForge CLI v1.1.5-beta"
 PIDVersion = "v.0.0.1.alpha"
 HOHMANNVersion= "v.0.0.1.alpha"
 
-### CONSTANTS
-
-BANDS = MappingProxyType({
-    "black":  0,
-    "brown":  1,
-    "red":    2,
-    "orange": 3,
-    "yellow": 4,
-    "green":  5,
-    "blue":   6,
-    "violet": 7,
-    "gray":   8,
-    "white":  9,
-})
-MULTIPLIERS = MappingProxyType({
-    "black":  1,
-    "brown":  10,
-    "red":    1e2,
-    "orange": 1e3,
-    "yellow": 1e4,
-    "green":  1e5,
-    "blue":   1e6,
-    "violet": 1e7,
-    "gray":   1e8,
-    "white":  1e9,
-    "gold":   0.1,
-    "silver": 0.01,
-})
-TOLERANCES = MappingProxyType({
-    "brown":  1,
-    "red":    2,
-    "green":  0.5,
-    "blue":   0.25,
-    "violet": 0.1,
-    "gray":   0.05,
-    "gold":   5,
-    "silver": 10,
-})
-
-### ERRORS
-
-class InvalidColorCount(Exception):
-    """Raised when the color count passed into a function of the resistor group is invalid."""
-    def __init__(self, Function: callable):
-        super().__init__(f"Invalid Color Count for {ColorText(Function.__name__, 'blue')}")
-class InconsistencyError(Exception):
-    """Raises when the VIR-values passed into PowerDissipation() gives inconsistent values for the three formulas."""
-    def __init__(self, Function: callable, Inconsistency: str):
-        super().__init__(f"Inconsistency error at {ColorText(Function.__name__, 'blue')} with {ColorText(Inconsistency, 'red')}")
-class IncorrectArgumentCount(Exception):
-    """Raises when the count of arguments given to a function is incorrect."""
-    def __init__(self, Function: callable, GivenArgumentCount: int, WantedArgumentCount: set):
-        super().__init__(f"Incorrect count of arguments for {ColorText(Function.__name__, 'blue')}. {ColorText(Function.__name__, 'blue')} takes {ColorText(WantedArgumentCount, 'green')} but was given {ColorText(GivenArgumentCount, 'red')}")
-class InvalidColors(Exception):
-    """Raises when the colors passed into ResistorInsight() are invalid for the given band."""
-    def __init__(self, Function: callable, IndexOfInvalidColors: int):
-        super().__init__(f"Invalid colors for {ColorText(Function.__name__, 'blue')} at indices {IndexOfInvalidColors}")
-class UnknownModule(Exception):
-    """Raises when an unknown module gets caught in VerifyTokens()."""
-    def __init__(self, GivenModule: str):
-        super().__init__(f"Unknown Module: {ColorText(GivenModule, 'red')}") 
-class UnknownSubCommand(Exception):
-    """Raises when an unknown subcommand gets caught in VerifyTokens()."""
-    def __init__(self, Module: str, GivenCommand: str):
-        super().__init__(f"Unknown command for {Module}: {ColorText(GivenCommand, 'red')}")
-class MissingSubCommand(Exception):
-    """Raises when the subcommand is missing from a command string."""
-    def __init__(self, module):
-        super().__init__(f"Missing subcommand for {module}")    
-class MissingParameters(Exception):
-    """Raises when a function is not given enough parameters."""
-    def __init__(self, Function: callable, MissingParameters: list):
-        super().__init__(f"Missing parameter {ColorText(MissingParameters, 'red')} for {ColorText(Function.__name__, 'blue')}.")
-class EmptyTokenList(Exception):
-    """Raises when the TokenList passed into VerifyTokens() is empty."""
-    def __init__(self):
-        super().__init__(f"Empty TokenList! Make sure of correct tokens before verification attempt.")
-
-### SIGNALS
-
-class ExitEnvironmentSignal(Exception):
-    """Raise when the user wants to return to MAINEnv."""
-    def __init__(self):
-        super().__init__()
-    
 ### UTILS
 
 def InsertJSON(PathToJSON: str, ContentDict: dict) -> None:
-    """Inserts a dictionary into a JSON file. If the file does not exist, it creates it. Returns True if the operation was successful, False otherwise."""
+    """Inserts a dictionary into a `JSON` file. If the file does not exist, it creates it. Returns `True` if the operation was successful, `False` otherwise."""
     with open(PathToJSON, 'w') as JSONFile:
         json.dump(ContentDict, JSONFile, indent=4, sort_keys=True)
 def ExtractJSON(PathToJSON: str) -> dict:
-    """Extracts a JSON file and returns the content as a dictionary. Returns None if the file is not found or if there is an error during extraction."""
+    """Extracts a `JSON` file and returns the content as a dictionary. Returns `None` if the file is not found or if there is an error during extraction."""
     try:
         with open(PathToJSON, 'r', encoding='utf-8') as file:
             return json.load(file)
@@ -169,157 +84,6 @@ def _exitEnviroment() -> None:
 def _clearTerminal() -> None:
     os.system('cls' if os.name == 'nt' else 'clear')
 
-### UNIPOWER
-
-def OhmsLaw(V: float | None = None, I: float | None = None, R: float | None = None) -> str:
-    """
-    Ohms Law calculation for Voltage, Current, and Resistivity. \n
-    Formulas:
-    >>> V = I * R \n
-    >>> I = V / R \n 
-    >>> R = V / I \n 
-    """
-    
-    if V is not None: V = float(V)
-    if I is not None: I = float(I)
-    if R is not None: R = float(R)
-            
-    if (V, I, R).count(None) > 1:
-        MissingParams = []
-        for idx, value in enumerate((V, I, R)):
-            if value is None:
-                MissingParams.append(("V", "I", "R")[idx])
-        
-        raise MissingParameters(OhmsLaw, MissingParams)
-    
-    if V is None:
-        V = I * R
-    elif I is None:
-        I = V / R
-    elif R is None:
-        R = V / I
-        
-    return f"V: {V}, I: {I}, R: {R}"
-def VoltDivider(VIn: float, R1: float, R2: float) -> Quantity:
-    """Calculates the output voltage of a voltage divider from input voltage and the two resistances."""
-    return Quantity((VIn * (R2 / (R1 + R2))), UNITS["V"])
-def RCTimeConstant(Capacitance: float, Resistance: float) -> Quantity:
-    """Calculates the time constant of an RC circuit from capacitance in farads and resistance in ohms."""
-    return Quantity((Capacitance * Resistance), UNITS["S"])
-def InductorImpedance(Hertz: float, Inductance: float) -> Quantity:
-    """Calculates the impedance of an inductor at a given frequency in hertz and inductance in henrys."""
-    return Quantity((2 * numpy.pi * Hertz * Inductance), UNITS["Ohm"])
-def PowerDissipation(V: float | None = None, I: float | None = None, R: float | None = None) -> Quantity:
-    """Calculates power dissipation from voltage, current and resistance. If all three parameters are given, it checks for consistency between the three formulas P = I^2 * R, P = V^2 / R and P = V * I."""
-    if (V, I, R).count(None) > 1:
-        MissingParams = []
-        for idx, value in enumerate((V, I, R)):
-            if value is None:
-                MissingParams.append(("V", "I", "R")[idx])
-        
-        raise MissingParameters(PowerDissipation, MissingParams)
-
-    if (V, I, R).count(None) == 1:
-        if V is None:
-            P = I ** 2 * R
-        elif I is None:
-            P = V ** 2 / R
-        elif R is None:
-            P = V * I
-        return Quantity(P, UNITS["W"])
-    
-    else:
-        P1 = I ** 2 * R
-        P2 = V ** 2 / R
-        P3 = V * I
-        
-        if math.isclose(P1, P2):
-            if math.isclose(P2, P3):
-                return Quantity(((P1 + P2 + P3) / 3), UNITS["W"])
-            else:
-                raise InconsistencyError(PowerDissipation, "Inconsistency with P3 = V * I")
-        else:
-            if math.isclose(P1, P3):
-                raise InconsistencyError(PowerDissipation, "Inconsistency with P2 = V ** 2 / R")
-            else:
-                raise InconsistencyError(PowerDissipation, "Inconsistency with P1 = I ** 2 * R")
-    
-def ResistorViz(C1: str, C2: str, C3: str, C4: str, C5: str | None = None) -> str:
-    """Prints a ASCII representation of a resistor with the color code""" 
-    def color_block(color: str):
-        ansi = ANSI_COLORS.get(color.lower(), "\033[0m")
-        reset = "\033[0m"
-        return f"{ansi}    {reset}"
-    if C5 is not None:
-        return f"    <----------------------------->\n    |                             |\n    |  ┌────┬────┬────┬────┬────┐ |\n   ----│{color_block(C1)}│{color_block(C2)}│{color_block(C3)}│{color_block(C4)}│{color_block(C5)}|----\n    |  └────┴────┴────┴────┴────┘ |\n    |                             |\n    <----------------------------->" 
-    else:
-        return f"    <------------------------->\n    |                         |\n    |  ┌────┬────┬────┬────┐  |\n   ----│{color_block(C1)}│{color_block(C2)}│{color_block(C3)}│{color_block(C4)}│----\n    |  └────┴────┴────┴────┘  |\n    |                         |\n    <------------------------->" 
-def ResistorInsight(C1: str, C2: str, C3: str, C4: str, C5: str | None = None) -> tuple:
-    """Takes in 4/5 colors of a resistor and returns the resistivity and tolerance range."""
-    
-    Band1 = BANDS.get(C1)
-    Band2 = BANDS.get(C2)
-    
-    if C5 is None:
-        Multiplier = MULTIPLIERS.get(C3)
-        Tolerance = TOLERANCES.get(C4)
-        bands = (Band1, Band2, Multiplier, Tolerance)
-        
-        if None in bands:
-            raise InvalidColors(ResistorInsight, bands.index(None) + 1)
-        
-        Ohms = (Band1 * 10 + Band2) * Multiplier
-        
-    else:
-        Band3 = BANDS.get(C3)
-        Multiplier = MULTIPLIERS.get(C4)
-        Tolerance = TOLERANCES.get(C5)
-        bands = (Band1, Band2, Band3, Multiplier, Tolerance)
-        
-        if None in bands:
-            raise InvalidColors(ResistorInsight, bands.index(None) + 1)
-        
-        Ohms = (Band1 * 100 + Band2 * 10 + Band3) * Multiplier
-
-    ToleranceDecimal = Tolerance / 100
-    LowerBound = Ohms * (1 - ToleranceDecimal)
-    UpperBound = Ohms * (1 + ToleranceDecimal)
-    
-    ResistanceString = f"Resistance: {Ohms}Ω"
-    RangeString = f"Range: {LowerBound}Ω - {UpperBound}Ω ( {Tolerance}% )"
-
-    return (ResistanceString, RangeString)
-
-### TODO finish wrapping these functions
-def TotalESR(caps: list[tuple], ConnectionType: Literal["parallel", "series"]) -> float:
-    """Calculates total ESR of a list of capacitors based on their connection type. Caps are in the format (capacitance, voltage, esr) for now."""
-    if ConnectionType == "series":
-        return sum(cap[2] for cap in caps)
-    
-    elif ConnectionType == "parallel":
-        try:
-            return 1 / sum(1 / cap[2] for cap in caps if cap[2] != 0)
-        except ZeroDivisionError:
-            return 0  
-        
-    else:
-        raise ValueError("Connection type must be 'parallel' or 'series'")
-def TotalCapacitance(caps: list[tuple], ConnectionType: Literal["parallel", "series"]) -> str: ### caps (capacitance, voltage, esr) (for now)
-    """Calculates total capacitance, voltage limit and ESR of a list of capacitors based on their connection type."""
-        
-    if ConnectionType == "parallel":
-        totalCapacitance = sum(cap[0] for cap in caps)
-        VoltLimit = min([cap[1] for cap in caps])
-        
-    elif ConnectionType == "series":
-        totalCapacitance = 1 / sum(1/cap[0] for cap in caps)
-        VoltLimit = sum([cap[1] for cap in caps])   
-        
-    else:
-        raise ValueError("Connection type must be 'parallel' or 'series'")
-
-    return f"Total Capacitance: {totalCapacitance}, Volt Limit: {VoltLimit}, Total ESR: {TotalESR(caps, ConnectionType)}"
-
 ### UNIMAKE
 
 def Torque(MomentArmDistance: float, Force: float) -> Quantity:
@@ -366,11 +130,14 @@ def PIDStep(CurrentError: float, TimeInterval: float, Kp: float, Ki: float, Kd: 
 def T2WRatio(Thrust: float, Weight: float) -> str:
     """Thrust to Weight ratio calculator. Ensure consistent units!"""
     Ratio = Thrust / Weight
-    return f"Ratio: {ColorText(f'{Ratio}', 'green' if Ratio > 1 else 'red')}" if Ratio != 1 else f"Ratio: {ColorText(f'{Ratio}', 'yellow')}"
-def MachNumber(Velocity: float, SpeedOfSound: float | None = SPEED_SOUND) -> str:
+    return f"Ratio: {ColorText(f'{Ratio}', 'green' if Ratio > 1 else 'red' if Ratio != 1 else 'yellow')}" 
+def MachNumber(Velocity: float, SpeedOfSound: float | None = MACH) -> str:
     """Mach Number Calulator. Speed of sound is defaulted to 343 m/s. Ensure consistent units!"""
-    MachNumber = Velocity / SpeedOfSound
-    return (f"Ratio: {ColorText(f'{MachNumber} - SUPERSONIC', 'green') if MachNumber > 1 else ColorText(f'{MachNumber} - SUBSONIC', 'red')}" if MachNumber != 1 else f"Ratio: {ColorText(f'{MachNumber} - TRANSONIC', 'yellow')}") if MachNumber < 5 else f"Ratio: {ColorText(f'{MachNumber} - HYPERSONIC', 'blue')}"
+    mach = Velocity / SpeedOfSound
+    label = ('SUBSONIC' if mach < 1 else 'TRANSONIC' if mach == 1 else 'SUPERSONIC' if mach < 5 else 'HYPERSONIC' if mach < 10 else 'HIGH-HYPERSONIC')
+    color = ('red' if mach < 1 else 'yellow' if mach == 1 else 'green' if mach < 5 else 'blue' if mach < 10 else 'violet')
+    return f"Ratio: {ColorText(f'{mach} - {label}', color)}"
+                                
 def DynamicPressure(Velocity: float, AirDensity: float | None = 1.225) -> Quantity:
     return Quantity(0.5 * Velocity ** 2 * AirDensity, UNITS["Pa"])
 
@@ -379,14 +146,14 @@ def LiftEquation(LiftCoefficient: float, DynamicPressure: float, ReferenceArea: 
 def DragEquation(DragCoefficient: float, DynamicPressure: float, ReferenceArea: float) -> Quantity:
     return Quantity(DragCoefficient * DynamicPressure * ReferenceArea, UNITS["N"])
 
-### UNISPACE - Hohmann transfer delta-v + visualization env - COMING SOON
+### UNISPACE - NOTE Hohmann transfer delta-v + visualization env - COMING SOON
 
 def OrbitalPeriod(SemiMajorAxis: float, M: float, m: float) -> Quantity:
     return Quantity((2 * math.pi * math.sqrt(SemiMajorAxis ** 3 / (G * (M + m)))), UNITS["S"])
 def OrbitalVelocity(OrbitalRadius: float = EARTH_R, Mass: float = EARTH_M) -> Quantity:
-    return Quantity((math.sqrt((G*Mass) / OrbitalRadius)), UNITS["m/s"])
+    return Quantity((math.sqrt((G * Mass) / OrbitalRadius)), UNITS["m/s"])
 def EscapeVelocity(Radius: float = EARTH_R, Mass: float = EARTH_M) -> Quantity:
-    return Quantity((math.sqrt(2) * OrbitalVelocity(Radius, Mass).value), UNITS["m/s"])
+    return Quantity((math.sqrt(2) * OrbitalVelocity(Radius, Mass)), UNITS["m/s"])
 
 def GravitationalForce(Mass1: float, Mass2: float, Distance: float) -> Quantity:
     return Quantity((G * Mass1 * Mass2 / Distance ** 2), UNITS["N"])
@@ -396,7 +163,7 @@ def SurfaceGravity(Mass: float, Radius: float) -> Quantity:
 def EinsteinMassEnergyEquivalence(Mass: float) -> Quantity:
     return Quantity((Mass * C ** 2), UNITS["J"])
 def TsiolkovskyRocketEquation(ExhaustVelocity: float, InitialMass: float, Finalmass: float) -> Quantity:
-    return Quantity((ExhaustVelocity * math.log(InitialMass/Finalmass)), UNITS["Δv"])
+    return Quantity((ExhaustVelocity * math.log(InitialMass / Finalmass)), UNITS["Δv"])
 
 ### UNIALGO
 
@@ -440,7 +207,7 @@ def FibonacciInteger(FiboIndex: float) -> int:
     return fib2
 
 def LovelacesAlgorithm(a: float, b: float, c: float, d: float, e: float, f: float) -> tuple:
-    """Lovelace's algorithm for solving systems of linear equations"""
+    """Lovelace's algorithm for solving systems of linear equations."""
     if (a*e - b*d) == 0:
         raise ValueError("The system has no unique solution.")
     
@@ -617,22 +384,9 @@ HOHMANNCMDMAP: dict[str, dict[str, callable]] = {
     }
 }
 
-def GenerateCompleter(Map: dict[str, dict]) -> NestedCompleter:
-    """Generate nested completer dict with parameter names for each function."""
-    
-    CompleterDict = {}
-    
-    for Module, Subcommand in Map.items():
-        CompleterDict[Module] = {}
-        for SubcommandName, CommandFunction in Subcommand.items():
-            Signature = inspect.signature(CommandFunction)
-            CompleterDict[Module][SubcommandName] = {param: None for param in Signature.parameters}
-    
-    return NestedCompleter.from_nested_dict(CompleterDict)
-
 MAINCOMPLETER    = GenerateCompleter(MAINCMDMAP)
 PIDCOMPLETER     = GenerateCompleter(PIDCMDMAP)
 HOHMANNCOMPLETER = GenerateCompleter(HOHMANNCMDMAP)
 
 if __name__ == "__main__":
-    _mainEnv()                       
+   _mainEnv()
