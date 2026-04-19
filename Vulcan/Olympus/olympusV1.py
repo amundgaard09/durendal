@@ -1,5 +1,5 @@
 """
-OLYMPUS INTERFACE CORE \n
+`OLYMPUS` `UI` \n
 The Olympus Interface is a tool for elite athletes to log their training, recovery, and overall well-being in a structured way. 
 It provides a comprehensive overview of daily activities, training sessions, and upcoming events, 
 allowing athletes to track their progress and make informed decisions about their training and recovery strategies. 

@@ -226,6 +226,7 @@ def _mainEnv() -> None:
         try:
             CommandString = prompt("UniForge >>> ", completer=MAINCOMPLETER)
             Result = Dispatcher(CommandString, MAINCMDMAP, MAINARGMAP)
+            _clearTerminal()
             if Result is not None:
                 print(Result)
             

@@ -3,6 +3,6 @@
 import whisper
 import awpc
 import Vulcan.Archimedes as Archimedes
-import Vulcan.Olympus as Olympus
+import Vulcan.Olympus.olympusV1 as Olympus
 import Vulcan.Prometheus as Prometheus
 

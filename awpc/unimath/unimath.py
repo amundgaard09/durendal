@@ -4,11 +4,11 @@ This library contains functions for various mathematical calculations, including
 The library is still in development and may contain some unstable functions that are not yet fully tested.
 """
 
-import math, time, sympy
-import matplotlib.pyplot as mpl
+import math, time, sympy, matplotlib.pyplot as mpl
 
 from typing import Literal
 from awpc.utils.utils import *
+
 
 class ContinuousPIDController:
     def __init__(self, kp, ki, kd, setpoint=0):
@@ -46,7 +46,7 @@ class ContinuousPIDController:
 
 def _plotXY(XVals: list[float], YVals: list[float]) -> None:
     """Initialize a plot where `x[idx]` and `y[idx]` are coordinate pairs of a function."""
-    mpl.plot(XVals, YVals, color='red', linestyle='--')
+    mpl.plot(XVals, YVals, color='red', linestyle='-', marker='o')
     mpl.xlabel('X')
     mpl.ylabel('Y')
     mpl.axhline(0, color='black')
@@ -81,7 +81,10 @@ def TriExtrapolate(a: float, b: float, c: float, A: float | None = None, B: floa
     
     return f"""Area: {Area} - Sides: A: {A}, B: {B}, C: {C} - Sin({a}) = {SinA}, Sin({b}) = {SinB}, Sin({c}) = {SinC}"""
 def Pythagoras(A: float | None = None, B: float | None = None, C: float | None = None) -> str:
-    """Calculates the missing side of a right-angled triangle using either normal or reverse pythagoras."""
+    """
+    Calculates the missing side of a right-angled triangle using either normal or reverse pythagoras.
+    Formula: `A² + B² = C²` for normal, and `A² = C² - B²` / `B² = C² - A²` for reverse.
+    """
     
     if (A, B, C).count(None) > 1:
         return None
@@ -101,15 +104,19 @@ def SineRule(
     AngleMeasurementMode: Literal["Degrees", "Radians"]
     ) -> list[list[float], list[float]] | None:
     """
-    Sine Rule
+    The Sine Rule calculation function. Takes in 
 
     Formula:
-    `A / sin(a) = B / sin(b) = C / sin(c)`
+    `A / sin(a)` = `B / sin(b)` = `C / sin(c)`
 
     Return Format: [Angles: [A, B, C], Sides: [A, B, C]]
     """
+    
     ### VERY UNSTABLE!
+    
     angles_rad = []
+    ReferenceRatio = None
+    
     for angle in Angles:
         if angle is not None and AngleMeasurementMode == "Degrees":
             angles_rad.append(math.radians(angle))
@@ -117,17 +124,18 @@ def SineRule(
             angles_rad.append(angle)
 
     known_angle_indices = [i for i in range(3) if angles_rad[i] is not None]
+    
     if len(known_angle_indices) == 2:
         missing = next(i for i in range(3) if angles_rad[i] is None)
         angles_rad[missing] = math.pi - sum(angles_rad[i] for i in known_angle_indices)
-
-    ReferenceRatio = None
     
+    # Find the first known side and angle to establish the reference ratio for the sine rule
     for idx in range(3):
         if Sides[idx] is not None and angles_rad[idx] is not None:
             ReferenceRatio = Sides[idx] / math.sin(angles_rad[idx])
             break
-        
+    
+    # If the reference couldn't be established, return None
     if ReferenceRatio is None:
         return None
 
@@ -141,12 +149,13 @@ def SineRule(
             asin_val = math.asin(value)
             known_sum = sum(a for a in angles_rad if a is not None)
             
-            ### Check for the ambiguous case of the sine rule, where there may be two possible angles that satisfy the equation
+            # Check for the ambiguous case of the sine rule, where there may be two possible angles that satisfy the equation
             if math.pi - asin_val + known_sum <= math.pi:
                 angles_rad[idx] = math.pi - asin_val
             else:
                 angles_rad[idx] = asin_val
 
+    # Return in specified unit
     if AngleMeasurementMode == "Degrees":
         Angles_out = [math.degrees(a) if a is not None else None for a in angles_rad]
     else:
@@ -159,10 +168,8 @@ def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[f
     """ 
     Returns a tuple of the three angles in degrees, in the order of AngleA, AngleB, and AngleC.
     
-    Formula::
-
-        AngleA = math.arccos((B**2 + C**2 - A**2) / (2 * B * C))
-        
+    Formula:
+        Angle A = arccos( ( B² + C² - A² ) / ( 2 * B * C ) )
     """
 
     return (
@@ -172,6 +179,10 @@ def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[f
     )
 
 def SASArea(LengthA: float, LengthB: float, AngleC: float) -> float:
+    """
+    Returns the area of a triangle from two sides and the included angle.
+    Formula: `Area = 0.5 * LengthA * LengthB * sin(AngleC)` where AngleC is in degrees.
+    """
     return (0.5 * LengthA * LengthB * math.sin(math.radians(AngleC)))
 def HeronsFormula(LengthA: float, LengthB: float, LengthC: float) -> float:
     """
@@ -192,14 +203,14 @@ def R2D(Radians: float) -> float:
     """Return degrees from radians."""
     return Radians / math.pi * 180
 
-def Slope(x1: float, y1: float, x2: float, y2: float) -> float:
+def Slope(x1: float, y1: float, x2: float, y2: float) -> str:
     """Returns the slope of a line from two points `(x1, y1)` and `(x2, y2)`"""
-    return f"slope = {(y2 - y1) / (x2 - x1)}"
+    return f"Slope = {(y2 - y1) / (x2 - x1)}"
 def Distance(x1: float, y1: float, x2: float, y2: float) -> float:
     """Return the distance between two points `(x1, y1)` and `(x2, y2)`"""
     return math.sqrt((x2-x1)**2 + (y2-y1)**2)
 def Derivative(Function: str, x: float | None = None, h: float = 1e-5) -> float:
-    """Returns f'(x) if x is not given, else returns the numerical derivative of the function at the given x-value using the definition of the derivative."""
+    """Returns `f'(x)` if `x` is not given, else returns the numerical derivative of the function at the given x-value using the definition of the derivative."""
     x_sym = sympy.symbols('x')
     f = sympy.sympify(Function)
     if x is None:
@@ -226,7 +237,7 @@ def LinearEvaluation(m: float, b: float, x: float) -> str:
 def QuadraticVertex(a: float, b: float, c: float) -> str:
     """Returns the vertex (aka the minimum/maximum point) of a quadratic function in the form of `(x, y)`."""
     xv = -b / (2*a)
-    yv = a*xv**2 + b*xv + c
+    yv = QuadraticEvaluation(a, b, c, xv).split('= ')[-1]
 
     return f"Vertex: ({xv}, {yv}) - {'Minimum' if a > 0 else 'Maximum' if a < 0 else 'Linear'}"
 def QuadraticNumRoots(a: float, b: float, c: float) -> int:
@@ -241,16 +252,71 @@ def QuadraticSolutions(A: float, B: float, C: float) -> str:
     if D > 0:
         x1 = (-B - math.sqrt(D)) / (2 * A)
         x2 = (-B + math.sqrt(D)) / (2 * A)
-        return f"x1: {x1}, x2: {x2}"
+        return f"x1: {ColorText(x1, 'green')}, x2: {ColorText(x2, 'green')}"
     
     elif D == 0:
         x1 = -B / (2 * A)
-        return f"x: {x1}"
+        return f"x: {ColorText(x1, 'green')}"
     else: 
         return ColorText('No real solutions', 'red')
+def QuadraticFactorizedForm(a: float, b: float, c: float) -> str:
+    """Returns the factorized form of a quadratic function in the form of `a(x - x1)(x - x2)` where `x1` and `x2` are the roots of the function."""
+    D = b**2 - 4*a*c
+    if D > 0:
+        x1 = (-b - math.sqrt(D)) / (2 * a)
+        x2 = (-b + math.sqrt(D)) / (2 * a)
+        return f"{a}(x - {x1})(x - {x2})"
+    
+    elif D == 0:
+        x1 = -b / (2 * a)
+        return f"{a}(x - {x1})^2"
+    else: 
+        return ColorText('No real solutions', 'red')
+def QuadraticZeros(a: float, b: float, c: float) -> str:
+    """Returns the x-values where the quadratic function crosses the x-axis."""
+    D = b**2 - 4*a*c
+    if D > 0:
+        x1 = (-b - math.sqrt(D)) / (2 * a)
+        x2 = (-b + math.sqrt(D)) / (2 * a)
+        return f"Zeros: {ColorText((x1, 0), 'green')}, {ColorText((x2, 0), 'green')}"
+    
+    elif D == 0:
+        x1 = -b / (2 * a)
+        return f"Zero: {ColorText((x1, 0), 'green')}"
+    else: 
+        return ColorText('No real zeros', 'red')
 def QuadraticEvaluation(a: float, b: float, c: float, x: float) -> str:
     return f"{a}x^2 + {b}x + {c} = {a*x**2 + b*x + c}"
 
+def CubicVertex(a: float, b: float, c: float, d: float) -> str:
+    """Returns the vertex (aka the minimum/maximum point) of a cubic function in the form of `(x, y)`."""
+    x = sympy.symbols('x')
+    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
+    df = sympy.diff(f, x)
+    critical_points = sympy.solve(df, x)
+    
+    vertices = []
+    for point in critical_points:
+        y = f.subs(x, point)
+        vertices.append((point, y))
+    
+    return f"Vertices: {ColorText(vertices, 'green' if all(v[1].is_real for v in vertices) else 'red')}"
+def CubicNumRoots(a: float, b: float, c: float, d: float) -> int:
+    """Returns the number of roots of a cubic function based on the discriminant."""
+    D = 18*a*b*c*d - 4*b**3*d + b**2*c**2 - 4*a*c**3 - 27*a**2*d**2
+    return 3 if D > 0 else 2 if D == 0 else 1
+def CubicSolutions(a: float, b: float, c: float, d: float) -> str:
+    """Returns the roots of a cubic function in a tuple."""
+    x = sympy.symbols('x')
+    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
+    solutions = sympy.solve(f, x)
+    return f"Solutions: {ColorText(solutions, 'green' if all(sol.is_real for sol in solutions) else 'red')}"
+def CubicZeros(a: float, b: float, c: float, d: float) -> str:
+    """Returns the x-values where the cubic function crosses the x-axis."""
+    x = sympy.symbols('x')
+    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
+    zeros = sympy.solve(f, x)
+    return f"Zeros: {ColorText(zeros, 'green' if all(z.is_real for z in zeros) else 'red')}"
 def CubicEvaluation(a: float, b: float, c: float, d: float, x: float) -> tuple[str, float]:
     """Cubic Evaluation function"""
     result = a*x**3 + b*x**2 + c*x + d
@@ -290,16 +356,16 @@ def TangentFormula(Function1: str, Function2: str) -> list[str]:
 
     return tangents
 
-def PrimeFactorize(N: int) -> list[int]:
+def PrimeFactorize(Number: int) -> list[int]:
     """Returns the prime factorization of a number as a list of prime factors."""
-    factors = []
-    divisor = 2
+    Factors = []
+    Divisor = 2
     
-    while N >= 2:
-        if N % divisor == 0:
-            factors.append(divisor)
-            N //= divisor
+    while Number >= 2:
+        if Number % Divisor == 0:
+            Factors.append(Divisor)
+            Number //= Divisor
         else:
-            divisor += 1
+            Divisor += 1
             
-    return factors
+    return Factors
