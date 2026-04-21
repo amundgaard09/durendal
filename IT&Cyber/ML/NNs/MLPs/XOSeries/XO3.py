@@ -14,13 +14,13 @@ def _dsigmoid(Z: np.ndarray) -> np.ndarray:
     s = _sigmoid(Z)
     return s * (1 - s)
 def _softmax(Z: np.ndarray) -> np.ndarray:
-    """Softmax activation function for multi-class classification. Converts raw scores (logits) into probabilities."""
+    """Softmax activation function for multi-class classification. Converts raw scores (logits) into probabilities between 0 and 1."""
     expZ = np.exp(Z - np.max(Z, axis=-1, keepdims=True))
     return expZ / np.sum(expZ, axis=-1, keepdims=True)
 
 ACTIVATIONS = {
     "relu":    (lambda Z: np.maximum(0, Z), lambda Z: (Z > 0).astype(float)),
-    "linear":  (lambda Z: Z,                 lambda Z: np.ones_like(Z)),
+    "linear":  (lambda Z: Z,                lambda Z: np.ones_like(Z)),
     "sigmoid": (_sigmoid,                   _dsigmoid),
     "softmax": (_softmax,                   None) # Softmax derivative is handled differently in backpropagation, so we set it to None here.
 }
@@ -56,9 +56,9 @@ class DenseLayer:
         dW: np.ndarray = X.T @ dZ / X.shape[0]                                                # dW -> Weight GOL. Batch averaged. X.T @ dZm computes the sum of gradients for each weight across the batch, and dividing by X.shape[0] gives the average.
         dB: np.ndarray = dZ.mean(axis=0)                                                      # dB -> Bias   GOL, Batch averaged.
         dI: np.ndarray = dZ @ self.Weights.T                                                  # dI -> Input  GOL. For backpropagation to previous layers. 
-        
-        self.Weights -= LearningRate * dW # UPDATE
-        self.Bias    -= LearningRate * dB # UPDATE
+
+        self.Weights -= LearningRate * dW
+        self.Bias    -= LearningRate * dB
         
         return dI.reshape(self.Input.shape)
     

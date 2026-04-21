@@ -1,13 +1,13 @@
-# AWPC - The AmundWorks Python Collective
+# XO - Multi-architecture Neural Net Series
 
 ***Written, Created, Iterated, Evolved and Built by Simon Stordal Amundgård***
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-## What is AWPC?
+## What is the XO Series?
 
-The AmundWorks Python Collective is the open-source collection of all python projects built under AmundWorks, either by collabarators or AmundWorks itself. It features subpackages like the UNIx collection, a comprehensive toolchain built for STEMP projects. AWPC is part of the dependencies for the coming UniForge CLI project.
+The XO Series is a collection of MLP-based neural networks designed for various applications, including image recognition, natural language processing, and more. The series is built using the latest advancements in machine learning and deep learning techniques, and is designed to be highly efficient and accurate.
 
 ## AmundWorks Open Source Philosophy
 
@@ -17,19 +17,4 @@ While this software and all other software under AmundWorks is licensed under th
 
 By doing so, you help support an open, collaborative engineering ecosystem.
 
-## Install
-```shell
-pip install awpc
-```
-
-## Example
-```python
-from awpc.unimath.unimath import *
-print(Pythagoras(3, 4, None)) # From unimath
-```
-Result:
-
-```shell
->>> A: 3, B: 4, C: 5.0
-```
 
