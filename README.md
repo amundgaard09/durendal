@@ -2,18 +2,20 @@
 
 ***Written, Created, Iterated, Evolved and Built by Simon Stordal Amundgård***
 
+[![GitHub Repo Stars](https://img.shields.io/github/stars/amundgaard09/amundworks?style=social)]
+[![GitHub Repo Size](https://img.shields.io/github/repo-size/amundgaard09/amundworks?style=flat-square)]
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-*What is AmundWorks?* 
+*What is AmundWorks?*
 
 The **AmundWorks GitHub repository** is an open-source collection of all projects built by **AmundWorks**. It serves as a central hub for all the work and projects created by AmundWorks, providing a platform for sharing and collaborating on various initiatives. The repository includes a wide range of projects, from software development to scientific research, and is constantly updated with new content. It is intended to be a resource for anyone interested in the work of AmundWorks, as well as a platform for collaboration and innovation. 
 
 ## PROJECTS
 
-This is the list of projects built / currently being built under Amundworks. This list is subject to change. Archived projects can be found below this list. 
+[View AmundWorks Docs](Docs/docs.md)
 
-*Extensive documentation can be found for each of the projects in their respective Juypiter Notebooks.*
+This is the list of projects built / currently being built under Amundworks. This list is subject to change. Archived projects can be found below this list. 
 
 ### AWPC - The AmundWorks Python Collective
 
@@ -34,6 +36,8 @@ The **AmundWorks Python Collective** is the complete collection of all python pr
 **XO** is a series of MLP-based neural networks designed for various applications, including image recognition, natural language processing, and more. The **XO** series is built using the latest advancements in machine learning and deep learning techniques, and is designed to be highly efficient and accurate. Each model in the **XO** series is trained on large datasets and optimized for specific tasks, making them suitable for a wide range of applications. Whether you're looking to build a powerful image recognition system or a sophisticated natural language processing model, the **XO** series has you covered with its state-of-the-art MLP-based neural networks.
 
 ### Vulcan - The All-In-One Life Operating System
+
+[View Vulcan README](Vulcan/README.md)
 
 **Vulcan** is a personal, modular assistant designed as a “life operating system” for planning and decision-making across training, academics, and other aspects of life. Combined with a GUI, it uses a simple intent-driven pipeline to process user input and route tasks to specialized tool modules, generating structured outputs like training schedules, study plans, and daily priorities. Built with scalability in mind, **Vulcan** starts as a lightweight text-based system but is designed to evolve into a fully integrated GUI and voice-enabled assistant tailored to optimize performance, learning, and long-term progression. Vulcan is built upon **OpenAI Whisper**, **AWPC**, and other smaller projects under **AmundWorks**.
 

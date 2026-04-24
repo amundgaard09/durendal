@@ -15,22 +15,6 @@ MAINVersion = "UniForge CLI v1.1.5-beta"
 PIDVersion = "v.0.0.1.alpha"
 HOHMANNVersion= "v.0.0.1.alpha"
 
-### UTILS
-
-def InsertJSON(PathToJSON: str, ContentDict: dict) -> None:
-    """Inserts a dictionary into a `JSON` file. If the file does not exist, it creates it. Returns `True` if the operation was successful, `False` otherwise."""
-    with open(PathToJSON, 'w') as JSONFile:
-        json.dump(ContentDict, JSONFile, indent=4, sort_keys=True)
-def ExtractJSON(PathToJSON: str) -> dict:
-    """Extracts a `JSON` file and returns the content as a dictionary. Returns `None` if the file is not found or if there is an error during extraction."""
-    try:
-        with open(PathToJSON, 'r', encoding='utf-8') as file:
-            return json.load(file)
-    except Exception:
-        return None
-def CLIConvert(Value: float, FromUnit: str, ToUnit: str) -> Quantity:
-    return Convert(Quantity(Value, UNITS[FromUnit]), UNITS[ToUnit])
-
 ### SYSTEM
 
 def Tokenize(RawCommandString: str) -> list[str]:
