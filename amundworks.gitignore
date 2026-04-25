@@ -1,4 +1,6 @@
 
+.github/
+.vscode/
 amundworks.egg-info/
 __pycache__/
 target/
@@ -7,7 +9,9 @@ venv/
 .venv/
 .vscode/
 *.env
-*.md
 *.pyc
-!README.md
+.gitignore
+.DS_Store
+
+
 

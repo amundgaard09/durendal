@@ -13,7 +13,7 @@ The **AmundWorks GitHub repository** is the open-source collection of all projec
 
 ## PROJECTS
 
-[View AmundWorks Docs](Docs/docs.md)
+[View AmundWorks Docs](docs.md)
 
 This is the list of projects built / currently being built under Amundworks. This list is subject to change. Archived projects can be found below this list. 
 
