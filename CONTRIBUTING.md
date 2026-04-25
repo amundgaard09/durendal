@@ -1,5 +1,5 @@
 
-# AmundWorks GitHub Repository Cntribution Guidelines
+# AmundWorks GitHub Repository Contribution Guidelines
 
 Thank you for your interest in contributing to the AmundWorks GitHub repository! We welcome contributions from the community to help improve our projects. To ensure a smooth and efficient contribution process, please follow the guidelines outlined below.
 
