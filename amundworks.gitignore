@@ -1,13 +1,12 @@
 
-.github/
-.vscode/
-amundworks.egg-info/
+amundworks/.github/
+amundworks/.vscode/
+amundworks/amundworks.egg-info/
 __pycache__/
 target/
 Archive/
 venv/
 .venv/
-.vscode/
 *.env
 *.pyc
 .gitignore
