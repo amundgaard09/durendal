@@ -9,7 +9,7 @@
 
 *What is AmundWorks?*
 
-The **AmundWorks GitHub repository** is an open-source collection of all projects built by **AmundWorks**. It serves as a central hub for all the work and projects created by AmundWorks, providing a platform for sharing and collaborating on various initiatives. The repository includes a wide range of projects, from software development to scientific research, and is constantly updated with new content. It is intended to be a resource for anyone interested in the work of AmundWorks, as well as a platform for collaboration and innovation. 
+The **AmundWorks GitHub repository** is the open-source collection of all projects built by **AmundWorks**. It serves as a central hub for all the work and projects created by AmundWorks, providing a platform for sharing and collaborating on various initiatives. The repository includes projects built for anything from software development to defense application firmware, and is constantly updated with new content. It is intended to be a resource for anyone interested in the work of AmundWorks, as well as a platform for collaboration and innovation. 
 
 ## PROJECTS
 
@@ -21,7 +21,7 @@ This is the list of projects built / currently being built under Amundworks. Thi
 
 [View AWPC README](awpc/README.md)
 
-The **AmundWorks Python Collective** is the complete collection of all python projects built under AmundWorks. It is a collection of various Python libraries, tools, and applications that are designed to be used for a wide range of purposes, including scientific computing, data analysis, machine learning, and more. The **AWPC** is an open-source project that is constantly evolving and growing as new projects are added and existing ones are updated. It is intended to be a resource for developers, researchers, and anyone interested in using Python for their projects. The **AWPC** is organized into various submodules, each of which contains a specific set of tools and libraries that are designed to work together to provide a comprehensive Python ecosystem for a wide range of applications. 
+The **AmundWorks Python Collective** is the complete collection of all Python projects built under AmundWorks. It is a collection of various Python libraries, tools, and applications that are designed to be used for scientific computing, data analysis, machine learning, and more. The **AWPC** is an open-source project that is constantly evolving and growing as new projects are added and existing ones are updated. It is intended to be a resource for developers, researchers, and anyone interested in using Python for their projects. The **AWPC** is organized into various submodules, each of which contains a specific set of tools and libraries that are designed to work together to provide a comprehensive Python ecosystem for any purpose imaginable. 
 
 ### UniForge CLI - The Ultimate Command Line Interface STEMP Toolchain
 
@@ -33,7 +33,7 @@ The **AmundWorks Python Collective** is the complete collection of all python pr
 
 [View XO README](IT&Cyber/ML/NNs/MLPs/XOSeries/README.md)
 
-**XO** is a series of MLP-based neural networks designed for various applications, including image recognition, natural language processing, and more. The **XO** series is built using the latest advancements in machine learning and deep learning techniques, and is designed to be highly efficient and accurate. Each model in the **XO** series is trained on large datasets and optimized for specific tasks, making them suitable for a wide range of applications. Whether you're looking to build a powerful image recognition system or a sophisticated natural language processing model, the **XO** series has you covered with its state-of-the-art MLP-based neural networks.
+**XO** is a series of MLP-based neural networks designed for various applications, including image recognition, natural language processing, and more. The **XO** series is still in development, with new techniques, architectures and features being integrated regularly. When completed, the **XO** series will be a powerful tool for machine learning practitioners and researchers, providing a flexible and efficient platform for building and deploying neural networks. The **XO** series is built upon the **AWPC** ecosystem and is designed to be easily integrated with other tools and libraries built upon it.
 
 ### Vulcan - The All-In-One Life Operating System
 
@@ -51,13 +51,13 @@ This is the list of old projects no longer being maintained / further developed 
 
 ### TANGO I - Tactical Aerospace Networked Global Operator
 
-**TANGO I** was the first iteration of what would be the **TANGO** Series. As the title suggests, **TANGO** was supposed to be a useful program for aerospace-based planning and control tasks, featuring a complete suite of tools for visualisation, communications, navigation, and other neccessities. **TANGO** was and still is abandoned, but a successor may be built in the future.
+**TANGO I** was the first iteration of what would be the **TANGO** Series. As the title suggests, **TANGO** was supposed to be a useful program for aerospace-based mission planning and control tasks, featuring a complete suite of tools for visualisation, communications, navigation, and other neccessities. **TANGO** was and still is abandoned, but a successor may be built in the future.
 
 ## AmundWorks Open Source Philosophy
 
-The AmundWorks GitHub Repository is part of the software branch of the AmundWorks Engineering Ecosystem.
+The AmundWorks Github Repository is part of the AmundWorks Engineering Ecosystem.
 
-While this software is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon AmundWorks repositories to remain open source under the MIT License or something similarly permissive. Projects that follow this philosophy may be recognized as part of the official AmundWorks ecosystem.
+While this software and all other software under AmundWorks is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon the AmundWorks repository to remain open source under the MIT License or a similarly permissive license. Projects that follow this philosophy may be recognized as part of the official AmundWorks ecosystem.
 
 By doing so, you help support an open, collaborative engineering ecosystem.
 
