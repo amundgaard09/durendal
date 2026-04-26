@@ -20,7 +20,7 @@ Whether you're using the tools, contributing to development, or exploring the sy
 
 ## AmundWorks Overview & Status
 
-AmundWorks is a independet multi-displine engineering con
+AmundWorks is a independent multi-displine engineering conglomerate focused on creating innovative solutions at the intersection of technology and design. The organization focuses on building open-source resources, tools, and platforms that empower individuals and communities to create, learn, and innovate. AmundWorks is committed to fostering a collaborative environment where creativity and technology can thrive together.
 
 [![AmundWorks Status](https://img.shields.io/badge/Status-Active%20Development-green.svg)](https://github.com/amundgaard09/amundworks)
 
@@ -65,7 +65,7 @@ To get started with the AmundWorks Python Collective, follow these steps:
 
 3. Start using the available functions and classes in your project.
     ```python
-    result = unimath.linear_evaluation(a=5, b=3, x=2)
+    result = unimath.LinearEvaluation(a=5, b=3, x=2)
     print(result)  # Output: 13
     ```
  
@@ -76,7 +76,7 @@ If you're interested in using the UniForge CLI, which is a command-line interfac
     uniforge
     ```
 
-2. Test what the UniForge CLI can do by running a command, such as:
+2. Test what the UniForge CLI can do by running a command, such as the pythagoras calculator (the underscore `_` is used to indicate the value to be calculated, which is the standard within the UniForge CLI):
     ```bash
     unimath pythagoras 3 4 _
     ```
@@ -94,7 +94,7 @@ The following sections provide detailed documentation for each of the major proj
 
 ### AWPC - AmundWorks Python Collective
 
-The AmundWorks Python Collective is the collection of all Python projects, modules and packages built by AmundWorks. The UNIx library is a core component of **AWPC**, providing a set of utilities and functions that are used across various projects within AmundWorks. All modules under UNIx follow a consistent naming convention, starting with the prefix "uni" to indicate their association with the UNIx library. For example, you might find modules like `unimath`, `unipower`, and `univiz` within the AWPC, each offering specific functionalities related to mathematics, electrical systems, and visualizations, respectively, as well as many other modules, some still in development.
+The AmundWorks Python Collective is the collection of all Python projects, modules and packages built by AmundWorks. The UNIx library is a core component of **AWPC**, providing a set of utilities and functions that are used in Python-based projects within AmundWorks. All modules under UNIx follow a consistent naming convention, starting with the prefix "uni" to indicate their association with the UNIx library. For example, you might find modules like `unimath`, `unipower`, and `univiz` within the AWPC, each offering specific functionalities related to mathematics, electrical systems, and visualizations, respectively, as well as many other modules, with some still in development.
 
 To install AWPC, use pip:
 
@@ -135,7 +135,7 @@ AmundWorks is entirely open-source, and contributions from the community are alw
 ## License and Usage
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
-[![License Details](https://img.shields.io/badge/License-Details-blue.svg)](../LICENSE)
+[![License Details](https://img.shields.io/badge/License-Details-blue.svg)](LICENSE)
 
 All projects under AmundWorks are licensed under the MIT License, which allows for free use, modification, and distribution of the software. Users are encouraged to review the specific license files included in each project for more details on the terms and conditions of use. By using any of the AWPC projects, you agree to comply with the terms of the MIT License and acknowledge that the software is provided "as is" without any warranties or liabilities.
 

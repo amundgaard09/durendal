@@ -9,7 +9,6 @@ venv/
 .venv/
 *.env
 *.pyc
-.gitignore
 .DS_Store
 
 
