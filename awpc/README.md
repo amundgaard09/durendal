@@ -7,7 +7,13 @@
 
 ## What is AWPC?
 
-The AmundWorks Python Collective is the open-source collection of all python projects built under AmundWorks, either by collabarators or AmundWorks itself. It features subpackages like the UNIx collection, a comprehensive toolchain built for STEMP projects. AWPC is part of the dependencies for the coming UniForge CLI project.
+The AmundWorks Python Collective is the open-source collection of all Python projects built under AmundWorks, either by collabarators or AmundWorks itself. It features subpackages like the UNIx collection, which is a comprehensive toolchain built for STEM projects. AWPC is part of the dependencies for the coming UniForge CLI project.
+
+### Why AWPC?
+
+AWPC serves as a central hub for all Python-based projects under AmundWorks, fostering collaboration and sharing of tools and libraries. By consolidating these projects into a single collective, we aim to create a more cohesive and efficient development environment for our community.
+
+If you have a Python project that you think would be a good fit for AWPC, please feel free to contribute! We welcome all contributions, big or small, and are always looking for ways to improve our ecosystem.
 
 ## AmundWorks Open Source Philosophy
 
@@ -30,6 +36,6 @@ print(Pythagoras(3, 4, None)) # From unimath
 Result:
 
 ```shell
->>> A: 3, B: 4, C: 5.0
+A: 3, B: 4, C: 5.0
 ```
 

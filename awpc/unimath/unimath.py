@@ -7,14 +7,17 @@ The library is still in development and may contain some unstable functions that
 import math, time, sympy, matplotlib.pyplot as mpl
 
 from typing import Literal
-from awpc.utils.utils import *
-
+from awpc.utils.utils import xColorText
+from awpc.uniexception.uniexception import ImpossibleTriangleError
 
 class ContinuousPIDController:
+    """
+    A very crude first iteration of the Continuous PID Controller algorithms from AmundWorks.
+    """
     def __init__(self, kp, ki, kd, setpoint=0):
-        self.kp = kp  # Proportional gain
-        self.ki = ki  # Integral gain
-        self.kd = kd  # Derivative gain
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
         self.setpoint = setpoint
 
         self.integral = 0
@@ -23,26 +26,22 @@ class ContinuousPIDController:
 
     def update(self, measured_value):
         now = time.time()
-        dt = now - self.prev_time          # Elapsed time
+        dt = now - self.prev_time
 
         error = self.setpoint - measured_value
 
-        # P term
         P = self.kp * error
-
-        # I term — integrates error over time
+        
         self.integral += error * dt
         I = self.ki * self.integral
 
-        # D term — rate of error change
         derivative = (error - self.prev_error) / dt if dt > 0 else 0
         D = self.kd * derivative
 
-        # Store state for next iteration
         self.prev_error = error
         self.prev_time = now
 
-        return P + I + D  # Control output u(t)
+        return P + I + D 
 
 def _plotXY(XVals: list[float], YVals: list[float]) -> None:
     """Initialize a plot where `x[idx]` and `y[idx]` are coordinate pairs of a function."""
@@ -83,7 +82,10 @@ def TriExtrapolate(a: float, b: float, c: float, A: float | None = None, B: floa
 def Pythagoras(A: float | None = None, B: float | None = None, C: float | None = None) -> str:
     """
     Calculates the missing side of a right-angled triangle using either normal or reverse pythagoras.
-    Formula: `A² + B² = C²` for normal, and `A² = C² - B²` / `B² = C² - A²` for reverse.
+    Formula: `A² + B² = C²` for normal, and `A² = C² - B²` or  `B² = C² - A²` for reverse.
+    
+    The function can take in any two sides and will return the missing side, as well as the values of all three sides. If more than one side is missing, the function will return `None`.
+    If no sides are missing, the function will return the values of all three sides.
     """
     
     if (A, B, C).count(None) > 1:
@@ -117,6 +119,7 @@ def SineRule(
     angles_rad = []
     ReferenceRatio = None
     
+    # Convert angles to radians if they are in degrees, and keep them as is if they are already in radians. If an angle is None, keep it as None.
     for angle in Angles:
         if angle is not None and AngleMeasurementMode == "Degrees":
             angles_rad.append(math.radians(angle))
@@ -125,11 +128,12 @@ def SineRule(
 
     known_angle_indices = [i for i in range(3) if angles_rad[i] is not None]
     
+    # If two angles are known, calculate the third angle using the fact that the sum of angles in a triangle is 180 degrees (or π radians).
     if len(known_angle_indices) == 2:
         missing = next(i for i in range(3) if angles_rad[i] is None)
         angles_rad[missing] = math.pi - sum(angles_rad[i] for i in known_angle_indices)
     
-    # Find the first known side and angle to establish the reference ratio for the sine rule
+    # Find the first known side and angle to establish the reference ratio for the Sine Rule
     for idx in range(3):
         if Sides[idx] is not None and angles_rad[idx] is not None:
             ReferenceRatio = Sides[idx] / math.sin(angles_rad[idx])
@@ -139,6 +143,7 @@ def SineRule(
     if ReferenceRatio is None:
         return None
 
+    # Loop through the sides and angles to calculate the missing values using the Sine Rule
     for idx in range(3):
         if Sides[idx] is None and angles_rad[idx] is not None:
             Sides[idx] = ReferenceRatio * math.sin(angles_rad[idx])
@@ -252,13 +257,13 @@ def QuadraticSolutions(A: float, B: float, C: float) -> str:
     if D > 0:
         x1 = (-B - math.sqrt(D)) / (2 * A)
         x2 = (-B + math.sqrt(D)) / (2 * A)
-        return f"x1: {ColorText(x1, 'green')}, x2: {ColorText(x2, 'green')}"
+        return f"x1: {xColorText(x1, 'green')}, x2: {xColorText(x2, 'green')}"
     
     elif D == 0:
         x1 = -B / (2 * A)
-        return f"x: {ColorText(x1, 'green')}"
+        return f"x: {xColorText(x1, 'green')}"
     else: 
-        return ColorText('No real solutions', 'red')
+        return xColorText('No real solutions', 'red')
 def QuadraticFactorizedForm(a: float, b: float, c: float) -> str:
     """Returns the factorized form of a quadratic function in the form of `a(x - x1)(x - x2)` where `x1` and `x2` are the roots of the function."""
     D = b**2 - 4*a*c
@@ -271,20 +276,20 @@ def QuadraticFactorizedForm(a: float, b: float, c: float) -> str:
         x1 = -b / (2 * a)
         return f"{a}(x - {x1})^2"
     else: 
-        return ColorText('No real solutions', 'red')
+        return xColorText('No real solutions', 'red')
 def QuadraticZeros(a: float, b: float, c: float) -> str:
     """Returns the x-values where the quadratic function crosses the x-axis."""
     D = b**2 - 4*a*c
     if D > 0:
         x1 = (-b - math.sqrt(D)) / (2 * a)
         x2 = (-b + math.sqrt(D)) / (2 * a)
-        return f"Zeros: {ColorText((x1, 0), 'green')}, {ColorText((x2, 0), 'green')}"
+        return f"Zeros: {xColorText((x1, 0), 'green')}, {xColorText((x2, 0), 'green')}"
     
     elif D == 0:
         x1 = -b / (2 * a)
-        return f"Zero: {ColorText((x1, 0), 'green')}"
+        return f"Zero: {xColorText((x1, 0), 'green')}"
     else: 
-        return ColorText('No real zeros', 'red')
+        return xColorText('No real zeros', 'red')
 def QuadraticEvaluation(a: float, b: float, c: float, x: float) -> str:
     return f"{a}x^2 + {b}x + {c} = {a*x**2 + b*x + c}"
 
@@ -300,7 +305,7 @@ def CubicVertex(a: float, b: float, c: float, d: float) -> str:
         y = f.subs(x, point)
         vertices.append((point, y))
     
-    return f"Vertices: {ColorText(vertices, 'green' if all(v[1].is_real for v in vertices) else 'red')}"
+    return f"Vertices: {xColorText(vertices, 'green' if all(v[1].is_real for v in vertices) else 'red')}"
 def CubicNumRoots(a: float, b: float, c: float, d: float) -> int:
     """Returns the number of roots of a cubic function based on the discriminant."""
     D = 18*a*b*c*d - 4*b**3*d + b**2*c**2 - 4*a*c**3 - 27*a**2*d**2
@@ -310,13 +315,13 @@ def CubicSolutions(a: float, b: float, c: float, d: float) -> str:
     x = sympy.symbols('x')
     f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
     solutions = sympy.solve(f, x)
-    return f"Solutions: {ColorText(solutions, 'green' if all(sol.is_real for sol in solutions) else 'red')}"
+    return f"Solutions: {xColorText(solutions, 'green' if all(sol.is_real for sol in solutions) else 'red')}"
 def CubicZeros(a: float, b: float, c: float, d: float) -> str:
     """Returns the x-values where the cubic function crosses the x-axis."""
     x = sympy.symbols('x')
     f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
     zeros = sympy.solve(f, x)
-    return f"Zeros: {ColorText(zeros, 'green' if all(z.is_real for z in zeros) else 'red')}"
+    return f"Zeros: {xColorText(zeros, 'green' if all(z.is_real for z in zeros) else 'red')}"
 def CubicEvaluation(a: float, b: float, c: float, d: float, x: float) -> tuple[str, float]:
     """Cubic Evaluation function"""
     result = a*x**3 + b*x**2 + c*x + d
@@ -330,7 +335,7 @@ def CubicEvaluationBruteForce(a: float, b: float, c: float, d: float, LowerBound
         xvals.append(x)
         yvals.append(result)
         roots.append(x) if result == 0 else None
-        print(ColorText(string, 'green' if result == 0 else 'red'))
+        print(xColorText(string, 'green' if result == 0 else 'red'))
         
     print(f"Roots: {roots}")
     _plotXY(xvals, yvals)
@@ -369,3 +374,12 @@ def PrimeFactorize(Number: int) -> list[int]:
             Divisor += 1
             
     return Factors
+
+### - TODO: Add more functions for various mathematical calculations, such as:
+### - More functions for geometry, such as area and volume calculations for various shapes, surface area calculations, and more.
+### - More functions for algebra, such as polynomial expansion, factorization, and more.
+### - More functions for calculus, such as integration, limits, and more.
+### - More functions for linear algebra, such as matrix operations, determinants, eigenvalues, and more.
+### - More functions for number theory, such as GCD, LCM, modular arithmetic, and more.
+### - More functions for engineering and physics, such as kinematics equations, projectile motion calculations, work and energy calculations, and more.
+

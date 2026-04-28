@@ -4,8 +4,10 @@ import inspect
 
 from awpc.unimath import unimath
 from awpc.unicrypt import unicrypt
+from awpc.uniphys import uniphys
+from awpc.unipower import unipower
 
-def genDict(Module) -> tuple[dict, dict]:
+def generateDict(Module) -> tuple[dict, dict]:
     """Generate an argument count dict and function call dict for a module. Returns `(arg_count_dict, call_dict)`, both in alphabetical order."""
     
     arg_count_dict = {}
@@ -13,7 +15,7 @@ def genDict(Module) -> tuple[dict, dict]:
     
     for name, obj in inspect.getmembers(Module, inspect.isfunction):
     
-        if name.startswith("_"):
+        if name.startswith("_") or name.startswith("x"):
             continue
 
         sig = inspect.signature(obj)
@@ -30,5 +32,7 @@ def genDict(Module) -> tuple[dict, dict]:
     
     return arg_count_dict, call_dict
 
-UNIMATHARGMAP, UNIMATHCALLMAP = genDict(unimath)
-UNICRYPTARGMAP, UNICRYPTCALLMAP = genDict(unicrypt)
+UNIMATHARGMAP,  UNIMATHCALLMAP = generateDict(unimath)
+UNICRYPTARGMAP, UNICRYPTCALLMAP = generateDict(unicrypt)
+UNIPHYSARGMAP,  UNIPHYSCALLMAP = generateDict(uniphys)
+UNIPOWERARGMAP, UNIPOWERCALLMAP = generateDict(unipower)

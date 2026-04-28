@@ -1,6 +1,6 @@
 """
 The UniPower function library for the `AWPC` library. 
-This library contains functions for various electrical calculations and simulations. The functions are designed to be easy to use and understand, with clear input and output formats. 
+This library contains functions for electrical calculations and simulations. The functions are designed to be easy to use and understand, with clear input and output formats. 
 The library is still in development and may contain some unstable functions that are not yet fully tested.
 """
 
@@ -8,7 +8,14 @@ import math
 
 from types import MappingProxyType
 from typing_extensions import Literal
-from awpc.utils.utils import *
+from awpc.utils.utils import Quantity, UNITS, ANSI_COLORS
+
+from awpc.uniexception.uniexception import (
+    MissingParameters, 
+    InconsistencyError, 
+    InvalidColors
+)
+
 
 BANDS = MappingProxyType({
     "black":  0,

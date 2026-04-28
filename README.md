@@ -9,7 +9,7 @@
 
 *What is AmundWorks?*
 
-The **AmundWorks GitHub repository** is the open-source collection of all projects built by **AmundWorks**. It serves as a central hub for all the work and projects created by AmundWorks, providing a platform for sharing and collaborating on various initiatives. The repository includes projects built for anything from software development to defense application firmware, and is constantly updated with new content. It is intended to be a resource for anyone interested in the work of AmundWorks, as well as a platform for collaboration and innovation. 
+The **AmundWorks GitHub repository** is the open-source collection of all projects built by **AmundWorks**. It serves as a central hub for all the work and projects created by AmundWorks, providing a platform for sharing and collaborating on various initiatives. The repository includes projects built for anything from software development to defense application firmware. It is intended to be a resource for anyone interested in the work of AmundWorks, as well as a platform for collaboration and innovation. 
 
 ## PROJECTS
 

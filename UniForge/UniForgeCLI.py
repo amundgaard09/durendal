@@ -1,11 +1,13 @@
 """UniForge Engineering Assistant CLI - v1.1.5-beta"""
 
-import os, math, json, shlex
+import math
 
 from awpc.unimath.unimath import *
 from awpc.unicrypt.unicrypt import *
 from awpc.unipower.unipower import *
+from awpc.uniphys.uniphys import *
 
+from awpc.uniCLI.uniCLI import clearTerminal, Dispatcher, GenerateCompleter, ExitEnvironmentSignal
 from awpc.utils.utils import *
 from awpc import moduleTools as mt
 
@@ -17,85 +19,9 @@ HOHMANNVersion= "v.0.0.1.alpha"
 
 ### SYSTEM
 
-def Tokenize(RawCommandString: str) -> list[str]:
-    """Tokenize a raw command string and return token list."""
-    Tokens = shlex.split(RawCommandString)
-    ProcessedTokens = []
-    for Token in Tokens:
-        if Token.startswith("[") and Token.endswith("]"):
-            ProcessedValue = [float(x.strip()) for x in Token.strip("[]").split(",") if x.strip()]
-            ProcessedTokens.append(ProcessedValue)
-        else:
-            ProcessedTokens.append(Token)
-    return ProcessedTokens
-def Dispatcher(RawCommandString: str, CommandMap: dict[str, dict[str, callable]], ArgMap: dict[str, dict[str, set]]) -> callable:
-    """The main dispatcher function that takes in a raw command string, tokenizes it, verifies the tokens, validates the arguments and dispatches the command to the correct function."""
-    Tokens = Tokenize(RawCommandString) 
-    ValidateCommand(Tokens, CommandMap, ArgMap)
-    Module, Command, RawArgs = Tokens[0], Tokens[1], Tokens[2:]
-    Args = []
-    for arg in RawArgs:
-        if arg == "_":
-            Args.append(None)
-        else:
-            try:
-                Args.append(float(arg))
-            except ValueError:
-                Args.append(arg)
-            
-    return CommandMap[Module][Command](*Args)
-def ValidateCommand(tokens: list, cmd_map: dict, arg_map: dict):
-    if not tokens:
-        raise EmptyTokenList
-
-    module = tokens[0]
-    if module not in cmd_map:
-        raise UnknownModule(module)
-
-    if len(tokens) < 2:
-        raise MissingSubCommand(module)
-
-    command = tokens[1]
-    if command not in cmd_map[module]:
-        raise UnknownSubCommand(module, command)
-
-    args = tokens[2:]
-    if len(args) not in arg_map[module][command]:
-        raise IncorrectArgumentCount(cmd_map[module][command], len(args), arg_map[module][command])
 def _exitEnviroment() -> None:
     """Exit the current environment and return to MAINEnv."""
     raise ExitEnvironmentSignal
-def _clearTerminal() -> None:
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-### UNIMAKE
-
-def Torque(MomentArmDistance: float, Force: float) -> Quantity:
-    """Returns a `torque` quantity in newtonmeters from moment arm distance in meters and force in newtons."""
-    return Quantity((MomentArmDistance * Force), UNITS["Nm"])
-def GearRatio(DrivingGearTeethCount: int, DrivenGearTeethCount: int) -> str:
-    """Returns the gear ratio from the driving gear's teeth count and the driven gear's teeth count."""
-    Ratio = DrivenGearTeethCount / DrivingGearTeethCount
-    if Ratio > 1:
-        return f"{Ratio} - {ColorText('Speed-', 'red')} - {ColorText('Torque+', 'green')}"
-    elif Ratio < 1:
-        return f"{Ratio} - {ColorText('Speed+', 'green')} - {ColorText('Torque-', 'red')}"
-    else:
-        return f"{Ratio} - Same Speed - Same Torque"
-
-def AngularVelocityR(RPM: float) -> Quantity:
-    """Returns angular velocity from RPM in radians/s"""
-    return Quantity((RPM * math.pi / 30), UNITS["Rad"])
-def AngularVelocityD(RPM: float) -> Quantity:
-    """Returns angular velocity from RPM in degrees/s"""
-    return Quantity(R2D((RPM * math.pi / 30)), UNITS["Deg"])
-
-def KineticEnergy(Mass: float, Velocity: float) -> Quantity:
-    """Returns the kinetic energy from mass in kgs and velocity in m/s"""
-    return Quantity((0.5 * Mass * Velocity**2), UNITS["J"])
-def PotentialEnergy(Mass: float, Height: float, Gravity: float | None = EARTH_G.value) -> Quantity:
-    """Returns the potential energy of a mass. Gravity is defaulted to 9.8m /s^2"""
-    return Quantity(Mass * Gravity * Height, UNITS["J"])
 
 ### UNICON
 
@@ -114,13 +40,13 @@ def PIDStep(CurrentError: float, TimeInterval: float, Kp: float, Ki: float, Kd: 
 def T2WRatio(Thrust: float, Weight: float) -> str:
     """Thrust to Weight ratio calculator. Ensure consistent units!"""
     Ratio = Thrust / Weight
-    return f"Ratio: {ColorText(f'{Ratio}', 'green' if Ratio > 1 else 'red' if Ratio != 1 else 'yellow')}" 
+    return f"Ratio: {xColorText(f'{Ratio}', 'green' if Ratio > 1 else 'red' if Ratio != 1 else 'yellow')}" 
 def MachNumber(Velocity: float, SpeedOfSound: float | None = MACH) -> str:
     """Mach Number Calulator. Speed of sound is defaulted to 343 m/s. Ensure consistent units!"""
     mach = Velocity / SpeedOfSound
-    label = ('SUBSONIC' if mach < 1 else 'TRANSONIC' if mach == 1 else 'SUPERSONIC' if mach < 5 else 'HYPERSONIC' if mach < 10 else 'HIGH-HYPERSONIC')
+    label = ('SUBSONIC' if mach < 1 else 'TRANSONIC' if abs(mach - 1) < 0.01 else 'SUPERSONIC' if mach < 5 else 'HYPERSONIC' if mach < 10 else 'HIGH-HYPERSONIC')
     color = ('red' if mach < 1 else 'yellow' if mach == 1 else 'green' if mach < 5 else 'blue' if mach < 10 else 'violet')
-    return f"Ratio: {ColorText(f'{mach} - {label}', color)}"
+    return f"Ratio: {xColorText(f'{mach} - {label}', color)}"
                                 
 def DynamicPressure(Velocity: float, AirDensity: float | None = 1.225) -> Quantity:
     return Quantity(0.5 * Velocity ** 2 * AirDensity, UNITS["Pa"])
@@ -146,8 +72,8 @@ def SurfaceGravity(Mass: float, Radius: float) -> Quantity:
 
 def EinsteinMassEnergyEquivalence(Mass: float) -> Quantity:
     return Quantity((Mass * C ** 2), UNITS["J"])
-def TsiolkovskyRocketEquation(ExhaustVelocity: float, InitialMass: float, Finalmass: float) -> Quantity:
-    return Quantity((ExhaustVelocity * math.log(InitialMass / Finalmass)), UNITS["Δv"])
+def TsiolkovskyRocketEquation(ExhaustVelocity: float, InitialMass: float, FinalMass: float) -> Quantity:
+    return Quantity((ExhaustVelocity * math.log(InitialMass / FinalMass)), UNITS["Δv"])
 
 ### UNIALGO
 
@@ -161,6 +87,9 @@ def FibonacciList(ListLength: float) -> list[int]:
     
     fib0, fib1 = 0, 1
     FiboList = [fib0, fib1]
+    
+    if ListLength < 2:
+        raise ValueError("FibonacciList does not take integers less than 2!")
     
     for _ in range(0, (ListLength - 2)):
         fib2 = fib0 + fib1
@@ -192,7 +121,7 @@ def FibonacciInteger(FiboIndex: float) -> int:
 
 def LovelacesAlgorithm(a: float, b: float, c: float, d: float, e: float, f: float) -> tuple:
     """Lovelace's algorithm for solving systems of linear equations."""
-    if (a*e - b*d) == 0:
+    if a*e == b*d: 
         raise ValueError("The system has no unique solution.")
     
     Dx = c*e - b*f
@@ -204,20 +133,20 @@ def LovelacesAlgorithm(a: float, b: float, c: float, d: float, e: float, f: floa
 ### ENVIROMENTS 
 
 def _mainEnv() -> None:
-    _clearTerminal()
+    clearTerminal()
     print(MAINVersion)
     while True:        
         try:
             CommandString = prompt("UniForge >>> ", completer=MAINCOMPLETER)
             Result = Dispatcher(CommandString, MAINCMDMAP, MAINARGMAP)
-            _clearTerminal()
+            clearTerminal()
             if Result is not None:
                 print(Result)
             
         except Exception as e:
-            print(e)
+            print(f"[{xColorText('ERROR', 'red')}] {type(e).__name__}: {e}")
 def _pidEnv() -> None:
-    _clearTerminal()
+    clearTerminal()
     print(f"ORION PID Testing Environment {PIDVersion}")
     while True:
         try:
@@ -227,13 +156,13 @@ def _pidEnv() -> None:
                 print(Result)    
         
         except ExitEnvironmentSignal:
-            _clearTerminal()
+            clearTerminal()
             print(f"ORION Environment {MAINVersion}")
             break
         except Exception as e:
-            print(e)
+            print(f"[{xColorText('ERROR', 'red')}] {type(e).__name__}: {e}")
 def _hohmannEnv() -> None:
-    _clearTerminal()
+    clearTerminal()
     print(f"ORION Hohmann Calculation & Visualization Environment {HOHMANNVersion}")
     while True:
         try:
@@ -243,11 +172,11 @@ def _hohmannEnv() -> None:
                 print(Result)    
         
         except ExitEnvironmentSignal:
-            _clearTerminal()
+            clearTerminal()
             print(MAINVersion)
             break
         except Exception as e:
-            print(e)
+            print(f"[{xColorText('ERROR', 'red')}] {type(e).__name__}: {e}")
 
 ### MAPS
 
@@ -263,14 +192,7 @@ MAINARGMAP:    dict[str, dict[str, set]] = {
         "totalcapacitance": {2},
         "totalesr": {2},
     },
-    "unimake": {
-        "torque": {2},
-        "gearratio": {2},
-        "angularvelocityr": {1},
-        "angularvelocityd": {1},
-        "kineticenergy": {2},
-        "potentialenergy": {2, 3},
-    },
+    "uniphys": mt.UNIPHYSARGMAP,
     "uniflight": {
         "T2Wratio": {2},
         "machnumber": {1, 2},
@@ -322,14 +244,7 @@ MAINCMDMAP:    dict[str, dict[str, callable]] = {
         "totalcapacitance": TotalCapacitance,
         "totalesr": TotalESR,
     },
-    "unimake": {
-        "torque": Torque,
-        "gearratio": GearRatio,
-        "angularvelocityr": AngularVelocityR,
-        "angularvelocityd": AngularVelocityD,
-        "kineticenergy": KineticEnergy,
-        "potentialenergy": PotentialEnergy,
-    },
+    "uniphys": mt.UNIPHYSCALLMAP,
     "uniflight": {
         "T2Wratio": T2WRatio,
         "machnumber": MachNumber,

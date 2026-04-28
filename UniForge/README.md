@@ -1,4 +1,4 @@
-# UniForge CLI - The Ultimate Command Line Interface STEMP Toolchain
+# UniForge CLI - The Ultimate Command Line Interface STEM Toolchain
 
 ***Written, Created, Iterated, Evolved and Built by Simon Stordal Amundgård***
 
@@ -7,7 +7,7 @@
 
 ## What is UniForge?
 
-The UniForge CLI is the ultimate command line interface from AmundWorks, designed to provide a seamless and powerful experience for users working with STEMP projects. It leverages the capabilities of the AmundWorks Python Collective and integrates with various subpackages, including the UNIx collection, to offer a comprehensive toolchain for developers and engineers.
+The UniForge CLI is the ultimate command line interface from AmundWorks, designed to provide a seamless and powerful experience for users working with STEM projects. It leverages the capabilities of the AmundWorks Python Collective and integrates with various subpackages, including the UNIx collection, to offer a comprehensive toolchain for developers and engineers.
 
 ## AmundWorks Open Source Philosophy
 
@@ -22,7 +22,7 @@ By doing so, you help support an open, collaborative engineering ecosystem.
 uniforge
 ```
 
-This command will launch the UniForge CLI Enviroment, allowing you to access its various features and tools for STEMP engineering projects.
+This command will launch the UniForge CLI Enviroment, allowing you to access its features and tools for STEM engineering projects.
 
 ## Example Usage
 ```shell
@@ -34,7 +34,7 @@ Using the unimath subpackage to calculate the hypotenuse of a right triangle wit
 Result:
 
 ```shell
->>> A: 3, B: 4, C: 5.0 
+A: 3, B: 4, C: 5.0 
 ```
 
 The output shows the values of A, B, and C, with C being the calculated hypotenuse.
