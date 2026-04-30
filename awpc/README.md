@@ -35,7 +35,6 @@ print(Pythagoras(3, 4, None)) # From unimath
 ```
 Result:
 
-```shell
+```
 A: 3, B: 4, C: 5.0
 ```
-

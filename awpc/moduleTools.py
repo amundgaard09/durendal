@@ -2,10 +2,14 @@
 
 import inspect
 
-from awpc.unimath import unimath
-from awpc.unicrypt import unicrypt
-from awpc.uniphys import uniphys
-from awpc.unipower import unipower
+
+from awpc.unipy.uniflight import uniflight
+from awpc.unipy.unispace import unispace
+from awpc.unipy.unicrypt import unicrypt
+from awpc.unipy.unipower import unipower
+from awpc.unipy.uniphys import uniphys
+from awpc.unipy.unimath import unimath
+from awpc.unipy.unialgo import unialgo
 
 def generateDict(Module) -> tuple[dict, dict]:
     """Generate an argument count dict and function call dict for a module. Returns `(arg_count_dict, call_dict)`, both in alphabetical order."""
@@ -32,7 +36,10 @@ def generateDict(Module) -> tuple[dict, dict]:
     
     return arg_count_dict, call_dict
 
-UNIMATHARGMAP,  UNIMATHCALLMAP = generateDict(unimath)
-UNICRYPTARGMAP, UNICRYPTCALLMAP = generateDict(unicrypt)
-UNIPHYSARGMAP,  UNIPHYSCALLMAP = generateDict(uniphys)
-UNIPOWERARGMAP, UNIPOWERCALLMAP = generateDict(unipower)
+UNIFLIGHTARGMAP, UNIFLIGHTCALLMAP = generateDict(uniflight)
+UNISPACEARGMAP,  UNISPACECALLMAP  = generateDict(unispace)
+UNIPOWERARGMAP,  UNIPOWERCALLMAP  = generateDict(unipower)
+UNICRYPTARGMAP,  UNICRYPTCALLMAP  = generateDict(unicrypt)
+UNIPHYSARGMAP,   UNIPHYSCALLMAP   = generateDict(uniphys)
+UNIMATHARGMAP,   UNIMATHCALLMAP   = generateDict(unimath)
+UNIALGOARGMAP,   UNIALGOCALLMAP   = generateDict(unialgo)
