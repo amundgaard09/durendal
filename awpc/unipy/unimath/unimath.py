@@ -7,7 +7,7 @@ including geometry, algebra, calculus, and more.
 import math, time, sympy, matplotlib.pyplot as mpl
 
 from typing import Literal
-from awpc.utilities.utils import xColorText
+from awpc.commons.utils import xColorText
 from awpc.commons.exceptions import ImpossibleTriangleError
 
 class ContinuousPIDController:

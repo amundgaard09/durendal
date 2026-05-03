@@ -4,7 +4,9 @@ The `AWPC` `UniSpace` module provides a collection of functions and classes for 
 
 import math
 
-from awpc.utilities.utils import Quantity, EARTH_M, EARTH_R, UNITS, G, C
+from awpc.commons.types import Quantity, UNITS
+from awpc.commons.constants import G, EARTH_M, EARTH_R
+
 
 ### NOTE Hohmann transfer delta-v + visualization env - COMING SOON
 
@@ -20,7 +22,5 @@ def GravitationalForce(Mass1: float, Mass2: float, Distance: float) -> Quantity:
 def SurfaceGravity(Mass: float, Radius: float) -> Quantity:
     return Quantity((G * Mass / Radius ** 2), UNITS["m/s^2"])
 
-def EinsteinMassEnergyEquivalence(Mass: float) -> Quantity:
-    return Quantity((Mass * C ** 2), UNITS["J"])
 def TsiolkovskyRocketEquation(ExhaustVelocity: float, InitialMass: float, FinalMass: float) -> Quantity:
     return Quantity((ExhaustVelocity * math.log(InitialMass / FinalMass)), UNITS["Δv"])

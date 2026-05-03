@@ -10,8 +10,13 @@ typedef struct {
 } Array;
 
 void InitArray(Array *a);
-int ArraySize(Array *a);
-void Append(Array *a, float value);
 void PrintArray(Array *a);
+void Append(Array *a, float data);
+void SetValue(Array *a, int Index, float Value);
+void Remove(Array *a, int Index);
+void FreeArray(Array *a);
+
+float GetValue(Array *a, int Index);
+int ArraySize(Array *a);
 
 #endif

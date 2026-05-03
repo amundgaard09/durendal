@@ -6,12 +6,10 @@ The library is still in development and may contain some unstable functions that
 
 import math
 
-from awpc.utilities.utils import (
-    xColorText, 
-    Quantity,  
-    UNITS, 
-    EARTH_G
-)
+from awpc.commons.utils import xColorText
+from awpc.commons.types import Quantity, UNITS
+from awpc.commons.constants import EARTH_G, C
+
 
 def Torque(MomentArmDistance: float, Force: float) -> Quantity:
     """Returns a `torque` quantity in newtonmeters from moment arm distance in meters and force in newtons."""
@@ -39,3 +37,6 @@ def KineticEnergy(Mass: float, Velocity: float) -> Quantity:
 def PotentialEnergy(Mass: float, Height: float, Gravity: float | None = EARTH_G.value) -> Quantity:
     """Returns the potential energy of a mass. Gravity is defaulted to 9.8m /s^2"""
     return Quantity(Mass * Gravity * Height, UNITS["J"])
+
+def EinsteinMassEnergyEquivalence(Mass: float) -> Quantity:
+    return Quantity((Mass * C ** 2), UNITS["J"])

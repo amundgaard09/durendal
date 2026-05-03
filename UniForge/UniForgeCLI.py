@@ -8,7 +8,7 @@ from awpc.unipy.unimath.unimath import *
 from awpc.unipy.uniphys.uniphys import *
 from awpc.unipy.unialgo.unialgo import *
 
-from awpc.utilities.utils import *
+from awpc.commons.utils import *
 from awpc import moduleTools as mt
 
 from awpc.unipy.uniCLI.uniCLI import (

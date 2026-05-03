@@ -1,7 +1,7 @@
 
-#include <chrono>
 #include <iostream>
 #include <vector>
+#include <chrono>
 
 // Check if `Number` is prime
 // Uses trial division to check for factors of `Number` up to the square root of `Number`.

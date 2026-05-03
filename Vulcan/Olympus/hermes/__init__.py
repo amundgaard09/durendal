@@ -1,6 +1,6 @@
 
 from typing import __all__
 
-import main
+import vulcan.olympus.hermes.main as main
 
 __all__ = ["main"]

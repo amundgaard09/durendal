@@ -24,7 +24,7 @@ While this software and all other software under AmundWorks is licensed under th
 By doing so, you help support an open, collaborative engineering ecosystem.
 
 ## Install
-```shell
+```
 pip install awpc
 ```
 

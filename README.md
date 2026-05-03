@@ -41,6 +41,10 @@ The **AmundWorks Python Collective** is the complete collection of all Python pr
 
 **Vulcan** is a personal, modular assistant designed as a “life operating system” for planning and decision-making across training, academics, and other aspects of life. Combined with a GUI, it uses a simple intent-driven pipeline to process user input and route tasks to specialized tool modules, generating structured outputs like training schedules, study plans, and daily priorities. Built with scalability in mind, **Vulcan** starts as a lightweight text-based system but is designed to evolve into a fully integrated GUI and voice-enabled assistant tailored to optimize performance, learning, and long-term progression. Vulcan is built upon **OpenAI Whisper**, **AWPC**, and other smaller projects under **AmundWorks**.
 
+### MAX-Q - Composable Systems Engine
+
+**MAX-Q** is a 
+
 ## ARCHIVED PROJECTS
 
 This is the list of old projects no longer being maintained / further developed by AmundWorks. Projects may be restarted again at any time.

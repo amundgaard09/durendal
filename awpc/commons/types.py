@@ -1,20 +1,8 @@
-"""The `AWPC` utilities and dependencies module. This module contains all the dependencies of the `AWPC` library, such as custom exceptions, datatypes, and other utilities."""
-
-ANSI_COLORS = {
-    "black":  "\033[30m",
-    "brown":  "\033[38;5;94m",
-    "red":    "\033[31m",
-    "orange": "\033[38;5;208m",
-    "yellow": "\033[33m",
-    "green":  "\033[32m",
-    "blue":   "\033[34m",
-    "violet": "\033[38;5;93m",
-    "gray":   "\033[90m",
-    "white":  "\033[97m",
-    "gold":   "\033[38;5;178m",
-    "silver": "\033[38;5;7m",
-} 
-"""The `ANSI` escape codes for the colors used in the `UNIx` library. The keys are the color names and the values are the corresponding `ANSI` escape codes."""
+"""
+This module contains the base classes for the unit system used in the `AWPC` library, including `Unit`, `Quantity`, and `PhysicalConstant`. 
+It also includes a conversion table for converting between different units of measurement. 
+The unit system is designed to unify units of measurement along with their dimensions (e.g. length, weight, etc.) and to allow for easy conversion between compatible units.
+"""
 
 class Unit:
     """Base class for the unit system - unifying units of measurement along with the dimension of measurement (e.g. length, weight, etc.)"""
@@ -138,45 +126,96 @@ CONVERSION_TABLE: dict[tuple[str, str], float] = {
     ("psi",  "Pa"):   6894.76,
 }
 
-def xColorText(Text: str, Color: str) -> str:
-    """Returns the given text in the given color using `ANSI` escape codes. If the color is not found, it returns the text without coloring."""
-    Text = str(Text)
-    ANSI = ANSI_COLORS.get(Color.lower(), '\033[0m')
-    return ANSI + Text + '\033[0m'
-def InsertJSON(PathToJSON: str, ContentDict: dict) -> None:
-    """Inserts a dictionary into a `JSON` file. If the file does not exist, it creates it. Returns `True` if the operation was successful, `False` otherwise."""
+class BaseColor:
+    "Base class for color data types."
+    def __init__(self, colorname: str):
+        self.colorname = colorname
     
-    import json
+class RGB(BaseColor):
+    "RGB color data type."
+    def __init__(self, colorname: str, r: int, g: int, b: int):
+        super().__init__(colorname)
+        self.r = r
+        self.g = g
+        self.b = b
+        
+    # add dunder methods
     
-    with open(PathToJSON, 'w') as JSONFile:
-        json.dump(ContentDict, JSONFile, indent=4, sort_keys=True)
-def ExtractJSON(PathToJSON: str) -> dict:
-    """Extracts a `JSON` file and returns the content as a dictionary. Returns `None` if the file is not found or if there is an error during extraction."""
+    @property
+    def values(self) -> tuple[int, int, int]:
+        return (self.r, self.g, self.b)
     
-    import json
+    def toHex(self) -> str:
+        """Converts the RGB color to a hexadecimal color code in the format "#RRGGBB"."""
+        return f"#{self.r:02x}{self.g:02x}{self.b:02x}"
+    def toCMYK(self) -> tuple[int, int, int, int]:
+        """Converts the RGB color to CMYK color values."""
+        r_scaled = self.r / 255
+        g_scaled = self.g / 255
+        b_scaled = self.b / 255
+        
+        k = 1 - max(r_scaled, g_scaled, b_scaled)
+        if k == 1:
+            return (0, 0, 0, 100) # Pure black
+        
+        c = (1 - r_scaled - k) / (1 - k)
+        m = (1 - g_scaled - k) / (1 - k)
+        y = (1 - b_scaled - k) / (1 - k)
+        
+        return (int(c * 100), int(m * 100), int(y * 100), int(k * 100)) 
+class HexColor(BaseColor):
+    "Hex color data type."
+    def __init__(self, colorname: str, hexcode: str):
+        super().__init__(colorname)
+        self.hexcode = hexcode
+
+    @property
+    def values(self) -> str:
+        return self.hexcode
     
-    try:
-        with open(PathToJSON, 'r', encoding='utf-8') as file:
-            return json.load(file)
-    except Exception:
-        return None
+    def toRGB(self) -> tuple[int, int, int]:
+        """Converts the hexadecimal color code to RGB color values."""
+        hexcode = self.hexcode.lstrip('#')
+        r = int(hexcode[0:2], 16)
+        g = int(hexcode[2:4], 16)
+        b = int(hexcode[4:6], 16)
+        return (r, g, b)
+    def toCMYK(self) -> tuple[int, int, int, int]:
+        """Converts the hexadecimal color code to CMYK color values."""
+        r, g, b = self.toRGB()
+        r_scaled = r / 255
+        g_scaled = g / 255
+        b_scaled = b / 255
+        
+        k = 1 - max(r_scaled, g_scaled, b_scaled)
+        if k == 1:
+            return (0, 0, 0, 100) # Pure black
+        
+        c = (1 - r_scaled - k) / (1 - k)
+        m = (1 - g_scaled - k) / (1 - k)
+        y = (1 - b_scaled - k) / (1 - k)
+        
+        return (int(c * 100), int(m * 100), int(y * 100), int(k * 100))   
+class CMYK(BaseColor):
+    "CMYK color data type."
+    def __init__(self, colorname: str, c: int, m: int, y: int, k: int):
+        super().__init__(colorname)
+        self.c = c
+        self.m = m
+        self.y = y
+        self.k = k
 
-G       = PhysicalConstant(6.674e-11, UNITS["GCONST"], "Gravitational Constant")
-C       = PhysicalConstant(299792458, UNITS["m/s"],    "Speed of Light")
-AU      = PhysicalConstant(1.496e+11, UNITS["m"],      "Astronomical Unit")
-MACH    = PhysicalConstant(343,       UNITS["m/s"],    "Speed of Sound at sea level")
+    @property
+    def values(self) -> tuple[int, int, int, int]:
+        return (self.c, self.m, self.y, self.k)
 
-EARTH_G = PhysicalConstant(9.8,       UNITS["m/s^2"],  "Surface Gravity of the Earth")
-MOON_G  = PhysicalConstant(1.62,      UNITS["m/s^2"],  "Surface Gravity of the Moon")
-MARS_G  = PhysicalConstant(3.71,      UNITS["m/s^2"],  "Surface Gravity of Mars")
-SUN_G   = PhysicalConstant(274,       UNITS["m/s^2"],  "Surface Gravity of the Sun")
-
-EARTH_M = PhysicalConstant(5.972e+24, UNITS["kg"],     "Mass of the Earth")
-MOON_M  = PhysicalConstant(7.342e+22, UNITS["kg"],     "Mass of the Moon")
-MARS_M  = PhysicalConstant(6.390e+23, UNITS["kg"],     "Mass of Mars")
-SUN_M   = PhysicalConstant(1.989e+30, UNITS["kg"],     "Mass of the Sun")
-
-EARTH_R = PhysicalConstant(6.371e+6,  UNITS["m"],      "Radius of the Earth")
-MOON_R  = PhysicalConstant(1.737e+6,  UNITS["m"],      "Radius of the Moon")
-MARS_R  = PhysicalConstant(3.390e+6,  UNITS["m"],      "Radius of Mars")
-SUN_R   = PhysicalConstant(6.957e+8,  UNITS["m"],      "Radius of the Sun")
+    def toRGB(self) -> tuple[int, int, int]:
+        """Converts the CMYK color values to RGB color values."""
+        r = 255 * (1 - self.c / 100) * (1 - self.k / 100)
+        g = 255 * (1 - self.m / 100) * (1 - self.k / 100)
+        b = 255 * (1 - self.y / 100) * (1 - self.k / 100)
+        return (int(r), int(g), int(b))
+    def toHex(self) -> str:
+        """Converts the CMYK color values to a hexadecimal color code in the format "#RRGGBB"."""
+        r, g, b = self.toRGB()
+        return f"#{r:02x}{g:02x}{b:02x}"

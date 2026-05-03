@@ -8,7 +8,11 @@ import math
 
 from types import MappingProxyType
 from typing_extensions import Literal
-from awpc.utilities.utils import Quantity, UNITS, ANSI_COLORS
+from awpc.commons.utils import ANSI_COLORS
+from awpc.commons.types import (
+    Quantity,
+    UNITS
+)
 
 from awpc.commons.exceptions import (
     MissingParameters, 

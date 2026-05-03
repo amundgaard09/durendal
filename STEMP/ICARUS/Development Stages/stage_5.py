@@ -1,7 +1,6 @@
 """ICARUS Autonomous Tactical Assistant - STAGE V - TTS Testing"""
 
 from piper import PiperVoice
-from pathlib import Path
 import wave
 
 ONNX = "C:/Users/Administrator/.vscode/AmundWorks/amundworks/STEMP/ICARUS/Dependencies/en_US-arctic-medium.onnx"

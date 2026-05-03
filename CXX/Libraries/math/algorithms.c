@@ -1,4 +1,4 @@
-/* UTILITY LIBRARY - AMUNDWORKS - V.1 */
+/* ALGORITHMS LIBRARY - AMUNDWORKS - V.1 */
 
 #include <stdio.h>
 #include <stdbool.h>

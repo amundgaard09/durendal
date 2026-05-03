@@ -1,8 +1,10 @@
 """The first test and iteration of the Vulcan Ecosystem."""
 
 import whisper
-import awpc
-import Vulcan.Archimedes as Archimedes
-import Vulcan.Olympus.olympusV1 as Olympus
-import Vulcan.Prometheus as Prometheus
+
+import vulcan.archimedes.main     as arch
+import vulcan.olympus.olympusV1   as olym
+import vulcan.olympus.hermes.main as herm
+import vulcan.prometheus.main     as prom
+
 

@@ -2,7 +2,9 @@
 The `AWPC` `UniFlight` module provides a collection of functions and classes for performing calculations and simulations related to flight dynamics, aerodynamics, and propulsion.
 """
 
-from awpc.utilities.utils import xColorText, Quantity, UNITS, MACH
+from awpc.commons.utils import xColorText
+from awpc.commons.types import Quantity, UNITS
+from awpc.commons.constants import MACH
 
 def T2WRatio(Thrust: float, Weight: float) -> str:
     """Thrust to Weight ratio calculator. Ensure consistent units!"""

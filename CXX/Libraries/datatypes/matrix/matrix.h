@@ -11,7 +11,10 @@ typedef struct {
 } Matrix; 
 
 void MatrixInit(Matrix *M, int rows, int cols);
-void GetElement(Matrix *M, int row, int col);
-void SetElement(Matrix *M, int row, int col);
+void getElement(Matrix *M, int row, int col);
+void setElement(Matrix *M, int row, int col, float value);
+
+void addRow(Matrix *M);
+void addCol(Matrix *M);
 
 #endif

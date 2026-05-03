@@ -1,10 +1,10 @@
-/* Utils prototype file - AMUNDWORKS UTILITIES LIBRARY - V.1*/
+/* Algorithms prototype file - AMUNDWORKS ALGORITHMS LIBRARY - V.1*/
 
 #include <stdint.h>
 #include "../datatypes/dl_list/dllist.h"
 
-#ifndef UTILS.H
-#define UTILS.H
+#ifndef ALGORITHMS.H
+#define ALGORITHMS.H
 
 bool IsPrime(int Number);
 DLList PrimeFactorize(int Number);
