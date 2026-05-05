@@ -1,1 +1,0 @@
-/// M/E|date           |exercises|DCS|Dayscore|Step Goal met|Injured/Sick|Sleep|Nutrition|Mentalrating|Strength

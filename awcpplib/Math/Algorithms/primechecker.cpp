@@ -1,25 +1,9 @@
 
+#include <chrono>
 #include <iostream>
 #include <vector>
-#include <chrono>
+#include "primality.hpp"
 
-// Check if `Number` is prime
-// Uses trial division to check for factors of `Number` up to the square root of `Number`.
-bool IsPrime(int Number) {
-    if (Number <= 1) {
-        return false;
-    }
-
-    for (int i = 2; i * i < Number; ++i) {
-        if (Number % i == 0) {
-            return false;
-        } 
-    }
-    return true;
-}
-
-// Main function to check for prime numbers up to `CheckStop`, and measure the time taken for the operation.
-// Uses a simple loop to check each number for primality and stores the prime numbers in a vector.
 int main() {
     std::ios::sync_with_stdio(false);
     std::cin.tie(NULL);
@@ -35,7 +19,7 @@ int main() {
     auto start = std::chrono::high_resolution_clock::now();
 
     for (int idx = 2; idx < CheckStop; ++idx) {
-        if (IsPrime(idx)) {
+        if (isprime(idx)) {
             PrimeArray.push_back(idx);
         }
     }

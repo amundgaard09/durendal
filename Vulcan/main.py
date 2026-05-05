@@ -2,9 +2,9 @@
 
 import whisper
 
-import vulcan.archimedes.main     as arch
-import vulcan.olympus.olympusV1   as olym
-import vulcan.olympus.hermes.main as herm
-import vulcan.prometheus.main     as prom
+import vulcan.archimedes.main as arch
+import olympus.main as olym
+import hermes.main as herm
+import vulcan.prometheus.main as prom
 
 

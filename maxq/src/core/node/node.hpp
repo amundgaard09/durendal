@@ -13,22 +13,21 @@ class BaseNode {
         float* Output;                       // A pointer to the output from this node
         int ID;                             // This nodes ID
         
-        virtual void compute();         // Base compute() function - is to be overridden by type-given node class (Constant, Compute, etc.) 
+        virtual void compute() {};         // Base compute() function - is to be overridden by type-given node class (Constant, Compute, etc.) 
         virtual ~BaseNode() = default;
 };
 
 class ConstantNode : public BaseNode {
     public:
-        float Value;                            // The value of this constant
-        virtual void compute(void) override;    // The compute() function overridden as a setter method
-
+        float Value;
+        virtual void compute(void) override {};
 };
 
 class ComputeNode : public BaseNode {
     public:
-        int NWInMin;        // Minimum number of valid inputs 
-        int NWInMax;        // Maximum number of valid inputs
-        bool val_args(int argsGiven);   // Validate given args to ComputeNode function. Returns true if valid - False otherwise.
+        int NVInMin;        // Minimum number of valid inputs 
+        int NVInMax;        // Maximum number of valid inputs
+        bool val_args(int argsGiven) {};   // Validate given args to ComputeNode function. Returns true if valid - False otherwise.
 };
 
 #endif

@@ -1,6 +1,6 @@
 
 from typing import __all__
 
-import main
+import hermes.main as main
 
 __all__ = ["main"]

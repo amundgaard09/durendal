@@ -1,9 +1,10 @@
 """
-`OLYMPUS` `UI` \n
+The `OLYMPUS` Console \n
 The Olympus Interface is a tool for elite athletes to log their training, recovery, and overall well-being in a structured way. 
 It provides a comprehensive overview of daily activities, training sessions, and upcoming events, 
 allowing athletes to track their progress and make informed decisions about their training and recovery strategies. 
-The interface is designed to be user-friendly and efficient, enabling athletes to quickly log their data and access
+
+The interface is designed to be user-friendly and efficient, enabling athletes to quickly log their data and access neccesary tools for optimal performace.
 """
 
 ### ------------------------------------------------------------------ ###
@@ -25,216 +26,26 @@ The interface is designed to be user-friendly and efficient, enabling athletes t
 
 import sys, json, time, datetime, questionary
 
-from typing import Literal
-from pathlib import Path
+SCHEDULEPATH, SESSIONFILE, SLEEP_SCORES, GOALS, LOGFILE, LOGPATH, EVENTFILE, SCHEDULE = 0
 
-LOGPATH = "amundwork\\Vulcan\\Olympus\\data\\txt\\olympus_log.txt"
-JSONPATH = "amundwork\\Vulcan\\Olympus\\data\\json"
+from awpc.commons.utils import xColorText as color_text
+from awpc.unipy.uniCLI.uniCLI import clearTerminal as clearterminal
 
-SCHEDULEPATH = Path(JSONPATH + "schedule.json") 
-SESSIONFILE  = Path(JSONPATH + "sessions.json")
-EVENTFILE    = Path(JSONPATH + "events.json")
-PRFILE       = Path(JSONPATH + "prs.json")
-
-SCHEDULEPATH.touch() if not SCHEDULEPATH.exists() else None
-SESSIONFILE.touch()  if not SESSIONFILE.exists()  else None
-EVENTFILE.touch()    if not EVENTFILE.exists()    else None
-PRFILE.touch()       if not PRFILE.exists()       else None
-
-SCHEDULE = {
-    "monday": ["pull day", "zone 2 run"],
-    "tuesday": ["core strength", "cycling intervals", "skierg"],
-    "wednesday": ["leg day", "cycling rehab", "skierg"],
-    "thursday": ["core strength", "4x4 intervals"],
-    "friday": ["push day", "swim technique and endurance"],
-    "saturday": ["brick sesh", "skierg"],
-    "sunday": ["rest day"]
-}
-GOALS = [
-    "strength",
-    "endurance",
-    "hypertrophy",
-    "recovery",
-    "mobility",
-    "mentality",
-    "weight loss",
-    ]
-SLEEP_SCORES = {
-    "Poor": 10,
-    "Fair": 20,
-    "Good": 30,
-    "Excellent": 40
-}
-
-class Step:
-    def __init__(
-        self, 
-        name: str, 
-        workout: str,
-        duration: int, 
-        thrz: int, 
-        trpe: int
-    ):
-        self.name = name
-        self.workout = workout
-        self.duration = duration
-        self.thrz = thrz
-        self.trpe = trpe   
-        
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "workout": self.workout,
-            "duration": self.duration,
-            "thrz": self.thrz,
-            "trpe": self.trpe
-        }
-
-    @classmethod
-    def from_dict(cls, data):
-        return cls(**data)   
-class Exercise:
-    def __init__(
-        self, 
-        name: str,
-        steps: list[Step]
-    ):
-        
-        self.name = name
-        self.steps: list[Step] = steps
-        
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "steps": [s.to_dict() for s in self.steps]
-        }
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            name=data["name"],
-            steps=[Step.from_dict(s) for s in data["steps"]]
-        )     
-class Session:
-    def __init__(
-        self,
-        name: str,
-        seshtype: str,
-        exercises: list[Exercise],
-    ):
-        self.name = name
-        self.seshtype = seshtype
-        self.exercises = exercises
-
-    @property
-    def duration(self) -> int:
-        return sum(
-            step.duration
-            for exercise in self.exercises
-            for step in exercise.steps
-        )
-
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "seshtype": self.seshtype,
-            "exercises": [e.to_dict() for e in self.exercises],
-        }
-
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            name=data["name"],
-            seshtype=data["seshtype"],
-            exercises=[Exercise.from_dict(e) for e in data["exercises"]],
-        )
-class LoggedSession(Session):
-    def __init__(
-        self, 
-        completed: bool, 
-        perceived_effort: int | None = None, 
-        notes: str | None = None, 
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-        self.completed = completed
-        self.perceived_effort = perceived_effort
-        self.notes = notes
-
-class DayPlan:
-    def __init__(self, date: str, sessions: list[Session]):
-        self.date = date
-        self.sessions = sessions
-
-    def to_dict(self):
-        return {
-            "date": self.date,
-            "sessions": [s.to_dict() for s in self.sessions]
-        }
-
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            date=data["date"],
-            sessions=[Session.from_dict(s) for s in data["sessions"]]
-        )
-class WeekPlan:
-    def __init__(self):
-        self.days: dict[str, list[Session]] = {
-            "monday": [],
-            "tuesday": [],
-            "wednesday": [],
-            "thursday": [],
-            "friday": [],
-            "saturday": [],
-            "sunday": [],
-        }
-
-    def add_session(self, day: str, session: Session):
-        self.days[day.lower()].append(session)
-
-    def get_day(self, day: str) -> list[Session]:
-        return self.days.get(day.lower(), [])
-
-class Event:
-    def __init__(
-        self,
-        name: str,
-        date: str,
-        type: str,
-        distance: float | list[float] | None = None,
-        location: list[str] | None = None, # [city, state/country]
-        priority: Literal["Primary", "Secondary", "Tertiary", "Supporting"] | None = None,
-        notes: str | None = None
-    ):
-        self.name = name
-        self.date = date
-        self.type = type
-        self.distance = distance
-        self.location = location
-        self.priority = priority
-        self.notes = notes
-
-    def to_dict(self):
-        return {
-            "name": self.name,
-            "date": self.date,
-            "type": self.type,
-            "distance": self.distance,
-            "location": self.location,
-            "priority": self.priority,
-            "notes": self.notes,
-        }
-
-    @classmethod
-    def from_dict(cls, data):
-        return cls(**data)       
+from src import (
+    Step,
+    Exercise,
+    Session,
+    DayPlan,
+    WeekPlan,
+    Event,
+)
 
 def save_event(event: Event):
     events = load_events()
     events.append(event)
 
     with open(EVENTFILE, "w", encoding="utf-8") as f:
-        json.dump([e.to_dict() for e in events], f, indent=4)
+        json.dump([e.to_dict() for e in events], f, indent=4) 
 def load_events() -> list[Event]:
     try:
         with open(EVENTFILE, "r", encoding="utf-8") as f:
@@ -242,15 +53,7 @@ def load_events() -> list[Event]:
         return [Event.from_dict(e) for e in data]
     except (FileNotFoundError, json.JSONDecodeError):
         return []
-def sort_events_by_date(events: list[Event]) -> list[Event]:
-    def parse_date(event: Event):
-        try:
-            return datetime.datetime.strptime(event.date, "%d-%m-%Y")
-        except ValueError:
-            return datetime.datetime.max  # Place invalid dates at the end
-
-    return sorted(events, key=parse_date)
-
+    
 def save_session(session: Session):
     sessions = load_sessions()
     sessions.append(session)
@@ -268,6 +71,15 @@ def load_sessions() -> list[Session]:
         return [Session.from_dict(s) for s in data]
     except (FileNotFoundError, json.JSONDecodeError):
         return []
+
+def sort_events_by_date(events: list[Event]) -> list[Event]:
+    def parse_date(event: Event):
+        try:
+            return datetime.datetime.strptime(event.date, "%d-%m-%Y")
+        except ValueError:
+            return datetime.datetime.max  # Place invalid dates at the end
+
+    return sorted(events, key=parse_date)
 
 def load_schedule() -> dict[str, list[str]] | None:
     schedule = {
@@ -299,27 +111,11 @@ def edit_schedule():
 def writefile(filepath: str, content: str) -> None:
     with open(filepath, 'a') as f:
         f.write(content + "\n")
-def color_text(text: str, color: Literal["purple", "red", "orange", "yellow", "green", "blue", "cyan"], underline: bool = False, bold: bool = False) -> str:
-    colors = {
-        'purple': '\033[95m',
-        'red': '\033[91m',
-        'orange': '\033[33m',
-        'yellow': '\033[93m',
-        'green': '\033[92m',
-        'blue': '\033[94m',
-        'cyan': '\033[96m',
-    }
-    reset_color = '\033[0m'
-    underline_code = '\033[4m' if underline else ''
-    bold_code = '\033[1m' if bold else ''
-    colored_text = f"{bold_code}{underline_code}{colors.get(color, '')}{text}{reset_color}"
-    return colored_text
-def clearterminal():
-    import os
-    os.system('cls' if os.name == 'nt' else 'clear')
+
 def get_current_datetime_str() -> str:
     datetime_now = datetime.datetime.now()
     return datetime_now.strftime("%Y-%m-%d %H:%M:%S")
+
 def ask_int(prompt: str, min_val: int | None = None, max_val: int | None = None) -> int:
     while True:
         try:
@@ -614,7 +410,7 @@ def sessionbuilder():
     
     exercises: list[Exercise] = []
     sessionname = questionary.text("Session Name:").ask()
-    seshtype = questionary.select("Session Type:", choices=[GOALS[i].capitalize() for i in range(len(GOALS))]).ask()
+    seshtype = questionary.select("Session Type:", choices=[GOALS[idx].capitalize() for idx, _ in enumerate(GOALS)]).ask()
     duration: int = 0  
     
     addexercises = questionary.confirm("Add exercises to this session?").ask()
