@@ -43,7 +43,7 @@ The **AmundWorks Python Collective** is the complete collection of all Python pr
 
 ### MAX-Q - Composable Systems Engine
 
-**MAX-Q** is a 
+**MAX-Q** is a *Composable Systems Engine* (**CSE**) designed to streamline the assembly and management of modular IT resources and business processes. By acting as a central orchestration layer, MAX-Q allows developers to "compose" sophisticated systems from independent, best-of-breed services and microservices. It enables rapid scalability, modularity and quick and easy maintenance.
 
 ## ARCHIVED PROJECTS
 

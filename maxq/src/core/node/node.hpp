@@ -10,7 +10,8 @@
 class BaseNode {
     public:
         std::vector<float*> Inputs;         // Vector of float pointers to inputs
-        float* Output;                       // A pointer to the output from this node
+        std::vector<float*> OptOutputs;     // A optional vector output for multi-output nodes
+        float* Output;                      // A pointer to the output from this node
         int ID;                             // This nodes ID
         
         virtual void compute() {};         // Base compute() function - is to be overridden by type-given node class (Constant, Compute, etc.) 
@@ -29,5 +30,11 @@ class ComputeNode : public BaseNode {
         int NVInMax;        // Maximum number of valid inputs
         bool val_args(int argsGiven) {};   // Validate given args to ComputeNode function. Returns true if valid - False otherwise.
 };
+
+class AlgoNode : public ComputeNode {
+    public:
+};
+
+
 
 #endif

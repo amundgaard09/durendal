@@ -10,7 +10,6 @@ from awpc.commons.utils import xColorText
 from awpc.commons.types import Quantity, UNITS
 from awpc.commons.constants import EARTH_G, C
 
-
 def Torque(MomentArmDistance: float, Force: float) -> Quantity:
     """Returns a `torque` quantity in newtonmeters from moment arm distance in meters and force in newtons."""
     return Quantity((MomentArmDistance * Force), UNITS["Nm"])

@@ -1,7 +1,22 @@
 
 #include "algorithms.hpp"
 #include "../../core/node/node.hpp"
-#include "../../../../awcpplib/Math/Algorithms/primality.hpp"
+#include "../../commons/utilities/toolchain.hpp"
+#include "../../../../awcpplib/Libraries/Math/Algorithms/primality.hpp"
+
+std::vector<float> lovelace(float a, float b, float c, float d, float e, float f) {
+    std::vector<float> vec;
+    if (a*e == b*d) {
+        vec.push_back(NULL);
+        return vec;
+    }
+    
+    float Dx = c*e - b*f;
+    float Dy = a*f - c*d;
+    vec.push_back(Dx / (a*e - b*d));
+    vec.push_back(Dy / (a*e - b*d));
+    return vec;
+}
 
 class PrimeFactorizeNode : public ComputeNode {
     public:
@@ -18,3 +33,15 @@ class PrimeFactorizeNode : public ComputeNode {
         }
 };
 
+class LovelaceNode : public ComputeNode {
+    public:
+        virtual void compute() override {
+            if (Inputs.size() == 6) {
+                std::vector<float> coeffs = lovelace(*Inputs.at(0), *Inputs.at(1), *Inputs.at(2), *Inputs.at(3), *Inputs.at(4), *Inputs.at(5));
+                OptOutputs = get_indvdl_ptrs(coeffs);
+            } else {
+                Output = NULL;
+            }
+        }
+
+};

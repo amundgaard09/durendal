@@ -1,7 +1,5 @@
 """ Third Iteration - XO Neural Net Series | Matrix-Based Image Classification Neural Net"""
 
-### XO4 -> CUDA OPTIMALIZATION
-
 import keras
 import numpy as np
 import time

@@ -15,18 +15,18 @@ def DotProduct(listA: list, listB: list) -> float:
 
 ### ACTIVATION FUNCTIONS
 
-def _ReLU(x: float) -> float:
+def ReLU(x: float) -> float:
     """Returns the ReLU activation of x."""
     return max(0, x)
-def _sigmoid(x: float) -> float:
+def sigmoid(x: float) -> float:
     """Returns the sigmoid activation of x."""
     return 1 / (1 + math.exp(-x))
-def _dReLU(x: float) -> float:
+def dReLU(x: float) -> float:
     """Returns the derivative of the ReLU activation function."""
     return 1 if x > 0 else 0
-def _dsigmoid(x: float) -> float:
+def dsigmoid(x: float) -> float:
     """Returns the derivative of the sigmoid activation function."""
-    s = _sigmoid(x)
+    s = sigmoid(x)
     return s * (1 - s)
 
 def _softmax(Z: np.ndarray) -> np.ndarray:
@@ -36,20 +36,20 @@ def _softmax(Z: np.ndarray) -> np.ndarray:
 
 ### PERFORMANCE METRICS
 
-def _mae(Actual: list, Prediction: list) -> float:
+def mae(Actual: list, Prediction: list) -> float:
     if len(Prediction) != len(Actual):
         return None
     return (sum((np.abs(Actual[i] - Prediction[i])) for i in range(len(Actual)))) / len(Actual)
-def _mse(Actual: list, Prediction: list) -> float:
+def mse(Actual: list, Prediction: list) -> float:
     if len(Prediction) != len(Actual):
         return None
     return (sum(np.mean((Actual[i] - Prediction[i])**2) for i in range(len(Actual)))) / len(Actual)
-def _rmse(Actual: list, Prediction: list) -> float:
+def rmse(Actual: list, Prediction: list) -> float:
     if len(Prediction) != len(Actual):
         return None
-    return np.sqrt(_mse(Actual, Prediction))
+    return np.sqrt(mse(Actual, Prediction))
 
-def _crossEntropyLoss(Actual: np.ndarray, Prediction: np.ndarray) -> float:
+def crossEntropyLoss(Actual: np.ndarray, Prediction: np.ndarray) -> float:
     """Cross-entropy loss function for multi-class classification."""
     ArrayLength = Actual.shape[0]
     SoftmaxedPrediction = _softmax(Prediction) # Ensure predictions are probabilities.

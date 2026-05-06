@@ -17,6 +17,7 @@
 class BaseNode {
     public:
         std::vector<float*> Inputs;
+        std::vector<float*> OptOutputs;
         float* Output;
         int ID;
         
