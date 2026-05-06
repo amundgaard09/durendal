@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "../datatypes/dl_list/dllist.h"
+#include "../../types/dl_list/dllist.h"
 
 // Check if `Number` is prime via trial division up to the square root of `Number` 
 bool IsPrime(int Number) {

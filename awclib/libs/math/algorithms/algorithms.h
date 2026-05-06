@@ -1,7 +1,7 @@
 /* Algorithms prototype file - AMUNDWORKS ALGORITHMS LIBRARY - V.1*/
 
 #include <stdint.h>
-#include "../datatypes/dl_list/dllist.h"
+#include "../../types/dl_list/dllist.h"
 
 #ifndef ALGORITHMS.H
 #define ALGORITHMS.H
