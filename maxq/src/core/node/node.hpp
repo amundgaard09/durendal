@@ -7,24 +7,27 @@
 #include <vector>
 #include <stdbool.h>
 
-class BaseNode {
+class Node {
     public:
-        std::vector<float*> Inputs;         // Vector of float pointers to inputs
-        std::vector<float*> OptOutputs;     // A optional vector output for multi-output nodes
-        float* Output;                      // A pointer to the output from this node
-        int ID;                             // This nodes ID
-        
-        virtual void compute() {};         // Base compute() function - is to be overridden by type-given node class (Constant, Compute, etc.) 
-        virtual ~BaseNode() = default;
+        int ID;
 };
 
-class ConstantNode : public BaseNode {
+class IONode : public Node {
+    public:
+        std::vector<float*> Inputs;
+        std::vector<float*> Outputs;
+        
+        virtual void execute() {};         // Base compute() function - is to be overridden by type-given node class (Constant, Compute, etc.) 
+        virtual ~IONode() = default;
+};
+
+class ConstantNode : public IONode {
     public:
         float Value;
-        virtual void compute(void) override {};
+        virtual void execute(void) override {};
 };
 
-class ComputeNode : public BaseNode {
+class ComputeNode : public IONode {
     public:
         int NVInMin;        // Minimum number of valid inputs 
         int NVInMax;        // Maximum number of valid inputs

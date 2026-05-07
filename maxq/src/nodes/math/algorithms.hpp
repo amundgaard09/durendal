@@ -9,7 +9,7 @@ std::vector<float> lovelace(float a, float b, float c, float d, float e, float f
 
 class PrimeFactorizeNode : public AlgoNode {
     public:
-        virtual void compute() override {};
+        virtual void execute() override {};
 };
 
 #endif
