@@ -1,0 +1,17 @@
+.github/
+.vscode/
+.DS_Store
+**/amundworks.egg-info
+**/__pycache__
+__pycache__/
+Archive/
+target/
+venv/
+.venv/
+*.toml
+*.env
+*.pyc
+
+
+
+
