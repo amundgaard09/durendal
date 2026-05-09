@@ -1,17 +1,17 @@
 """UniForge Engineering Assistant CLI - v1.1.5-beta"""
 
-from awpc.unipy.uniflight.uniflight import *
-from awpc.unipy.unispace.unispace import *
-from awpc.unipy.unicrypt.unicrypt import *
-from awpc.unipy.unipower.unipower import *
-from awpc.unipy.unimath.unimath import *
-from awpc.unipy.uniphys.uniphys import *
-from awpc.unipy.unialgo.unialgo import *
+from awpc.src.package.unipy.uniflight.uniflight import *
+from awpc.src.package.unipy.unispace.unispace import *
+from awpc.src.package.unipy.unicrypt.unicrypt import *
+from awpc.src.package.unipy.unipower.unipower import *
+from awpc.src.package.unipy.unimath.unimath import *
+from awpc.src.package.unipy.uniphys.uniphys import *
+from awpc.src.package.unipy.unialgo.unialgo import *
 
-from awpc.commons.utils import *
-from awpc import moduleTools as mt
+from awpc.src.package.commons.utils import *
+from awpc.src.package.unipy import moduleTools as mt
 
-from awpc.unipy.uniCLI.uniCLI import (
+from awpc.src.package.unipy.uniCLI.uniCLI import (
     ExitEnvironmentSignal,
     clearTerminal, 
     Dispatcher, 
