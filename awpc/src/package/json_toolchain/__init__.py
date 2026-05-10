@@ -1,5 +1,4 @@
 
-from typing import __all__
-import awpc.src.package.json_toolchain.main as main
+from . import main
 
 __all__ = ["main"]

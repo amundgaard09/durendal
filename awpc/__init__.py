@@ -1,4 +1,6 @@
+"""
+The complete AmundWorks Python Collective (`AWPC`) Package.
+"""
 
-from typing import __all__
-
-__all__ = ["commons", "json_toolchain", "unipy"]
+__all__ = ["src"]
+__version__ = "0.0.1.2"

@@ -1,5 +1,7 @@
-
-from typing import __all__
+"""
+The `AmundWorks` `UniPy` package for Python.
+`UniPy` provides an extensive suite of Python resources for anything, ranging from CLI-projects, provided for by the `UniCLI` module, to mathematical Python, provided for by `UniMath`.
+"""
 
 __all__ = [
     "unialgo",
@@ -10,5 +12,6 @@ __all__ = [
     "uniphys",
     "unipower",
     "unispace",
-    "univiz"
+    "univiz",
+    "moduletools.py",
 ]
