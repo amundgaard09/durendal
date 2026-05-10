@@ -1,5 +1,5 @@
 [project]
-name = "AmundWorks"
+name = "AWPC" # AWPC for now. Will fix with polyrepo architechture
 version = "0.0.1.2"
 description = "AmundWorks Multi-dicipline Engineering"
 authors = [{name = "Simon Stordal Amundgård"}]
@@ -7,9 +7,6 @@ dependencies = [
     "prompt_toolkit",
     "numpy"
 ]
-
-[project.scripts]
-uniforge = "UniForge.UniForgeCLI:_mainEnv"
 
 [tool.setuptools]
 packages = [
