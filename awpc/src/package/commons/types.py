@@ -163,26 +163,24 @@ UNITS: dict[str, Unit] = {
     
     "J": Unit("Joule", "Energy"),
     
-    "W": Unit("Watt",  "Power"),
-    
     "S": Unit("Second", "Time"),
     "M": Unit("Minute", "Time"),
     "H": Unit("Hour",   "Time"),
     "Y": Unit("Year",   "Time"),
     
     "Nm": Unit("Newtonmeter", "Torque"),
-        
-    "A": Unit("Ampere", "Current"),
     
-    "V": Unit("Volt", "Voltage"),
+    "W": Unit("Watt",   "Power"),
+    "A": Unit("Ampere", "Current"),
+    "V": Unit("Volt",   "Voltage"),
+    "Ω": Unit("Ohm",    "Resistance"),
     
     "Δv": Unit("Delta-V", "Change in Velocity"),
     
-    "Ω": Unit("Ohm", "Resistance"),
-    
     "m/s^2": Unit("m/s^2", "Acceleration"),
     
-    "GCONST": Unit("Nm^2/kg^2", "Gravity"),
+    "GCONST": Unit("Nm^2/kg^2",          "Gravitational Constant"),
+    "NCONST": Unit("Numerical Constant", "Numerical Constant")
 }
 CONVERSION_TABLE: dict[tuple[str, str], float] = {
     # Velocity

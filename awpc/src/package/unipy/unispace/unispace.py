@@ -4,11 +4,8 @@ The `AWPC` `UniSpace` module provides a collection of functions and classes for 
 
 import math
 
-from awpc.src.package.commons.types import Quantity, UNITS
-from awpc.src.package.commons.constants import G, EARTH_M, EARTH_R
-
-
-### NOTE Hohmann transfer delta-v + visualization env - COMING SOON
+from commons.types import Quantity, UNITS
+from commons.constants import G, EARTH_M, EARTH_R
 
 def OrbitalPeriod(SemiMajorAxis: float, M: float, m: float) -> Quantity:
     return Quantity((2 * math.pi * math.sqrt(SemiMajorAxis ** 3 / (G * (M + m)))), UNITS["S"])

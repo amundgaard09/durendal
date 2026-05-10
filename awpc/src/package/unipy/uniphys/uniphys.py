@@ -6,9 +6,9 @@ The library is still in development and may contain some unstable functions that
 
 import math
 
-from awpc.src.package.commons.utils import xColorText
-from awpc.src.package.commons.types import Quantity, UNITS
-from awpc.src.package.commons.constants import EARTH_G, C
+from commons.utils import xColorText
+from commons.types import Quantity, UNITS
+from commons.constants import EARTH_G, C
 
 def Torque(MomentArmDistance: float, Force: float) -> Quantity:
     """Returns a `torque` quantity in newtonmeters from moment arm distance in meters and force in newtons."""

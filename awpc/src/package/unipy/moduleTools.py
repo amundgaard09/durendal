@@ -10,7 +10,7 @@ from awpc.src.package.unipy.uniphys import uniphys
 from awpc.src.package.unipy.unimath import unimath
 from awpc.src.package.unipy.unialgo import unialgo
 
-def generateDict(Module) -> tuple[dict, dict]:
+def _generateDicts(Module) -> tuple[dict, dict]:
     """Generate an argument count dict and function call dict for a module. Returns `(arg_count_dict, call_dict)`, both in alphabetical order."""
     
     arg_count_dict = {}
@@ -35,10 +35,10 @@ def generateDict(Module) -> tuple[dict, dict]:
     
     return arg_count_dict, call_dict
 
-UNIFLIGHTARGMAP, UNIFLIGHTCALLMAP = generateDict(uniflight)
-UNISPACEARGMAP,  UNISPACECALLMAP  = generateDict(unispace)
-UNIPOWERARGMAP,  UNIPOWERCALLMAP  = generateDict(unipower)
-UNICRYPTARGMAP,  UNICRYPTCALLMAP  = generateDict(unicrypt)
-UNIPHYSARGMAP,   UNIPHYSCALLMAP   = generateDict(uniphys)
-UNIMATHARGMAP,   UNIMATHCALLMAP   = generateDict(unimath)
-UNIALGOARGMAP,   UNIALGOCALLMAP   = generateDict(unialgo)
+UNIFLIGHTARGMAP, UNIFLIGHTCALLMAP = _generateDicts(uniflight)
+UNISPACEARGMAP,  UNISPACECALLMAP  = _generateDicts(unispace)
+UNIPOWERARGMAP,  UNIPOWERCALLMAP  = _generateDicts(unipower)
+UNICRYPTARGMAP,  UNICRYPTCALLMAP  = _generateDicts(unicrypt)
+UNIPHYSARGMAP,   UNIPHYSCALLMAP   = _generateDicts(uniphys)
+UNIMATHARGMAP,   UNIMATHCALLMAP   = _generateDicts(unimath)
+UNIALGOARGMAP,   UNIALGOCALLMAP   = _generateDicts(unialgo)

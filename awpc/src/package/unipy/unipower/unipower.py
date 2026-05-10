@@ -8,13 +8,13 @@ import math
 
 from types import MappingProxyType
 from typing_extensions import Literal
-from awpc.src.package.commons.utils import ANSI_COLORS
-from awpc.src.package.commons.types import (
+from commons.utils import ANSI_COLORS
+from commons.types import (
     Quantity,
     UNITS
 )
 
-from awpc.src.package.commons.exceptions import (
+from commons.exceptions import (
     MissingParameters, 
     InconsistencyError, 
     InvalidColors

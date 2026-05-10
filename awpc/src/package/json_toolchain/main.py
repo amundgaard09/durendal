@@ -1,5 +1,5 @@
 """
-The `AmundWorks` `JSON` Toolchain module.
+The `AWPC` `JSON` Toolchain module.
 """
 
 def InsertJSON(PathToJSON: str, ContentDict: dict) -> None:

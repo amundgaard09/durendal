@@ -3,7 +3,7 @@ The `AWPC` `UNIx` `UniException` module.
 This module contains all the custom exceptions used in the `AWPC` library.
 """
 
-from awpc.src.package.commons.utils import xColorText
+from commons.utils import xColorText
 
 class ImpossibleTriangleError(Exception):
     """Raise when the sum of the angles of a triangle is not 180 degrees, a mathematical impossibility."""
