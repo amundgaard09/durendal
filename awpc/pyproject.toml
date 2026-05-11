@@ -1,8 +1,8 @@
 
 [project]
-name = "AmundWorks"
-version = "0.0.1.2"
-description = "AmundWorks Multi-dicipline Engineering"
+name = "awpc"
+version = "0.0.1.3"
+description = "AmundWorks Python Collective - Multi-dicipline Engineering Python Software"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "LICENSE"}
