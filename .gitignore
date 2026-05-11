@@ -9,6 +9,8 @@ venv/
 .venv/
 *.env
 *.pyc
+*.onnx
+*.onnx.json
 
 
 
