@@ -37,8 +37,8 @@ AmundWorks is a independent multi-displine engineering conglomerate focused on c
 
 AmundWorks is organized around several core pillars:
 
-- **AWPC**: Main Python collective, including the UNIx core libraries
-- **UNIx**: Core utility modules (e.g., `unimath`, `unipower`, `univiz`, etc.)
+- **AWPC**: Main Python collective, including the UniPy core libraries
+- **UniPy**: Core utility modules (e.g., `unimath`, `unipower`, `univiz`, etc.)
 - **UniForge CLI**: Command-line interface for STEM workflows
 - **XO Neural Net Series**: Machine learning and AI models
 - **Vulcan Personal Productivity Platform**: Personal digital life management platform
@@ -94,7 +94,7 @@ The following sections provide detailed documentation for each of the major proj
 
 ### AWPC - AmundWorks Python Collective
 
-The AmundWorks Python Collective is the collection of all Python projects, modules and packages built by AmundWorks. The UNIx library is a core component of **AWPC**, providing a set of utilities and functions that are used in Python-based projects within AmundWorks. All modules under UNIx follow a consistent naming convention, starting with the prefix "uni" to indicate their association with the UNIx library. For example, you might find modules like `unimath`, `unipower`, and `univiz` within the AWPC, each offering specific functionalities related to mathematics, electrical systems, and visualizations, respectively, as well as many other modules, with some still in development.
+The AmundWorks Python Collective is the collection of all Python projects, modules and packages built by AmundWorks. The UniPy library is a core component of **AWPC**, providing a set of utilities and functions that are used in Python-based projects within AmundWorks. All modules under UniPy follow a consistent naming convention, starting with the prefix "uni" to indicate their association with the UniPy library. For example, you might find modules like `unimath`, `unipower`, and `univiz` within the AWPC, each offering specific functionalities related to mathematics, electrical systems, and visualizations, respectively, as well as many other modules, with some still in development. 
 
 To install AWPC, use pip:
 
@@ -104,7 +104,7 @@ pip install awpc
 
 ### UniForge CLI
 
-The UniForge CLI is a command-line interface toolchain for anything related to STEM. It's built upon the UNIx library and provides a powerful set of commands for calculations, visualizations, and simulations. The UniForge CLI is designed to be user-friendly and efficient, making it an essential tool for anyone working with STEM projects.
+The UniForge CLI is a command-line interface toolchain for anything related to STEM. It's built upon the UniPy library and provides a powerful set of commands for calculations, visualizations, and simulations. The UniForge CLI is designed to be user-friendly and efficient, making it an essential tool for anyone working with STEM projects.
 
 If you have the AWPC library installed, you can access the UniForge CLI by running the following command in your terminal:
 
