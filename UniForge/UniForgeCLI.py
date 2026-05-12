@@ -5,7 +5,7 @@ from awpc.src.package.unipy.unispace.unispace import *
 from awpc.src.package.unipy.unicrypt.unicrypt import *
 from awpc.src.package.unipy.unipower.unipower import *
 from awpc.src.package.unipy.unimath.unimath import *
-from awpc.src.package.unipy.uniphys.uniphys import *
+from awpc.src.package.unipy.uniphys.mechanics import *
 from awpc.src.package.unipy.unialgo.unialgo import *
 
 from awpc.src.package.commons.utils import *

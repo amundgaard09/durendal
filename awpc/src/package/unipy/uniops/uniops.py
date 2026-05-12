@@ -1,6 +1,6 @@
 """
 The `AmundWorks` `UniOps` module for Control and Operations tasks.
-`UniOps` is built for tasks related to mechatronics control and operation tasks.
+`UniOps` is built for tasks related to mechatronics control and operation tasks for robotics - either semi- or fully autonomous.
 """
 
 import time
