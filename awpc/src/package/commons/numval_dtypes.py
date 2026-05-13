@@ -132,10 +132,11 @@ UNITS: dict[str, Unit] = {
     "dm":  Unit("Decameter",  "Length"),
     "ft":  Unit("Foot",       "Length"),
     "Yd":  Unit("Yard",       "Length"),
-    "m":   Unit("Meter",      "Length"),
+     "m":  Unit("Meter",      "Length"),
     "km":  Unit("Kilometer",  "Length"),
     "mi":  Unit("Mile",       "Length"),
     "ly":  Unit("Light year", "Length"),
+  "psrc":  Unit("Parsec",     "Length"),
     
     "m²":  Unit("Square Meter",     "Area"), 
     "km²": Unit("Square Kilometer", "Area"), 

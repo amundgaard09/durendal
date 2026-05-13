@@ -8,8 +8,7 @@ from awpc.src.package.unipy.unimath.unimath import *
 from awpc.src.package.unipy.uniphys.mechanics import *
 from awpc.src.package.unipy.unialgo.unialgo import *
 
-from awpc.src.package.commons.utils import *
-from awpc.src.package.unipy import moduleTools as mt
+from awpc.src.package.unipy import moduletools as mt
 
 from awpc.src.package.unipy.uniCLI.uniCLI import (
     ExitEnvironmentSignal,

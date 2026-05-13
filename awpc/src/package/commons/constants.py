@@ -3,14 +3,18 @@ This module contains all the physical constants used in the `AWPC` library, such
 The constants are stored as instances of the `PhysicalConstant` class, which includes the value, unit, and name of the constant.
 """
 
-from commons.types import PhysicalConstant, UNITS
+# Alpha - A α, Beta - B β, Gamma - Γ γ, Delta - Δ δ,  Epsilon - E ε, Zeta - Z ζ, Eta - H η, 
+# Theta - Θ θ, Iota - I ι, Kappa - K κ, Lambda - Λ λ, Mu - M μ,      Nu - N ν,   Xi - Ξ ξ,  Omicron - O ο, 
+# Pi - Π π,    Rho - P ρ,  Sigma - Σ σ ς, Tau - T τ,  Ypsilon - Y υ, Phi - Φ φ,  Chi - X χ, Psi - Ψ ψ, Omega - Ω ω
+
+from commons.numval_dtypes import PhysicalConstant, UNITS
 
 # Mathematical Constants (Numerical/Unitless Constants - NCONST)
 I       = PhysicalConstant(1j,                 UNITS["NCONST"], "Imaginary Unit - sqrt(-1)")
 E       = PhysicalConstant(2.718281828459045,  UNITS["NCONST"], "Eulers Number")
-PI      = PhysicalConstant(3.141592653589793,  UNITS["NCONST"], "Pi")
-TAU     = PhysicalConstant(6.283185307179586,  UNITS["NCONST"], "Archimedes' Constant (AKA 2 * PI)")
-GOLDEN  = PhysicalConstant(1.618033988749895,  UNITS["NCONST"], "The Golden Ratio")
+PI      = PhysicalConstant(3.141592653589793,  UNITS["NCONST"], "Pi - π")
+TAU     = PhysicalConstant(6.283185307179586,  UNITS["NCONST"], "Archimedes' Constant - τ - (AKA 2 * PI)")
+GOLDEN  = PhysicalConstant(1.618033988749895,  UNITS["NCONST"], "The Golden Ratio - φ,")
 EULMAS  = PhysicalConstant(0.5772156649015329, UNITS["NCONST"], "The Euler-Mascheroni Constant")
 FSTRUCT = PhysicalConstant(7.2973525693e-03,   UNITS["NCONST"], "Fine-Structure Constant") 
    
@@ -53,6 +57,7 @@ SUN_R   = PhysicalConstant(6.957e+8,  UNITS["m"],    "Radius of the Sun")
 
 # TODO Sort and implement all units
 
+HUBBLE           = PhysicalConstant(                   UNITS["km/s/prsc"],  "Hubbles Constant")
 BOLTZMANN        = PhysicalConstant(1.380649e-23,      UNITS["J/K"],        "Boltzmann Constant")         # Relates the average relative kinetic energy of particles in a gas with the thermodynamic temperature of the gas.
 GAS_CONSTANT     = PhysicalConstant(8.314462618,       UNITS["J/(mol*K)"],  "Universal Gas Constant")     # Work performed by one mole of a gas during a temperature change of 1 Kelvin at constant pressure.
 AVOGADRO         = PhysicalConstant(6.02214076e+23,    UNITS["1/mol"],      "Avogadro Constant")          # Number of constituent particles (usually atoms or molecules) contained in one mole of a substance.

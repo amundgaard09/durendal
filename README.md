@@ -27,7 +27,7 @@ The **AmundWorks Python Collective** is the complete collection of all Python pr
 
 [View UniForge README](UniForge/README.md)
 
-**UniForge** is a Python-based CLI toolkit for performing calculations and simulations related to STEMP-engineering. It is built upon the UniPy Library from **AWPC** and provides a user-friendly interface for engineers, scientists, and students to explore and analyze various aspects of science, technology, engineering, mathematics, and physics. UniForge offers a wide range of features, including orbital mechanics calculations, trajectory simulations, and other tools that are essential for understanding the universe and the principles that govern it. Whether you're a student looking to learn more about space science or a professional engineer working on space-related projects, **UniForge** is designed to be a valuable resource for your work and studies.
+**UniForge** is a Python-based CLI toolkit for performing calculations and simulations related to STEMP-engineering. It is built upon the UniPy Library from **AWPC** and provides a user-friendly interface for engineers, scientists, and students to explore and analyze various aspects of science, technology, engineering, mathematics, and programming. UniForge offers a wide range of features, including orbital mechanics calculations, trajectory simulations, and other tools that are essential for understanding the universe and the principles that govern it. Whether you're a student looking to learn more about STEMP or a professional engineer working on STEMP-related projects, **UniForge** is designed to be a valuable resource for your work and studies.
 
 ### XO - Multi-architecture Neural Net Series
 

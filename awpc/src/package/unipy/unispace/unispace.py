@@ -4,7 +4,7 @@ The `AWPC` `UniSpace` module provides a collection of functions and classes for 
 
 import math
 
-from commons.types import Quantity, UNITS
+from commons.numval_dtypes import Quantity, UNITS
 from commons.constants import G, EARTH_M, EARTH_R
 
 def OrbitalPeriod(SemiMajorAxis: float, M: float, m: float) -> Quantity:

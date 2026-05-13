@@ -4,10 +4,14 @@ This module provides a collection of functions for performing various mathematic
 including geometry, algebra, calculus, and more.
 """
 
-import math, sympy, matplotlib.pyplot as mpl
+import sympy, matplotlib.pyplot as mpl
+
+from math import sin, asin, cos, acos, sqrt
 
 from typing import Literal
-from commons.utils import xColorText
+from commons.color_dtypes import xColorText
+from commons.math_dtypes import SquareMatrix, D3Vector
+from commons.constants import PI
 from commons.exceptions import ImpossibleTriangleError
 
 def _plotXY(XVals: list[float], YVals: list[float]) -> None:
@@ -27,9 +31,9 @@ def TriExtrapolate(a: float, b: float, c: float, A: float | None = None, B: floa
     if sum((a, b, c)) != 180:
         raise ImpossibleTriangleError
 
-    SinA = math.sin(math.radians(a))
-    SinB = math.sin(math.radians(b))
-    SinC = math.sin(math.radians(c))
+    SinA = sin(D2R)(a)
+    SinB = sin(D2R(b))
+    SinC = sin(D2R(c))
     
     if A is not None:
         B = (A * SinB) / SinA
@@ -59,11 +63,11 @@ def Pythagoras(A: float | None = None, B: float | None = None, C: float | None =
         return None
     
     if A is None:
-        A = math.sqrt(C**2 - B**2)
+        A = sqrt(C**2 - B**2)
     elif B is None:
-        B = math.sqrt(C**2 - A**2)
+        B = sqrt(C**2 - A**2)
     elif C is None:
-        C = math.sqrt(A**2 + B**2)
+        C = sqrt(A**2 + B**2)
     
     return f"A: {A}, B: {B}, C: {C}"
 
@@ -89,7 +93,7 @@ def SineRule(
     # Convert angles to radians if they are in degrees, and keep them as is if they are already in radians. If an angle is None, keep it as None.
     for angle in Angles:
         if angle is not None and AngleMeasurementMode == "Degrees":
-            angles_rad.append(math.radians(angle))
+            angles_rad.append(D2R(angle))
         else:
             angles_rad.append(angle)
 
@@ -98,12 +102,12 @@ def SineRule(
     # If two angles are known, calculate the third angle using the fact that the sum of angles in a triangle is 180 degrees (or π radians).
     if len(known_angle_indices) == 2:
         missing = next(i for i in range(3) if angles_rad[i] is None)
-        angles_rad[missing] = math.pi - sum(angles_rad[i] for i in known_angle_indices)
+        angles_rad[missing] = PI - sum(angles_rad[i] for i in known_angle_indices)
     
     # Find the first known side and angle to establish the reference ratio for the Sine Rule
     for idx in range(3):
         if Sides[idx] is not None and angles_rad[idx] is not None:
-            ReferenceRatio = Sides[idx] / math.sin(angles_rad[idx])
+            ReferenceRatio = Sides[idx] / sin(angles_rad[idx])
             break
     
     # If the reference couldn't be established, return None
@@ -113,29 +117,29 @@ def SineRule(
     # Loop through the sides and angles to calculate the missing values using the Sine Rule
     for idx in range(3):
         if Sides[idx] is None and angles_rad[idx] is not None:
-            Sides[idx] = ReferenceRatio * math.sin(angles_rad[idx])
+            Sides[idx] = ReferenceRatio * sin(angles_rad[idx])
         elif angles_rad[idx] is None and Sides[idx] is not None:
             value = Sides[idx] / ReferenceRatio
             if not -1 <= value <= 1:
                 return None
-            asin_val = math.asin(value)
+            asin_val = asin(value)
             known_sum = sum(a for a in angles_rad if a is not None)
             
             # Check for the ambiguous case of the sine rule, where there may be two possible angles that satisfy the equation
-            if math.pi - asin_val + known_sum <= math.pi:
-                angles_rad[idx] = math.pi - asin_val
+            if PI - asin_val + known_sum <= PI:
+                angles_rad[idx] = PI - asin_val
             else:
                 angles_rad[idx] = asin_val
 
     # Return in specified unit
     if AngleMeasurementMode == "Degrees":
-        Angles_out = [math.degrees(a) if a is not None else None for a in angles_rad]
+        Angles_out = [R2D(a) if a is not None else None for a in angles_rad]
     else:
         Angles_out = angles_rad
 
     return [Angles_out, Sides]
 def CosineRule(LengthA: float, LengthB: float, AngleA: float) -> float:
-    return math.sqrt(LengthA ** 2 + LengthB ** 2 - ((2 * LengthA * LengthB) * math.cos(math.radians(AngleA))))
+    return sqrt(LengthA ** 2 + LengthB ** 2 - ((2 * LengthA * LengthB) * cos(D2R(AngleA))))
 def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[float]:
     """ 
     Returns a tuple of the three angles in degrees, in the order of AngleA, AngleB, and AngleC.
@@ -145,9 +149,9 @@ def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[f
     """
 
     return (
-        math.degrees(math.acos((LengthB ** 2 + LengthC ** 2 - LengthA ** 2) / (2 * LengthB * LengthC))),  # AngleA
-        math.degrees(math.acos((LengthC ** 2 + LengthA ** 2 - LengthB ** 2) / (2 * LengthC * LengthA))),  # AngleB
-        math.degrees(math.acos((LengthA ** 2 + LengthB ** 2 - LengthC ** 2) / (2 * LengthA * LengthB)))   # AngleC
+        R2D(acos((LengthB ** 2 + LengthC ** 2 - LengthA ** 2) / (2 * LengthB * LengthC))),  # AngleA
+        R2D(acos((LengthC ** 2 + LengthA ** 2 - LengthB ** 2) / (2 * LengthC * LengthA))),  # AngleB
+        R2D(acos((LengthA ** 2 + LengthB ** 2 - LengthC ** 2) / (2 * LengthA * LengthB)))   # AngleC
     )
 
 def SASArea(LengthA: float, LengthB: float, AngleC: float) -> float:
@@ -155,7 +159,7 @@ def SASArea(LengthA: float, LengthB: float, AngleC: float) -> float:
     Returns the area of a triangle from two sides and the included angle.
     Formula: `Area = 0.5 * LengthA * LengthB * sin(AngleC)` where AngleC is in degrees.
     """
-    return (0.5 * LengthA * LengthB * math.sin(math.radians(AngleC)))
+    return (0.5 * LengthA * LengthB * sin(D2R(AngleC)))
 def HeronsFormula(LengthA: float, LengthB: float, LengthC: float) -> float:
     """
     Returns the area of a triangle from the side lengths.
@@ -166,21 +170,21 @@ def HeronsFormula(LengthA: float, LengthB: float, LengthC: float) -> float:
 
     """
     S = (LengthA + LengthB + LengthC) / 2
-    return math.sqrt(S * (S - LengthA) * (S - LengthB) * (S - LengthC))
+    return sqrt(S * (S - LengthA) * (S - LengthB) * (S - LengthC))
 
 def D2R(Degrees: float) -> float:
     """Return radians from degrees."""
-    return Degrees / 180 * math.pi
+    return Degrees / 180 * PI
 def R2D(Radians: float) -> float:
     """Return degrees from radians."""
-    return Radians / math.pi * 180
+    return Radians / PI * 180
 
 def Slope(x1: float, y1: float, x2: float, y2: float) -> str:
     """Returns the slope of a line from two points `(x1, y1)` and `(x2, y2)`"""
     return f"Slope = {(y2 - y1) / (x2 - x1)}"
 def Distance(x1: float, y1: float, x2: float, y2: float) -> float:
     """Return the distance between two points `(x1, y1)` and `(x2, y2)`"""
-    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
+    return sqrt((x2-x1)**2 + (y2-y1)**2)
 def Derivative(Function: str, x: float | None = None, h: float = 1e-5) -> float:
     """Returns `f'(x)` if `x` is not given, else returns the numerical derivative of the function at the given x-value using the definition of the derivative."""
     x_sym = sympy.symbols('x')
@@ -222,8 +226,8 @@ def QuadraticSolutions(A: float, B: float, C: float) -> str:
         return ValueError("Invalid quadratic equation! A cannot be 0.")
     D = B**2 - 4*A*C
     if D > 0:
-        x1 = (-B - math.sqrt(D)) / (2 * A)
-        x2 = (-B + math.sqrt(D)) / (2 * A)
+        x1 = (-B - sqrt(D)) / (2 * A)
+        x2 = (-B + sqrt(D)) / (2 * A)
         return f"x1: {xColorText(x1, 'green')}, x2: {xColorText(x2, 'green')}"
     
     elif D == 0:
@@ -235,8 +239,8 @@ def QuadraticFactorizedForm(a: float, b: float, c: float) -> str:
     """Returns the factorized form of a quadratic function in the form of `a(x - x1)(x - x2)` where `x1` and `x2` are the roots of the function."""
     D = b**2 - 4*a*c
     if D > 0:
-        x1 = (-b - math.sqrt(D)) / (2 * a)
-        x2 = (-b + math.sqrt(D)) / (2 * a)
+        x1 = (-b - sqrt(D)) / (2 * a)
+        x2 = (-b + sqrt(D)) / (2 * a)
         return f"{a}(x - {x1})(x - {x2})"
     
     elif D == 0:
@@ -248,8 +252,8 @@ def QuadraticZeros(a: float, b: float, c: float) -> str:
     """Returns the x-values where the quadratic function crosses the x-axis."""
     D = b**2 - 4*a*c
     if D > 0:
-        x1 = (-b - math.sqrt(D)) / (2 * a)
-        x2 = (-b + math.sqrt(D)) / (2 * a)
+        x1 = (-b - sqrt(D)) / (2 * a)
+        x2 = (-b + sqrt(D)) / (2 * a)
         return f"Zeros: {xColorText((x1, 0), 'green')}, {xColorText((x2, 0), 'green')}"
     
     elif D == 0:
@@ -342,6 +346,33 @@ def PrimeFactorize(Number: int) -> list[int]:
             
     return Factors
 
+def Rx(θ: float) -> SquareMatrix:
+    θ = D2R(θ)
+    return SquareMatrix([
+        [1, 0,       0     ], 
+        [0, cos(θ), -sin(θ)], 
+        [0, sin(θ),  cos(θ)]])
+def Ry(θ: float) -> SquareMatrix:
+    θ = D2R(θ)
+    return SquareMatrix([
+        [cos(θ),  0,  sin(θ)], 
+        [0,       1,  0     ], 
+        [-sin(θ), 0,  cos(θ)]])
+def Rz(θ: float) -> SquareMatrix:
+    θ = D2R(θ)
+    return SquareMatrix([
+        [cos(θ), -sin(θ), 0], 
+        [sin(θ),  cos(θ), 0], 
+        [0,       0,      1]])
+    
+def D3Vector_rotate(V: D3Vector, x: float, y: float, z: float):
+    """Rotates a 3D vector V by angles x, y, and z around the x, y, and z axes respectively."""
+        
+    R = (Rz(z) @ (Ry(y) @ Rx(x)))
+    newVec = R @ V
+    
+    return newVec
+
 ### - TODO: Add more functions for various mathematical calculations, such as:
 ### - More functions for geometry, such as area and volume calculations for various shapes, surface area calculations, and more.
 ### - More functions for algebra, such as polynomial expansion, factorization, and more.
@@ -349,4 +380,3 @@ def PrimeFactorize(Number: int) -> list[int]:
 ### - More functions for linear algebra, such as matrix operations, determinants, eigenvalues, and more.
 ### - More functions for number theory, such as GCD, LCM, modular arithmetic, and more.
 ### - More functions for engineering and physics, such as kinematics equations, projectile motion calculations, work and energy calculations, and more.
-

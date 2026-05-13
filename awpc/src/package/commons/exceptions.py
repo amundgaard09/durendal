@@ -3,7 +3,7 @@ The `AWPC` `UNIx` `UniException` module.
 This module contains all the custom exceptions used in the `AWPC` library.
 """
 
-from commons.utils import xColorText
+from commons.color_dtypes import xColorText as ColorText
 
 class ImpossibleTriangleError(Exception):
     """Raise when the sum of the angles of a triangle is not 180 degrees, a mathematical impossibility."""
@@ -12,11 +12,11 @@ class ImpossibleTriangleError(Exception):
 class IncorrectArgumentCount(Exception):
     """Raises when the count of arguments given to a function is incorrect."""
     def __init__(self, Function: callable, GivenArgumentCount: int, WantedArgumentCount: set):
-        super().__init__(f"Incorrect count of arguments for {xColorText(Function.__name__, 'blue')}. {xColorText(Function.__name__, 'blue')} takes {xColorText(WantedArgumentCount, 'green')} but was given {xColorText(GivenArgumentCount, 'red')}")
+        super().__init__(f"Incorrect count of arguments for {ColorText(Function.__name__, 'blue')}. {ColorText(Function.__name__, 'blue')} takes {ColorText(WantedArgumentCount, 'green')} but was given {ColorText(GivenArgumentCount, 'red')}")
 class InconsistencyError(Exception):
     """Raises when the VIR-values passed into PowerDissipation() gives inconsistent values for the three formulas."""
     def __init__(self, Function: callable, Inconsistency: str):
-        super().__init__(f"Inconsistency error at {xColorText(Function.__name__, 'blue')} with {xColorText(Inconsistency, 'red')}")
+        super().__init__(f"Inconsistency error at {ColorText(Function.__name__, 'blue')} with {ColorText(Inconsistency, 'red')}")
 class DimensionMismatch(Exception):
     """Raise when the dimensions of two units don't match when trying to convert or perform operations on them."""
     def __init__(self, string):
@@ -24,11 +24,11 @@ class DimensionMismatch(Exception):
 class InvalidColorCount(Exception):
     """Raised when the color count passed into a function of the resistor group is invalid."""
     def __init__(self, Function: callable):
-        super().__init__(f"Invalid Color Count for {xColorText(Function.__name__, 'blue')}")
+        super().__init__(f"Invalid Color Count for {ColorText(Function.__name__, 'blue')}")
 class UnknownSubCommand(Exception):
     """Raises when an unknown subcommand gets caught in ValidateCommand()."""
     def __init__(self, Module: str, GivenCommand: str):
-        super().__init__(f"Unknown command for {Module}: {xColorText(GivenCommand, 'red')}")
+        super().__init__(f"Unknown command for {Module}: {ColorText(GivenCommand, 'red')}")
 class MissingSubCommand(Exception):
     """Raises when the subcommand is missing from a command string."""
     def __init__(self, module):
@@ -36,7 +36,7 @@ class MissingSubCommand(Exception):
 class MissingParameters(Exception):
     """Raises when a function is not given enough parameters."""
     def __init__(self, Function: callable, MissingParameters: list):
-        super().__init__(f"Missing parameter {xColorText(MissingParameters, 'red')} for {xColorText(Function.__name__, 'blue')}.")
+        super().__init__(f"Missing parameter {ColorText(MissingParameters, 'red')} for {ColorText(Function.__name__, 'blue')}.")
 class EmptyTokenList(Exception):
     """Raises when the TokenList passed into ValidateCommand() is empty."""
     def __init__(self):
@@ -44,11 +44,15 @@ class EmptyTokenList(Exception):
 class InvalidColors(Exception):
     """Raises when the colors passed into ResistorInsight() are invalid for the given band."""
     def __init__(self, Function: callable, IndexOfInvalidColors: int):
-        super().__init__(f"Invalid colors for {xColorText(Function.__name__, 'blue')} at indices {IndexOfInvalidColors}")
+        super().__init__(f"Invalid colors for {ColorText(Function.__name__, 'blue')} at indices {IndexOfInvalidColors}")
 class UnknownModule(Exception):
     """Raises when an unknown module gets caught in ValidateCommand()."""
     def __init__(self, GivenModule: str):
-        super().__init__(f"Unknown Module: {xColorText(GivenModule, 'red')}") 
+        super().__init__(f"Unknown Module: {ColorText(GivenModule, 'red')}") 
+class InvalidInput(Exception):
+    """Raises when an invalid input gets caught, e.g. a letter for a wanted float."""
+    def __init__(self, WantedType: str, GivenType: str):
+        super().__init__(f"Invalid Input: WantedType: {ColorText(WantedType, 'green')} GivenType: {ColorText(GivenType, 'red')}") 
 
 
 

@@ -8,8 +8,8 @@ import math
 
 from types import MappingProxyType
 from typing_extensions import Literal
-from commons.utils import ANSI_COLORS
-from commons.types import (
+from commons.color_dtypes import ANSI_COLORS
+from commons.numval_dtypes import (
     Quantity,
     UNITS
 )
