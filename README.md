@@ -2,9 +2,9 @@
 
 ***Written, Created, Iterated, Evolved and Built by Simon Stordal Amundgård***
 
-[![GitHub Repo Stars](https://img.shields.io/github/stars/amundgaard09/amundworks?style=social)]
-[![GitHub Repo Size](https://img.shields.io/github/repo-size/amundgaard09/amundworks?style=flat-square)]
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/amundgaard09/amundworks/publish-to-pypi.yml)]
+![GitHub Repo Stars](https://img.shields.io/github/stars/amundgaard09/amundworks?style=social)
+![GitHub Repo Size](https://img.shields.io/github/repo-size/amundgaard09/amundworks?style=flat-square)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/amundgaard09/amundworks/publish-to-pypi.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
