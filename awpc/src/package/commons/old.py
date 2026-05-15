@@ -40,6 +40,8 @@ class _NumericValue:
         return f"{self._value}"
     def __bool__(self):
         return True if self._value != 0 else False
+    def __neg__(self):
+        return -self._value
     def __add__(self, other):
         if isinstance(other, self.__class__):
             return self._value + other._value
@@ -96,6 +98,7 @@ class _NumericValue:
         if isinstance(other, self.__class__):
             return other._value ** self._value
         return other ** self._value
+    
 class Quantity(_NumericValue):
     """Base Class for storing values and their units."""
     def __init__(self, value: float, unit: Unit):

@@ -9,6 +9,7 @@ __all__ = [
     "unicrypt",
     "uniflight",
     "unimath",
+    "uniops"
     "uniphys",
     "unipower",
     "unispace",

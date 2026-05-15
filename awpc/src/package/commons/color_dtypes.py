@@ -5,7 +5,13 @@ This module includes terminal text coloring tools and color data classes such as
 """
 
 from __future__ import annotations
-from ..unipy.unimath.helpers import intclip
+
+def _intclip(val: int, lower: int, upper: int) -> int:
+    if val <= lower:
+        return lower
+    elif val >= upper:
+        return upper
+    return val
 
 ANSI_COLORS = {
     "black":  "\033[30m",
@@ -69,7 +75,7 @@ class RGB(_BaseColor):
     @r.setter
     def r(self, new_value: int) -> None:
         """Setter: Clips and assigns the new red value."""
-        self._r = intclip(new_value, 0, 255) 
+        self._r = _intclip(new_value, 0, 255) 
     @property
     def g(self) -> int:
         """Getter: Returns the green value."""
@@ -77,7 +83,7 @@ class RGB(_BaseColor):
     @g.setter
     def g(self, new_value: int) -> None:
         """Setter: Clips and assigns the new green value."""
-        self._g = intclip(new_value, 0, 255)
+        self._g = _intclip(new_value, 0, 255)
     @property
     def b(self) -> int:
         """Getter: Returns the blue value."""
@@ -85,7 +91,7 @@ class RGB(_BaseColor):
     @b.setter
     def b(self, new_value: int) -> None:
         """Setter: Clips and assigns the new blue value."""
-        self._b = intclip(new_value, 0, 255)
+        self._b = _intclip(new_value, 0, 255)
             
     
     def toHex(self) -> HEX:
@@ -165,10 +171,10 @@ class CMYK(_BaseColor):
     "CMYK color data type."
     def __init__(self, colorname: str, c: int, m: int, y: int, k: int):
         super().__init__(colorname)
-        self.c = intclip(c, 0, 100)
-        self.m = intclip(m, 0, 100)
-        self.y = intclip(y, 0, 100)
-        self.k = intclip(k, 0, 100)
+        self.c = _intclip(c, 0, 100)
+        self.m = _intclip(m, 0, 100)
+        self.y = _intclip(y, 0, 100)
+        self.k = _intclip(k, 0, 100)
 
     @property
     def values(self) -> tuple[int, int, int, int]:

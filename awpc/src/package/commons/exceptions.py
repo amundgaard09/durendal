@@ -3,7 +3,7 @@ The `AWPC` `UNIx` `UniException` module.
 This module contains all the custom exceptions used in the `AWPC` library.
 """
 
-from commons.color_dtypes import xColorText as ColorText
+from color_dtypes import xColorText as ColorText
 
 class ImpossibleTriangleError(Exception):
     """Raise when the sum of the angles of a triangle is not 180 degrees, a mathematical impossibility."""
@@ -35,8 +35,8 @@ class MissingSubCommand(Exception):
         super().__init__(f"Missing subcommand for {module}")    
 class MissingParameters(Exception):
     """Raises when a function is not given enough parameters."""
-    def __init__(self, Function: callable, MissingParameters: list):
-        super().__init__(f"Missing parameter {ColorText(MissingParameters, 'red')} for {ColorText(Function.__name__, 'blue')}.")
+    def __init__(self, *args):
+        super().__init__(*args)
 class EmptyTokenList(Exception):
     """Raises when the TokenList passed into ValidateCommand() is empty."""
     def __init__(self):

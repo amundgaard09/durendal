@@ -1,6 +1,6 @@
 [project]
 name = "AWPC" # AWPC for now. Will fix with polyrepo architechture
-version = "0.0.1.3"
+version = "0.0.1.4"
 description = "AmundWorks Python Collective - Multi-dicipline Engineering Python Software"
 authors = [{name = "Simon Stordal Amundgård"}]
 dependencies = [

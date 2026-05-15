@@ -333,7 +333,7 @@ def TangentFormula(Function1: str, Function2: str) -> list[str]:
     return tangents
 
 def PrimeFactorize(Number: int) -> list[int]:
-    """Returns the prime factorization of a number as a list of prime factors."""
+    """Returns the prime factorization of a number as a list of its prime factors."""
     Factors = []
     Divisor = 2
     
@@ -345,33 +345,6 @@ def PrimeFactorize(Number: int) -> list[int]:
             Divisor += 1
             
     return Factors
-
-def Rx(θ: float) -> SquareMatrix:
-    θ = D2R(θ)
-    return SquareMatrix([
-        [1, 0,       0     ], 
-        [0, cos(θ), -sin(θ)], 
-        [0, sin(θ),  cos(θ)]])
-def Ry(θ: float) -> SquareMatrix:
-    θ = D2R(θ)
-    return SquareMatrix([
-        [cos(θ),  0,  sin(θ)], 
-        [0,       1,  0     ], 
-        [-sin(θ), 0,  cos(θ)]])
-def Rz(θ: float) -> SquareMatrix:
-    θ = D2R(θ)
-    return SquareMatrix([
-        [cos(θ), -sin(θ), 0], 
-        [sin(θ),  cos(θ), 0], 
-        [0,       0,      1]])
-    
-def D3Vector_rotate(V: D3Vector, x: float, y: float, z: float):
-    """Rotates a 3D vector V by angles x, y, and z around the x, y, and z axes respectively."""
-        
-    R = (Rz(z) @ (Ry(y) @ Rx(x)))
-    newVec = R @ V
-    
-    return newVec
 
 ### - TODO: Add more functions for various mathematical calculations, such as:
 ### - More functions for geometry, such as area and volume calculations for various shapes, surface area calculations, and more.

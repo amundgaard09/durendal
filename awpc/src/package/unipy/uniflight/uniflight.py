@@ -3,7 +3,7 @@ The `AWPC` `UniFlight` module provides a collection of functions and classes for
 """
 
 from commons.color_dtypes import xColorText as ColorText
-from commons.numval_dtypes import Quantity, UNITS
+from awpc.src.package.commons.old import Quantity, UNITS
 from commons.constants import MACH
 
 def T2WRatio(Thrust: float, Weight: float) -> str:

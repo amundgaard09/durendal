@@ -7,7 +7,7 @@ The constants are stored as instances of the `PhysicalConstant` class, which inc
 # Theta - Θ θ, Iota - I ι, Kappa - K κ, Lambda - Λ λ, Mu - M μ,      Nu - N ν,   Xi - Ξ ξ,  Omicron - O ο, 
 # Pi - Π π,    Rho - P ρ,  Sigma - Σ σ ς, Tau - T τ,  Ypsilon - Y υ, Phi - Φ φ,  Chi - X χ, Psi - Ψ ψ, Omega - Ω ω
 
-from commons.numval_dtypes import PhysicalConstant, UNITS
+from old import PhysicalConstant, UNITS
 
 # Mathematical Constants (Numerical/Unitless Constants - NCONST)
 I       = PhysicalConstant(1j,                 UNITS["NCONST"], "Imaginary Unit - sqrt(-1)")
