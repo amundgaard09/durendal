@@ -7,7 +7,7 @@ The constants are stored as instances of the `PhysicalConstant` class, which inc
 # Theta - Θ θ, Iota - I ι, Kappa - K κ, Lambda - Λ λ, Mu - M μ,      Nu - N ν,   Xi - Ξ ξ,  Omicron - O ο, 
 # Pi - Π π,    Rho - P ρ,  Sigma - Σ σ ς, Tau - T τ,  Ypsilon - Y υ, Phi - Φ φ,  Chi - X χ, Psi - Ψ ψ, Omega - Ω ω
 
-from old import PhysicalConstant, UNITS
+from awpc.src.package.types.phys_dtypes import PhysicalConstant, UNITS
 
 # Mathematical Constants (Numerical/Unitless Constants - NCONST)
 I       = PhysicalConstant(1j,                 UNITS["NCONST"], "Imaginary Unit - sqrt(-1)")
@@ -57,17 +57,17 @@ SUN_R   = PhysicalConstant(6.957e+8,  UNITS["m"],    "Radius of the Sun")
 
 # TODO Sort and implement all units
 
-HUBBLE           = PhysicalConstant(                   UNITS["km/s/prsc"],  "Hubbles Constant")
-BOLTZMANN        = PhysicalConstant(1.380649e-23,      UNITS["J/K"],        "Boltzmann Constant")         # Relates the average relative kinetic energy of particles in a gas with the thermodynamic temperature of the gas.
-GAS_CONSTANT     = PhysicalConstant(8.314462618,       UNITS["J/(mol*K)"],  "Universal Gas Constant")     # Work performed by one mole of a gas during a temperature change of 1 Kelvin at constant pressure.
-AVOGADRO         = PhysicalConstant(6.02214076e+23,    UNITS["1/mol"],      "Avogadro Constant")          # Number of constituent particles (usually atoms or molecules) contained in one mole of a substance.
-STEFAN_BOLTZMANN = PhysicalConstant(5.670374419e-08,   UNITS["W/(m²*K^4)"], "Stefan-Boltzmann Constant")  # Constant of proportionality in the Stefan-Boltzmann law relating total energy radiated per unit surface area of a black body.
-WIEN             = PhysicalConstant(2.897771955e-03,   UNITS["m*K"],        "Wien Displacement Constant") # Relationship between the thermodynamic temperature of a blackbody and the wavelength of its peak radiation.
-VAC_PERMITTIVITY = PhysicalConstant(8.8541878128e-12,  UNITS["F/m"],        "Vacuum Permittivity")        # Capability of a vacuum to permit electric field lines; also known as the electric constant.
-VAC_PERMEABILITY = PhysicalConstant(1.25663706127e-06, UNITS["N/A²"],       "Vacuum Permeability")        # Measure of the resistance encountered when forming a magnetic field in a vacuum; also known as the magnetic constant.
+#HUBBLE           = PhysicalConstant(                   UNITS["km/s/prsc"],  "Hubbles Constant")
+#BOLTZMANN        = PhysicalConstant(1.380649e-23,      UNITS["J/K"],        "Boltzmann Constant")         # Relates the average relative kinetic energy of particles in a gas with the thermodynamic temperature of the gas.
+#GAS_CONSTANT     = PhysicalConstant(8.314462618,       UNITS["J/(mol*K)"],  "Universal Gas Constant")     # Work performed by one mole of a gas during a temperature change of 1 Kelvin at constant pressure.
+#AVOGADRO         = PhysicalConstant(6.02214076e+23,    UNITS["1/mol"],      "Avogadro Constant")          # Number of constituent particles (usually atoms or molecules) contained in one mole of a substance.
+#STEFAN_BOLTZMANN = PhysicalConstant(5.670374419e-08,   UNITS["W/(m²*K^4)"], "Stefan-Boltzmann Constant")  # Constant of proportionality in the Stefan-Boltzmann law relating total energy radiated per unit surface area of a black body.
+#WIEN             = PhysicalConstant(2.897771955e-03,   UNITS["m*K"],        "Wien Displacement Constant") # Relationship between the thermodynamic temperature of a blackbody and the wavelength of its peak radiation.
+#VAC_PERMITTIVITY = PhysicalConstant(8.8541878128e-12,  UNITS["F/m"],        "Vacuum Permittivity")        # Capability of a vacuum to permit electric field lines; also known as the electric constant.
+#VAC_PERMEABILITY = PhysicalConstant(1.25663706127e-06, UNITS["N/A²"],       "Vacuum Permeability")        # Measure of the resistance encountered when forming a magnetic field in a vacuum; also known as the magnetic constant.
 VAC_IMPEDANCE    = PhysicalConstant(376.730313412,     UNITS["Ω"],          "Vacuum Impedance")           # Ratio of the magnitudes of the electric and magnetic fields in an electromagnetic wave traveling through a vacuum.
-COULOMB          = PhysicalConstant(8.9875517923e+09,  UNITS["N*m²/C²"],    "Coulomb Constant")           # Proportionality constant used in electrostatics equations, equal to 1 / (4pi * epsilon_0).
-FARADAY          = PhysicalConstant(96485.33212,       UNITS["C/mol"],      "Faraday Constant")           # Total electric charge carried by one mole of electrons.
-JOSEPHSON        = PhysicalConstant(483597.8484e+09,   UNITS["Hz/V"],       "Josephson Constant")         # Constant relating the potential difference across a Josephson junction to the frequency of the alternating current.
-PLANCK_REDUCED   = PhysicalConstant(1.054571817e-34,   UNITS["J*s"],        "Reduced Planck Constant")    # The Planck constant divided by 2pi, heavily used in quantum mechanical differential mechanics.
-RYDBERG          = PhysicalConstant(10973731.56816,    UNITS["1/m"],        "Rydberg Constant")           # Limiting value of the highest wavenumber of any photon that can be emitted from an atom.
+#COULOMB          = PhysicalConstant(8.9875517923e+09,  UNITS["N*m²/C²"],    "Coulomb Constant")           # Proportionality constant used in electrostatics equations, equal to 1 / (4pi * epsilon_0).
+#FARADAY          = PhysicalConstant(96485.33212,       UNITS["C/mol"],      "Faraday Constant")           # Total electric charge carried by one mole of electrons.
+#JOSEPHSON        = PhysicalConstant(483597.8484e+09,   UNITS["Hz/V"],       "Josephson Constant")         # Constant relating the potential difference across a Josephson junction to the frequency of the alternating current.
+#PLANCK_REDUCED   = PhysicalConstant(1.054571817e-34,   UNITS["J*s"],        "Reduced Planck Constant")    # The Planck constant divided by 2pi, heavily used in quantum mechanical differential mechanics.
+#RYDBERG          = PhysicalConstant(10973731.56816,    UNITS["1/m"],        "Rydberg Constant")           # Limiting value of the highest wavenumber of any photon that can be emitted from an atom.

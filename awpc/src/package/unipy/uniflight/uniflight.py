@@ -2,20 +2,20 @@
 The `AWPC` `UniFlight` module provides a collection of functions and classes for performing calculations and simulations related to flight dynamics, aerodynamics, and propulsion.
 """
 
-from commons.color_dtypes import xColorText as ColorText
-from awpc.src.package.commons.old import Quantity, UNITS
-from commons.constants import MACH
+from awpc.src.package.types.color_dtypes import xColorText
+from awpc.src.package.types.phys_dtypes import Quantity, UNITS
+from awpc.src.package.commons.constants import MACH
 
 def T2WRatio(Thrust: float, Weight: float) -> str:
     """Thrust to Weight ratio calculator. Ensure consistent units!"""
     Ratio = Thrust / Weight
-    return f"Ratio: {ColorText(f'{Ratio}', 'green' if Ratio > 1 else 'red' if Ratio != 1 else 'yellow')}" 
+    return f"Ratio: {xColorText(f'{Ratio}', 'green' if Ratio > 1 else 'red' if Ratio != 1 else 'yellow')}" 
 def MachNumber(Velocity: float, SpeedOfSound: float | None = MACH) -> str:
     """Mach Number Calulator. Speed of sound is defaulted to 343 m/s. Ensure consistent units!"""
     mach = Velocity / SpeedOfSound
     label = ('SUBSONIC' if mach < 1 else 'TRANSONIC' if abs(mach - 1) < 0.01 else 'SUPERSONIC' if mach < 5 else 'HYPERSONIC' if mach < 10 else 'HIGH-HYPERSONIC')
     color = ('red'      if mach < 1 else 'yellow'    if mach == 1            else 'green'      if mach < 5 else 'blue'       if mach < 10 else 'violet')
-    return f"Ratio: {ColorText(f'{mach} - {label}', color)}"
+    return f"Ratio: {xColorText(f'{mach} - {label}', color)}"
                                 
 def DynamicPressure(Velocity: float, AirDensity: float | None = 1.225) -> Quantity:
     return Quantity(0.5 * Velocity ** 2 * AirDensity, UNITS["Pa"])

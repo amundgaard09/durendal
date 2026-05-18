@@ -8,18 +8,17 @@ import math
 
 from types import MappingProxyType
 from typing_extensions import Literal
-from commons.color_dtypes import ANSI_COLORS
-from commons.numval_dtypes import (
+from awpc.src.package.types.color_dtypes import ANSI_COLORS
+from awpc.src.package.types.phys_dtypes import (
     Quantity,
     UNITS
 )
 
-from commons.exceptions import (
+from awpc.src.package.commons.exceptions import (
     MissingParameters, 
     InconsistencyError, 
     InvalidColors
 )
-
 
 BANDS = MappingProxyType({
     "black":  0,

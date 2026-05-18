@@ -6,13 +6,6 @@ This module includes terminal text coloring tools and color data classes such as
 
 from __future__ import annotations
 
-def _intclip(val: int, lower: int, upper: int) -> int:
-    if val <= lower:
-        return lower
-    elif val >= upper:
-        return upper
-    return val
-
 ANSI_COLORS = {
     "black":  "\033[30m",
     "brown":  "\033[38;5;94m",
@@ -27,14 +20,18 @@ ANSI_COLORS = {
     "gold":   "\033[38;5;178m",
     "silver": "\033[38;5;7m",
 } 
-"""The `ANSI` escape codes for the colors used in the `UNIx` library. The keys are the color names and the values are the corresponding `ANSI` escape codes."""
 
 def xColorText(Text: str, Color: str) -> str:
     """Returns the given text in the given color using `ANSI` escape codes. If the color is not found, it returns the text without coloring."""
     Text = str(Text)
     ANSI = ANSI_COLORS.get(Color.lower(), '\033[0m')
     return ANSI + Text + '\033[0m'
-
+def _intclip(val: int, lower: int, upper: int) -> int:
+    if val <= lower:
+        return lower
+    elif val >= upper:
+        return upper
+    return val
 def _validatehex(hexcode: str) -> str:
     """Validates a hexstring for colors. If invalid, returns `#000000`"""
     hexcode = hexcode[1:7]

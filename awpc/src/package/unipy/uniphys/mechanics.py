@@ -4,11 +4,10 @@ The Classical Mechanics module for `AWPC` `UniPhys`
 This module contains resources for calculations and simulations for Classical Mechanics. 
 """
 
-import math
-
-from commons.color_dtypes import xColorText as ColorText
-from commons.numval_dtypes import Quantity, UNITS
-from commons.constants import EARTH_G, C
+from awpc.src.package.types.color_dtypes import xColorText as ColorText
+from awpc.src.package.types.phys_dtypes import Quantity, UNITS
+from awpc.src.package.commons.constants import EARTH_G, PI, C 
+from awpc.src.package.unipy.unimath import D2R
 
 def Torque(MomentArmDistance: float, Force: float) -> Quantity:
     """Returns a `torque` quantity in newtonmeters from moment arm distance in meters and force in newtons."""
@@ -25,10 +24,10 @@ def GearRatio(DrivingGearTeethCount: int, DrivenGearTeethCount: int) -> str:
 
 def AngularVelocityR(RPM: float) -> Quantity:
     """Returns angular velocity from RPM in radians/s"""
-    return Quantity((RPM * math.pi / 30), UNITS["rad"])
+    return Quantity((RPM * PI / 30), UNITS["rad"])
 def AngularVelocityD(RPM: float) -> Quantity:
     """Returns angular velocity from RPM in degrees/s"""
-    return Quantity(math.degrees((RPM * math.pi / 30)), UNITS["deg"])
+    return Quantity(D2R((RPM * PI / 30)), UNITS["deg"])
 
 def KineticEnergy(Mass: float, Velocity: float) -> Quantity:
     """Returns the kinetic energy from mass in kgs and velocity in m/s"""
@@ -38,5 +37,5 @@ def PotentialEnergy(Mass: float, Height: float, Gravity: float | None = EARTH_G.
     return Quantity(Mass * Gravity * Height, UNITS["J"])
 
 def EinsteinMassEnergyEquivalence(Mass: float) -> Quantity:
-    return Quantity((Mass * C ** 2), UNITS["J"])
+    return Quantity((Mass * C * C), UNITS["J"])
 

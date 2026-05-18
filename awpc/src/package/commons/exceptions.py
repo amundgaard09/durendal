@@ -1,9 +1,9 @@
 """
-The `AWPC` `UNIx` `UniException` module.
+The `AWPC` `Exceptions` module.
 This module contains all the custom exceptions used in the `AWPC` library.
 """
 
-from color_dtypes import xColorText as ColorText
+from ..types.color_dtypes import xColorText as ColorText
 
 class ImpossibleTriangleError(Exception):
     """Raise when the sum of the angles of a triangle is not 180 degrees, a mathematical impossibility."""
@@ -50,7 +50,7 @@ class UnknownModule(Exception):
     def __init__(self, GivenModule: str):
         super().__init__(f"Unknown Module: {ColorText(GivenModule, 'red')}") 
 class InvalidInput(Exception):
-    """Raises when an invalid input gets caught, e.g. a letter for a wanted float."""
+    """Raises when an invalid input gets caught, e.g. a str for a wanted float."""
     def __init__(self, WantedType: str, GivenType: str):
         super().__init__(f"Invalid Input: WantedType: {ColorText(WantedType, 'green')} GivenType: {ColorText(GivenType, 'red')}") 
 

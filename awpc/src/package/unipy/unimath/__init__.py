@@ -4,4 +4,6 @@ This module provides a collection of functions for performing various mathematic
 including geometry, algebra, calculus, and more.
 """
 
-__all__ = ["unimath.py, math_utils.py"]
+from .unimath import *
+
+__all__ = ["unimath.py"]
