@@ -21,7 +21,7 @@ class Unit:
     def __hash__(self):
         return hash((self.unitname, self.measurement))
     def __bool__(self):
-        return True   
+        return True     
 class Quantity:
     """Base Class for storing values and their units."""
     def __init__(self, value: float, unit: Unit):
