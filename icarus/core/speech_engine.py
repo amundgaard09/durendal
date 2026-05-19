@@ -7,7 +7,7 @@ from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
 from pydub.playback import play
 from pydub.utils import which
-from awpc.src.package.types.color_dtypes import xColorText as color_text
+from awpc.src.types.color_dtypes import xColorText as color_text
 
 recognizer = Speech.Recognizer()
 

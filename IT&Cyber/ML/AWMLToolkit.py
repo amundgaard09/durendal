@@ -1,4 +1,4 @@
-"""The complete AmundWorks toolkit for ML - Version I - Written by Simon Stordal Amundgård"""
+"""The Complete AmundWorks Machine Learning Toolkit - Version I - Written by Simon Stordal Amundgård"""
 
 import math
 import numpy as np

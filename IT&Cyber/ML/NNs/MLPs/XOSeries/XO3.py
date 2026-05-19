@@ -1,8 +1,6 @@
 """ Third Iteration - XO Neural Net Series | Matrix-Based Image Classification Neural Net"""
 
-import keras
-import numpy as np
-import time
+import time, keras, numpy as np
 
 def _sigmoid(Z: np.ndarray) -> np.ndarray:
     """Sigmoid activation function for binary classification. Converts raw scores (logits) into probabilities."""
@@ -211,7 +209,6 @@ Epochs = 200
 StartTime = time.time()
 
 BATCHSIZE = 128
-
 MNISTNET.Train(X, Y, epochs=Epochs)
 
 Endtime = time.time()
