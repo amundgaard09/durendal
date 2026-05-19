@@ -29,10 +29,10 @@ SCHEDULE = "src\\data\\json\\schedule.json"
 
 ### ------------------------------------------------------------------ ### 
 
-import sys, json, time, datetime, questionary
+import json, time, datetime, questionary
 
-from awpc.src.package.commons.utils import xColorText as colorText
-from awpc.src.package.unipy.uniCLI.uniCLI import clearTerminal
+from awpc.src.types.color_dtypes import xColorText as colorText
+from awpc.src.unipy.uniCLI.uniCLI import clearTerminal
 from vulcan.olympus.src import (
     Step,
     Exercise,

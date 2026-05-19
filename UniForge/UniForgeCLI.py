@@ -1,16 +1,16 @@
 """UniForge Engineering Assistant CLI - v1.1.5-beta"""
 
-from awpc.src.package.unipy.uniflight.uniflight import *
-from awpc.src.package.unipy.unispace.unispace import *
-from awpc.src.package.unipy.unicrypt.unicrypt import *
-from awpc.src.package.unipy.unipower.unipower import *
-from awpc.src.package.unipy.unimath.unimath import *
-from awpc.src.package.unipy.uniphys.mechanics import *
-from awpc.src.package.unipy.unialgo.unialgo import *
+from awpc.src.unipy.uniflight.uniflight import *
+from awpc.src.unipy.unispace.unispace import *
+from awpc.src.unipy.unicrypt.unicrypt import *
+from awpc.src.unipy.unipower.unipower import *
+from awpc.src.unipy.unimath.unimath import *
+from awpc.src.unipy.uniphys.mechanics import *
+from awpc.src.unipy.unialgo.unialgo import *
 
-from awpc.src.package.unipy import moduletools as mt
+from awpc.src.unipy import moduletools as mt
 
-from awpc.src.package.unipy.uniCLI.uniCLI import (
+from awpc.src.unipy.uniCLI.uniCLI import (
     ExitEnvironmentSignal,
     clearTerminal, 
     Dispatcher, 
@@ -20,15 +20,15 @@ from awpc.src.package.unipy.uniCLI.uniCLI import (
 
 from prompt_toolkit import prompt
 
-MAINVersion = "UniForge CLI v1.1.5-beta"
-PIDVersion = "v.0.0.1.alpha"
-HOHMANNVersion= "v.0.0.1.alpha"
+MAINVER = "UniForge CLI v1.1.5-beta"
+PIDVER = "v.0.0.1.alpha"
+HOHMANNVER= "v.0.0.1.alpha"
 
 ### ENVIROMENTS 
 
 def _mainEnv() -> None:
     clearTerminal()
-    print(MAINVersion)
+    print(MAINVER)
     while True:        
         try:
             CommandString = prompt("UniForge >>> ", completer=MAINCOMPLETER)
@@ -41,7 +41,7 @@ def _mainEnv() -> None:
             print(f"[{xColorText('ERROR', 'red')}] {type(e).__name__}: {e}")
 def _pidEnv() -> None:
     clearTerminal()
-    print(f"ORION PID Testing Environment {PIDVersion}")
+    print(f"ORION PID Testing Environment {PIDVER}")
     while True:
         try:
             CommandString = prompt("PIDEnv >>> ", completer=PIDCOMPLETER)
@@ -51,13 +51,13 @@ def _pidEnv() -> None:
         
         except ExitEnvironmentSignal:
             clearTerminal()
-            print(f"ORION Environment {MAINVersion}")
+            print(f"ORION Environment {MAINVER}")
             break
         except Exception as e:
             print(f"[{xColorText('ERROR', 'red')}] {type(e).__name__}: {e}")
 def _hohmannEnv() -> None:
     clearTerminal()
-    print(f"ORION Hohmann Calculation & Visualization Environment {HOHMANNVersion}")
+    print(f"ORION Hohmann Calculation & Visualization Environment {HOHMANNVER}")
     while True:
         try:
             CommandString = prompt("HohmannENV >>> ", completer=HOHMANNCOMPLETER)
@@ -67,7 +67,7 @@ def _hohmannEnv() -> None:
         
         except ExitEnvironmentSignal:
             clearTerminal()
-            print(MAINVersion)
+            print(MAINVER)
             break
         except Exception as e:
             print(f"[{xColorText('ERROR', 'red')}] {type(e).__name__}: {e}")
