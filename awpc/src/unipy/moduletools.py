@@ -2,13 +2,13 @@
 
 import inspect
 
-from uniflight import uniflight
-from unispace import unispace
-from unicrypt import unicrypt
-from unipower import unipower
-from uniphys import mechanics
-from unimath import unimath
-from unialgo import unialgo
+from awpc.src.unipy.uniflight import uniflight
+from awpc.src.unipy.unispace import unispace
+from awpc.src.unipy.unicrypt import unicrypt
+from awpc.src.unipy.unipower import unipower
+from awpc.src.unipy.uniphys import mechanics
+from awpc.src.unipy.unimath import unimath
+from awpc.src.unipy.unialgo import unialgo
 
 def _generateDicts(Module) -> tuple[dict, dict]:
     """

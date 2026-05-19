@@ -9,10 +9,10 @@ import sympy, matplotlib.pyplot as mpl
 from math import sin, asin, cos, acos, sqrt
 
 from typing import Literal
-from awpc.src.package.types.color_dtypes import xColorText
-from awpc.src.package.types.linalg_dtypes import SquareMatrix, D3Vector
-from awpc.src.package.commons.constants import PI
-from awpc.src.package.commons.exceptions import ImpossibleTriangleError
+from awpc.src.types.color_dtypes import xColorText
+from awpc.src.types.linalg_dtypes import SquareMatrix, D3Vector
+from awpc.src.commons.constants import PI
+from awpc.src.commons.exceptions import ImpossibleTriangleError
 
 def _plotXY(XVals: list[float], YVals: list[float]) -> None:
     """Initialize a plot where `x[idx]` and `y[idx]` are coordinate pairs of a function."""

@@ -9,8 +9,8 @@ This module contains resources for calculations and simulations for Astrophysics
 # Pi - Π π,    Rho - P ρ,  Sigma - Σ σ ς, Tau - T τ,  Ypsilon - Y υ, Phi - Φ φ,  Chi - X χ, Psi - Ψ ψ, Omega - Ω ω
 
 from math import sqrt, log
-from awpc.src.package.types.phys_dtypes import Quantity, UNITS
-from awpc.src.package.commons.constants import G, C, PI, EARTH_M, EARTH_R, HUBBLE 
+from awpc.src.types.phys_dtypes import Quantity, UNITS
+from awpc.src.commons.constants import G, C, PI, EARTH_M, EARTH_R, HUBBLE 
 
 def SchwarzschildRadius(M: float) -> Quantity:
     return Quantity(((2 * G * M) / C * C), UNITS["m"])

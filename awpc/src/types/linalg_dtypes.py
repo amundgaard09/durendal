@@ -1,9 +1,9 @@
 
 from copy import deepcopy
+from math import radians, sqrt, sin, cos
 from __future__ import annotations
 from random import randint, uniform
-from math import radians, sqrt, sin, cos
-from awpc.src.package.commons.exceptions import MissingParameters, InvalidInput
+from awpc.src.commons.exceptions import MissingParameters, InvalidInput
 
 EPSILON = 1e-9
 
@@ -112,7 +112,73 @@ class D3Vector:
         return NotImplemented
     def __rmatmul__(self, other):
         return self.__matmul__(other)
+class NDVector:
+    """`AWPC` Dataclass for N-dimensional vectors.
+    
+    This class is to be used for applications where more than 3 dimensions in a vector is needed. 
+    Use the `D3Vector` class for 3-dimensional vectors.
+    
+    Args
+    ----
+    `components`: list[float] - The components of the vector, in order.
+    """
+    def __init__(self, components: list[float]):
+        self._components = [ _validateFloat(comp) for comp in components ]
+    
+    @property
+    def components(self) -> list[float]:
+        return self._components
 
+class Matrix:
+    """`AWPC` Dataclass for Matrices.
+    
+    This class is to be used for applications where non-square matrices are needed. 
+    Use the `SquareMatrix` class for square matrices.
+    
+    Args
+    ----
+    `array`: list[list[float]] - The data to create the matrix from, unless empty or random values are preferred.
+    
+    `rows`: int - Create an empty matrix with dimensions `Rows` x `Cols`
+    
+    `cols`: int - Create an empty matrix with dimensions `Rows` x `Cols`
+    
+    `random`: bool - Create a matrix filled with uniform values ranging from -1 and 1 unless otherwise specified with the `randrange` parameter.
+    
+    `fill`: float - Specifies what value to fill the matrix with, if not random.
+    
+    `randtype`: tuple - Specifies if the matrix should be filled with random integers or floats.
+    
+    `randrange`: tuple - Specifies the range for the `random`.`uniform` function.
+    """
+    def __init__(
+        self, 
+        array: list[list[float]] | None = None, 
+        rows:      int           | None = None, 
+        cols:      int           | None = None, 
+        random:    bool          | None = False,
+        fill:      float         | None = 0,
+        randtype: type           | None = float,
+        randrange: tuple         | None = (-1, 1),
+    ):
+        if array is None and rows and cols:
+            if random:
+                if randtype is float:
+                    array = [[uniform(*randrange) for _ in range(cols)] for _ in range(rows)]
+                elif randtype is int:
+                    array = [[randint(*randrange) for _ in range(cols)] for _ in range(rows)]
+                else: 
+                    array = [[0 for _ in range(cols)] for _ in range(rows)]
+                    
+            else:
+                array = [[fill for _ in range(cols)] for _ in range(rows)]
+            
+        if not rows and not cols and not array:
+            raise MissingParameters("Missing both array and size parameters! Matrix() needs atleast 1!")
+
+        self._data = array
+        self._rows = len(array)
+        self._cols = len(array[0]) if self._rows > 0 else 0
 class SquareMatrix:
     """
     `AWPC` Dataclass for Square Matrices.
@@ -278,6 +344,12 @@ class SquareMatrix:
             detsum += M.__sign(idx1) * (M[0][idx1] * M._det(minor))
             
         return detsum
+    @property
+    def det(self) -> float:
+        """
+        Returns the determinant of the matrix through Laplace Expansion.
+        """
+        return self._det(self)
     
     @staticmethod
     def _T(M: SquareMatrix) -> SquareMatrix:
@@ -287,11 +359,21 @@ class SquareMatrix:
                     transpose[i][j] = M[j][i]
                     
         return transpose
+    @property
+    def T(self) -> SquareMatrix:
+        """
+        Returns the transposed matrix of itself. 
+        
+        A transposed matrix is the original matrix but with its rows and columns swapped, 
+        so one element in the original matrix - `A[I][J]` becomes `A[J][I]` in the transpose.
+        It is as if the matrix was rotated around its diagonal from the top-left to bottom right.
+        """
+        return self._T(self)   
     
     @staticmethod
     def __build_augmented(A: SquareMatrix) -> SquareMatrix:
         n = A.dim
-        I = A.to_identity(n)
+        I = A.to_identity()
 
         aug = SquareMatrix([[0 for _ in range(2 * n)] for _ in range(n)], enablevalidation=False)
 
@@ -332,6 +414,16 @@ class SquareMatrix:
 
         inverse = [row[n:] for row in aug]
         return SquareMatrix(inverse)    
+    @property
+    def inverse(self) -> SquareMatrix:
+        """
+        Returns the inverse of the matrix through Gauss-Jordan elimination.
+        
+        The inverse of a matrix `A`, `A^-1`, satisfies the following equation:
+        
+        `A` * `A^-1` = `A^-1` * `A` = `I` where `I` is the identity matrix of the same dimension.
+        """
+        return self._inverse(self)
     
     @staticmethod
     def _rank(A: SquareMatrix) -> int:
@@ -363,9 +455,16 @@ class SquareMatrix:
                 break
                 
         return rank
+    @property
+    def rank(self) -> int:
+        """
+        Calculates matrix rank via Gaussian Elimination.
+        Accounts for floating point errors using `EPSILON`.
+        """
+        return self._rank(self)
     
     @staticmethod
-    def _QR_decomposition(A: SquareMatrix) -> tuple[SquareMatrix, SquareMatrix]:
+    def __QR_decomposition(A: SquareMatrix) -> tuple[SquareMatrix, SquareMatrix]:
         """Performs QR Decomposition via Modified Gram-Schmidt process."""
         N = A._dim  
         Q = SquareMatrix(size=N)
@@ -388,74 +487,16 @@ class SquareMatrix:
                 Q.set_column(J, [0.0] * N)
                 
         return Q, R
-
-    @property
-    def rank(self) -> int:
-        """
-        Calculates matrix rank via Gaussian Elimination.
-        Accounts for floating point errors using `EPSILON`.
-        """
-        return self._rank(self)
-    @property
-    def dim(self) -> int:
-        """
-        Returns the dimension of the matrix. 
-        
-        Since it's square, only one integer is needed, compared to a rectangular one.
-        """
-        return self._dim
-    @property
-    def det(self) -> float:
-        """
-        Returns the determinant of the matrix through Laplace Expansion.
-        """
-        return self._det(self)
-    @property
-    def trace(self) -> float:
-        """
-        Returns the trace of the matrix. 
-        
-        The trace is defined as the sum of all the elements on the diagonal, e. g. `A_00`, `A_11`, `A_22`, etc.
-        """
-        return sum(self[idx][idx] for idx in range(len(self._data)))
-    @property
-    def T(self) -> SquareMatrix:
-        """
-        Returns the transposed matrix of itself. 
-        
-        A transposed matrix is the original matrix but with its rows and columns swapped, 
-        so one element in the original matrix - `A[I][J]` becomes `A[J][I]` in the transpose.
-        It is as if the matrix was rotated around its diagonal from the top-left to bottom right.
-        """
-        return self._T(self)     
-    @property
-    def inverse(self) -> SquareMatrix:
-        """
-        Returns the inverse of the matrix through Gauss-Jordan elimination.
-        
-        The inverse of a matrix `A`, `A^-1`, satisfies the following equation:
-        
-        `A` * `A^-1` = `A^-1` * `A` = `I` where `I` is the identity matrix of the same dimension.
-        """
-        return self._inverse(self)
-    @property
-    def eigen(self) -> tuple[list[float], SquareMatrix]:
-        """
-        Computes eigenvalues and eigenvectors using the iterative QR algorithm.
-        
-        Returns
-        -------
-        - list[float]: The eigenvalues
-        - SquareMatrix: A matrix where columns represent the corresponding eigenvectors
-        """
-        n = self._dim
-        Ak = SquareMatrix([[self[r][c] for c in range(n)] for r in range(n)])
-        I = SquareMatrix.to_identity(n)
+    @staticmethod
+    def _eigen(A: SquareMatrix) -> tuple[list[float], SquareMatrix]:
+        n = A._dim
+        Ak = SquareMatrix([[A[r][c] for c in range(n)] for r in range(n)])
+        I = SquareMatrix(size=n).to_identity()
         
         max_iterations = 150
         
         for _ in range(max_iterations):
-            Q, R = SquareMatrix._QR_decomposition(Ak)
+            Q, R = SquareMatrix.__QR_decomposition(Ak)
             
             Ak = R @ Q
             I = I @ Q
@@ -471,12 +512,46 @@ class SquareMatrix:
                 
         eigenvalues = [Ak[i][i] for i in range(n)]
         return eigenvalues, I
+    @property
+    def eigen(self) -> tuple[list[float], SquareMatrix]:
+        """
+        Computes eigenvalues and eigenvectors using the iterative QR algorithm.
+        
+        Returns
+        -------
+        - list[float]: The eigenvalues
+        - SquareMatrix: A matrix where columns represent the corresponding eigenvectors
+        """
+        return self._eigen(self) 
     
-    @staticmethod
-    def to_identity(size: int) -> SquareMatrix:
+    @property
+    def dim(self) -> int:
+        """
+        Returns the dimension of the matrix. 
+        
+        Since it's square, only one integer is needed, compared to a rectangular one.
+        """
+        return self._dim
+    @property
+    def trace(self) -> float:
+        """
+        Returns the trace of the matrix. 
+        
+        The trace is defined as the sum of all the elements on the diagonal, e. g. `A_00`, `A_11`, `A_22`, etc.
+        """
+        return sum(self[idx][idx] for idx in range(len(self._data)))
+    @property
+    def diagonal(self) -> list:
+        """
+        Returns the diagonal of the matrix as a list.
+        """
+        
+        return [self[idx][idx] for idx in range(self._dim)]
+    
+    def to_identity(self) -> SquareMatrix:
         """Matrix constructor that returns the identity matrix of the given size."""
-        matrix = SquareMatrix(size=size)
-        for idx in range(size):    
+        matrix = SquareMatrix(size=self._dim)
+        for idx in range(self._dim):    
             matrix[idx][idx] = 1
     
         return matrix
@@ -492,7 +567,7 @@ class SquareMatrix:
         """
         Returns if the matrix is equal to the identity matrix of the same dimension.
         """
-        return self == SquareMatrix(size=self.dim).to_identity(self.dim)
+        return self == SquareMatrix(size=self.dim).to_identity()
     def is_diagonal(self) -> bool:
         """
         Returns if the matrix is diagonal.
@@ -594,12 +669,3 @@ def Rz(θ: float) -> SquareMatrix:
         [sin(θ),  cos(θ), 0], 
         [0,       0,      1]])    
 
-testDiaMat = SquareMatrix(
-    [
-        [1, 0, 0, 0, 0],
-        [0, 1, 0, 0, 0],
-        [0, 0, 1, 0, 0],
-        [0, 0, 0, 1, 0],
-        [0, 0, 0, 0, 1],
-    ]
-)

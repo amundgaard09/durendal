@@ -4,10 +4,10 @@ The Classical Mechanics module for `AWPC` `UniPhys`
 This module contains resources for calculations and simulations for Classical Mechanics. 
 """
 
-from awpc.src.package.types.color_dtypes import xColorText as ColorText
-from awpc.src.package.types.phys_dtypes import Quantity, UNITS
-from awpc.src.package.commons.constants import EARTH_G, PI, C 
-from awpc.src.package.unipy.unimath import D2R
+from awpc.src.types.color_dtypes import xColorText as ColorText
+from awpc.src.types.phys_dtypes import Quantity, UNITS
+from awpc.src.commons.constants import EARTH_G, PI, C 
+from awpc.src.unipy.unimath import D2R
 
 def Torque(MomentArmDistance: float, Force: float) -> Quantity:
     """Returns a `torque` quantity in newtonmeters from moment arm distance in meters and force in newtons."""

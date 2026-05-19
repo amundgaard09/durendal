@@ -1,4 +1,6 @@
 """
+The `AWPC` Constants Library
+
 This module contains all the physical constants used in the `AWPC` library, such as the gravitational constant, speed of light, and various planetary parameters. 
 The constants are stored as instances of the `PhysicalConstant` class, which includes the value, unit, and name of the constant.
 """
@@ -7,7 +9,7 @@ The constants are stored as instances of the `PhysicalConstant` class, which inc
 # Theta - Θ θ, Iota - I ι, Kappa - K κ, Lambda - Λ λ, Mu - M μ,      Nu - N ν,   Xi - Ξ ξ,  Omicron - O ο, 
 # Pi - Π π,    Rho - P ρ,  Sigma - Σ σ ς, Tau - T τ,  Ypsilon - Y υ, Phi - Φ φ,  Chi - X χ, Psi - Ψ ψ, Omega - Ω ω
 
-from awpc.src.package.types.phys_dtypes import PhysicalConstant, UNITS
+from awpc.src.types.phys_dtypes import PhysicalConstant, UNITS
 
 # Mathematical Constants (Numerical/Unitless Constants - NCONST)
 I       = PhysicalConstant(1j,                 UNITS["NCONST"], "Imaginary Unit - sqrt(-1)")
@@ -55,7 +57,7 @@ MOON_R  = PhysicalConstant(1.737e+6,  UNITS["m"],    "Radius of the Moon")
 MARS_R  = PhysicalConstant(3.390e+6,  UNITS["m"],    "Radius of Mars")
 SUN_R   = PhysicalConstant(6.957e+8,  UNITS["m"],    "Radius of the Sun")
 
-# TODO Sort and implement all units
+# TODO Sort and implement all units 
 
 #HUBBLE           = PhysicalConstant(                   UNITS["km/s/prsc"],  "Hubbles Constant")
 #BOLTZMANN        = PhysicalConstant(1.380649e-23,      UNITS["J/K"],        "Boltzmann Constant")         # Relates the average relative kinetic energy of particles in a gas with the thermodynamic temperature of the gas.

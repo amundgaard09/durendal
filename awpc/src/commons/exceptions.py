@@ -1,5 +1,6 @@
 """
 The `AWPC` `Exceptions` module.
+
 This module contains all the custom exceptions used in the `AWPC` library.
 """
 
@@ -34,7 +35,7 @@ class MissingSubCommand(Exception):
     def __init__(self, module):
         super().__init__(f"Missing subcommand for {module}")    
 class MissingParameters(Exception):
-    """Raises when a function is not given enough parameters."""
+    """Raises when a function is not given enough / too many parameters."""
     def __init__(self, *args):
         super().__init__(*args)
 class EmptyTokenList(Exception):

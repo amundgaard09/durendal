@@ -9,7 +9,7 @@ import os, shlex, inspect
 
 from prompt_toolkit.completion import NestedCompleter
 
-from awpc.src.package.commons.exceptions import (
+from awpc.src.commons.exceptions import (
     IncorrectArgumentCount,
     EmptyTokenList, 
     MissingSubCommand, 
