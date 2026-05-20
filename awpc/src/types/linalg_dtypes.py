@@ -24,8 +24,8 @@ def _isClose(a: float, b: float) -> bool: ...
 def _isClose(a: list[float], b: list[float]) -> bool: ...
 @overload
 def _isClose(a: list[list[float]], b: list[list[float]]) -> bool: ...
-
 def _isClose(a: float | list[float] | list[list[float]], b: float | list[float] | list[list[float]]) -> bool:
+    """Overloaded function for checking if two floats / lists of floats are close"""
     if isinstance(a, (int, float)) and isinstance(b, (int, float)):
         return isclose(a, b)
     
@@ -230,6 +230,9 @@ class Matrix:
     
     @property
     def dim(self) -> tuple[int, int]:
+        """
+        Returns the dimensions of the matrix in the format: (`Row`,`Cols`)
+        """
         return (self._rows, self._cols)
     
     def __getitem__(self, idx) -> list:
