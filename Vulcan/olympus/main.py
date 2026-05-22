@@ -39,8 +39,7 @@ from vulcan.olympus.src import (
     Session,
     DayPlan,
     WeekPlan,
-    Event,
-)
+    Event,)
 
 ### ------------------------------------------------------------------ ###
 

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from math import isclose, radians, sqrt, sin, cos
 from typing import overload
+from math import isclose, radians, sqrt, sin, cos
 from random import randint, uniform
 from awpc.src.commons.exceptions import MissingParameters, InvalidInput
 
@@ -790,5 +790,6 @@ def Rz(θ: float) -> SquareMatrix:
         [cos(θ), -sin(θ), 0], 
         [sin(θ),  cos(θ), 0], 
         [0,       0,      1]
-    ])    
-
+    ])
+                                                              
+     

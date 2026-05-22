@@ -170,6 +170,8 @@ UNITS: dict[str, Unit] = {
    "kWh": Unit("Kilowatthour", "Energy"), 
     "eV": Unit("Electronvolt", "Energy"),
     
+   "J*s": Unit("Joule Seconds", "Energy-Time"),
+    
     "hp": Unit("Horsepower", "Power"),
      "W": Unit("Watt",       "Power"),
         
@@ -180,10 +182,10 @@ UNITS: dict[str, Unit] = {
    "deg": Unit("Degree",  "Angles"),
    "rad": Unit("Radian",  "Angles"),
     
-    "Δv":  Unit("Delta-V",    "Change in Velocity"),
-    "°K":  Unit("Kelvin",     "Temperature"), 
-    "°C":  Unit("Celsius",    "Temperature"), 
-    "°F":  Unit("Fahrenheit", "Temperature"),
+    "Δv": Unit("Delta-V",    "Change in Velocity"),
+    "°K": Unit("Kelvin",     "Temperature"), 
+    "°C": Unit("Celsius",    "Temperature"), 
+    "°F": Unit("Fahrenheit", "Temperature"),
     
      "A": Unit("Ampere",  "Current"),
      "V": Unit("Volt",    "Voltage"),

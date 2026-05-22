@@ -4,6 +4,12 @@
 #include <string>
 #include <vector>
 
+int _int_clip(int value, int upper, int lower) {
+    if (value > upper) { return upper; } 
+    else if (value < lower) { return lower; } 
+    else { return value; }
+}
+
 int main() {
     
     int Difficulty;
@@ -28,6 +34,8 @@ int main() {
     std::cout << "Welcome to Hangman!" << std::endl;
     std::cout << "Select the Word Length (3 - 10): " << std::endl;
     std::cin >> Difficulty;
+
+    Difficulty = _int_clip(Difficulty, 10, 3);
 
     std::string GuessedLetters;
     std::vector<std::string>& WordList = WordDatabase[Difficulty];

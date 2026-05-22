@@ -16,12 +16,18 @@ I       = PhysicalConstant(1j,                 UNITS["NCONST"], "Imaginary Unit 
 E       = PhysicalConstant(2.718281828459045,  UNITS["NCONST"], "Eulers Number")
 PI      = PhysicalConstant(3.141592653589793,  UNITS["NCONST"], "Pi - π")
 TAU     = PhysicalConstant(6.283185307179586,  UNITS["NCONST"], "Archimedes' Constant - τ - (AKA 2 * PI)")
+INF     = PhysicalConstant(float('inf'),       UNITS["NCONST"], "Positive Infinity")
+NINF    = PhysicalConstant(float('-inf'),      UNITS["NCONST"], "Negative Infinity")
 GOLDEN  = PhysicalConstant(1.618033988749895,  UNITS["NCONST"], "The Golden Ratio - φ,")
 EULMAS  = PhysicalConstant(0.5772156649015329, UNITS["NCONST"], "The Euler-Mascheroni Constant")
 FSTRUCT = PhysicalConstant(7.2973525693e-03,   UNITS["NCONST"], "Fine-Structure Constant") 
    
 # Gravitational Constants
 G       = PhysicalConstant(6.674e-11,       UNITS["GCONST"], "Gravitational Constant")
+
+# Energy Constants
+PLANCK  = PhysicalConstant(6.62607015e-34,  UNITS["J*s"], "Planck's Constant")
+PLANCKR = PhysicalConstant(1.054571817e-34, UNITS["J*s"], "Reduced Planck Constant")
 
 # Speed Constants
 C       = PhysicalConstant(299792458,       UNITS["m/s"], "Speed of Light")
@@ -71,5 +77,4 @@ VAC_IMPEDANCE    = PhysicalConstant(376.730313412,     UNITS["Ω"],          "Va
 #COULOMB          = PhysicalConstant(8.9875517923e+09,  UNITS["N*m²/C²"],    "Coulomb Constant")           # Proportionality constant used in electrostatics equations, equal to 1 / (4pi * epsilon_0).
 #FARADAY          = PhysicalConstant(96485.33212,       UNITS["C/mol"],      "Faraday Constant")           # Total electric charge carried by one mole of electrons.
 #JOSEPHSON        = PhysicalConstant(483597.8484e+09,   UNITS["Hz/V"],       "Josephson Constant")         # Constant relating the potential difference across a Josephson junction to the frequency of the alternating current.
-#PLANCK_REDUCED   = PhysicalConstant(1.054571817e-34,   UNITS["J*s"],        "Reduced Planck Constant")    # The Planck constant divided by 2pi, heavily used in quantum mechanical differential mechanics.
 #RYDBERG          = PhysicalConstant(10973731.56816,    UNITS["1/m"],        "Rydberg Constant")           # Limiting value of the highest wavenumber of any photon that can be emitted from an atom.
