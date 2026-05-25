@@ -1,0 +1,20 @@
+[
+    {
+        "name": "1 Minute VO2 Interval",
+        "desc": "A 1 minute interval at VO2 max intensity. (80-90% of max heart rate).",
+        "sport": "Running",
+        "type": "VO2-MAX",
+        "duration": 60.0,
+        "thrz": 4,
+        "trpe": 7
+    },
+    {
+        "name": "2 Minute rest",
+        "desc": "A 2 minute rest period.",
+        "sport": null,
+        "type": "rest",
+        "duration": 120.0,
+        "thrz": 1,
+        "trpe": 1
+    }
+]

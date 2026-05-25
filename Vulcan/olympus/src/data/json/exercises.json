@@ -1,0 +1,72 @@
+[
+    {
+        "name": "4x4 VO2 Intervals",
+        "desc": "4x4min VO2 Intervals",
+        "type": "VO2-MAX",
+        "steps": [
+            {
+                "name": "1 min VO2 Interval",
+                "desc": null,
+                "sport": "Running",
+                "type": "VO2-MAX",
+                "duration": 60.0,
+                "thrz": 4,
+                "trpe": 7
+            },
+            {
+                "name": "2 Minute rest",
+                "desc": null,
+                "sport": null,
+                "type": "rest",
+                "duration": 120.0,
+                "thrz": 1,
+                "trpe": 1
+            },
+            {
+                "name": "1 min VO2 Interval",
+                "desc": null,
+                "sport": "Running",
+                "type": "VO2-MAX",
+                "duration": 60.0,
+                "thrz": 4,
+                "trpe": 7
+            },
+            {
+                "name": "2 Minute rest",
+                "desc": null,
+                "sport": null,
+                "type": "rest",
+                "duration": 120.0,
+                "thrz": 1,
+                "trpe": 1
+            },
+            {
+                "name": "1 min VO2 Interval",
+                "desc": null,
+                "sport": "Running",
+                "type": "VO2-MAX",
+                "duration": 60.0,
+                "thrz": 4,
+                "trpe": 7
+            },
+            {
+                "name": "2 Minute rest",
+                "desc": null,
+                "sport": null,
+                "type": "rest",
+                "duration": 120.0,
+                "thrz": 1,
+                "trpe": 1
+            },
+            {
+                "name": "1 min VO2 Interval",
+                "desc": null,
+                "sport": "Running",
+                "type": "VO2-MAX",
+                "duration": 60.0,
+                "thrz": 4,
+                "trpe": 7
+            }
+        ]
+    }
+]
