@@ -8,9 +8,9 @@ from awpc.src.commons.exceptions import MissingParameters, InvalidInput
 
 EPSILON = 1e-9
 
-def _Pythagoras(A: float, B: float) -> float:
+def _pythagoras(A: float, B: float) -> float:
     return sqrt(A*A + B*B)
-def _validateFloat(n: float) -> float:
+def _validate_float(n: float) -> float:
     try:
         toReturn = float(n)
     except (ValueError, TypeError):
@@ -47,9 +47,9 @@ class D3Vector:
     `x`, `y` & `z`: float - X, Y, and Z values for the vector.
     """
     def __init__(self, x: float, y: float, z: float):
-        self._x = _validateFloat(x)
-        self._y = _validateFloat(y)
-        self._z = _validateFloat(z)
+        self._x = _validate_float(x)
+        self._y = _validate_float(y)
+        self._z = _validate_float(z)
 
     @property
     def x(self):
@@ -63,7 +63,7 @@ class D3Vector:
     
     @property
     def magnitude(self):
-        return _Pythagoras(self._x, _Pythagoras(self._y, self._z))
+        return _pythagoras(self._x, _pythagoras(self._y, self._z))
     
     def toOppositeVec(self):
         return D3Vector(-self._x, -self._y, -self._z)
@@ -131,7 +131,17 @@ class D3Vector:
                 self._y * other._y +
                 self._z * other._z
             )
-        return NotImplemented
+        elif isinstance(other, SquareMatrix):
+            values = [0.0, 0.0, 0.0]
+            vec = [self._x, self._y, self._z]
+
+            for i in range(3):
+                for k in range(3):
+                    values[i] += other[i][k] * vec[k]
+
+            return D3Vector(*values)
+        else:
+            return NotImplemented
     def __rmatmul__(self, other):
         return self.__matmul__(other)
 class NDVector:
@@ -145,12 +155,12 @@ class NDVector:
     `components`: list[float] - The components of the vector, in order.
     """
     def __init__(self, components: list[float]):
-        self._components = [ _validateFloat(comp) for comp in components ]
+        self._components = [ _validate_float(comp) for comp in components ]
     
     def __getitem__(self, idx: int) -> float:
         return self._components[idx]
     def __setitem__(self, key, value: float) -> None:
-        self._components[key] = _validateFloat(value)
+        self._components[key] = _validate_float(value)
     def __iter__(self):
         return iter(self._components)
     def __str__(self) -> str:
@@ -231,13 +241,20 @@ class Matrix:
     @property
     def dim(self) -> tuple[int, int]:
         """
-        Returns the dimensions of the matrix in the format: (`Row`,`Cols`)
+        Returns the dimensions of the matrix in the format: (`Rows`,`Cols`)
         """
         return (self._rows, self._cols)
     
-    def __getitem__(self, idx) -> list:
+    @property
+    def elements(self) -> int:
+        """
+        Returns the total number of elements in the matrix.
+        """
+        return self._rows * self._cols
+    
+    def __getitem__(self, idx: int) -> list:
         return self._data[idx]
-    def __setitem__(self, key, value) -> None:
+    def __setitem__(self, key: int, value: list[float]) -> None:
         self._data[key] = value
     def __format__(self, format_spec: str) -> str:
         match format_spec:
@@ -247,22 +264,126 @@ class Matrix:
                 return str(self)
         return str(self)
 
+    def __bool__(self) -> bool:
+        return any(any(cell != 0 for cell in row) for row in self._data)
     def __iter__(self):
         return iter(self._data)
+    def __repr__(self) -> str:
+        return f"Matrix({self._data!r})"
     def __str__(self) -> str:
         returnStr = ""
         for row in self:
             returnStr += str(row) + "\n"
             
         return returnStr
-    
+    def __neg__(self) -> Matrix:
+        return Matrix([[(self[idx1][idx2] * -1) for idx2 in range(self._cols)] for idx1 in range(self._rows)])
     def __eq__(self, other) -> bool:
         if isinstance(other, Matrix):         return _isClose(self._data, other._data) and self._rows == other._rows and self._cols == other._cols
         elif isinstance(other, SquareMatrix): return _isClose(self._data, other._data)
         else:                                 return self._data == other
-    def __neg__(self) -> Matrix:
-        return Matrix([[(self[idx1][idx2] * -1) for idx2 in range(self._cols)] for idx1 in range(self._rows)])
     
+    def __add__(self, other) -> Matrix | SquareMatrix:
+        if isinstance(other, Matrix):
+            if self._rows != other._rows or self._cols != other._cols:
+                raise ValueError("Matrix summation only takes same-size dimensions!")
+            return SquareMatrix([[self[i][j] + other[i][j] for j in range(self._cols)] for i in range(self._rows)])
+        elif isinstance(other, SquareMatrix):
+            if self._rows != other._dim or self._cols != other._dim:
+                raise ValueError("Matrix summation only takes same-size dimensions!")
+            return SquareMatrix([[self[i][j] + other[i][j] for j in range(self._cols)] for i in range(self._rows)])
+        elif isinstance(other, (int, float)):
+            return SquareMatrix([[self[i][j] + other for j in range(self._cols)] for i in range(self._rows)])
+        return NotImplemented
+    def __radd__(self, other) -> Matrix | SquareMatrix:
+        return self.__add__(other)
+    def __sub__(self, other) -> Matrix | SquareMatrix:
+        if isinstance(other, Matrix):
+            if self._rows != other._rows or self._cols != other._cols:
+                raise ValueError("Matrix subtraction only takes same-size dimensions!")
+            return SquareMatrix([[self[i][j] - other[i][j] for j in range(self._cols)] for i in range(self._rows)])
+        elif isinstance(other, SquareMatrix):
+            if self._rows != other._dim or self._cols != other._dim:
+                raise ValueError("Matrix subtraction only takes same-size dimensions!")
+            return SquareMatrix([[self[i][j] - other[i][j] for j in range(self._cols)] for i in range(self._rows)])
+        elif isinstance(other, (int, float)):
+            return SquareMatrix([[self[i][j] - other for j in range(self._cols)] for i in range(self._rows)])
+        return NotImplemented
+    def __rsub__(self, other) -> Matrix | SquareMatrix:
+        if isinstance(other, Matrix):
+            if self._rows != other._rows or self._cols != other._cols:
+                raise ValueError("Matrix subtraction only takes same-size dimensions!")
+            return SquareMatrix([[other[i][j] - self[i][j] for j in range(self._cols)] for i in range(self._rows)])
+        elif isinstance(other, SquareMatrix):
+            if self._rows != other._dim or self._cols != other._dim:
+                raise ValueError("Matrix subtraction only takes same-size dimensions!")
+            return SquareMatrix([[other[i][j] - self[i][j] for j in range(self._cols)] for i in range(self._rows)])
+        elif isinstance(other, (int, float)):
+            return SquareMatrix([[other - self[i][j] for j in range(self._cols)] for i in range(self._rows)])
+        return NotImplemented
+    def __mul__(self, other) -> Matrix:
+        if isinstance(other, (int, float)):
+            return SquareMatrix([[self[i][j] * other for j in range(self._cols)] for i in range(self._rows)])
+        return NotImplemented
+    def __rmul__(self, other) -> Matrix:
+        if isinstance(other, (int, float)):
+            return SquareMatrix([[self[i][j] * other for j in range(self._cols)] for i in range(self._rows)])
+        return NotImplemented
+    def __matmul__(self, other) -> Matrix | SquareMatrix:
+        if isinstance(other, Matrix):
+            if self._cols != other._rows:
+                raise ValueError("Matrix multiplication requires the number of columns in the first matrix to be equal to the number of rows in the second matrix!")
+            result = [[0.0 for _ in range(other._cols)] for _ in range(self._rows)]
+            for i in range(self._rows):
+                for j in range(other._cols):
+                    for k in range(self._cols):
+                        result[i][j] += (self[i][k] * other[k][j])
+            return SquareMatrix(array=result)
+        elif isinstance(other, SquareMatrix):
+            if self._cols != other._dim:
+                raise ValueError("Matrix multiplication requires the number of columns in the first matrix to be equal to the number of rows in the second matrix!")
+            result = [[0.0 for _ in range(other._dim)] for _ in range(self._rows)]
+            for i in range(self._rows):
+                for j in range(other._dim):
+                    for k in range(self._cols):
+                        result[i][j] += (self[i][k] * other[k][j])
+            return SquareMatrix(array=result)
+        return NotImplemented
+    def __rmatmul__(self, other) -> Matrix | SquareMatrix:
+        if isinstance(other, Matrix):
+            if other._cols != self._rows:
+                raise ValueError("Matrix multiplication requires the number of columns in the first matrix to be equal to the number of rows in the second matrix!")
+            result = [[0.0 for _ in range(self._cols)] for _ in range(other._rows)]
+            for i in range(other._rows):
+                for j in range(self._cols):
+                    for k in range(other._cols):
+                        result[i][j] += (other[i][k] * self[k][j])
+            return SquareMatrix(array=result)
+        elif isinstance(other, SquareMatrix):
+            if other._dim != self._rows:
+                raise ValueError("Matrix multiplication requires the number of columns in the first matrix to be equal to the number of rows in the second matrix!")
+            result = [[0.0 for _ in range(self._cols)] for _ in range(other._dim)]
+            for i in range(other._dim):
+                for j in range(self._cols):
+                    for k in range(other._dim):
+                        result[i][j] += (other[i][k] * self[k][j])
+            return SquareMatrix(array=result)
+        return NotImplemented
+
+    def __len__(self) -> int:
+        return self._rows
+
+    def __abs__(self) -> float:
+        return sqrt(sum(cell * cell for row in self._data for cell in row))
+
+    def __truediv__(self, other) -> Matrix:
+        if isinstance(other, (int, float)):
+            return SquareMatrix([[self[i][j] / other for j in range(self._cols)] for i in range(self._rows)])
+        return NotImplemented
+
+    def __rtruediv__(self, other):
+        return NotImplemented
+
     def set_row(self, idx: int, newrow: list) -> None:
         if len(newrow) != self._cols: 
             raise ValueError("New row length doesn't match the dimensions of the matrix!")
@@ -289,7 +410,7 @@ class SquareMatrix:
     
     - `random`: bool - Create a matrix filled with uniform values ranging from -1 and 1 unless otherwise specified with the `randrange` parameter.
     
-    - `enablevalidation`: bool - Bypasses square-shape validation in the constructor.
+    - `validate `: bool - Bypasses square-shape validation in the constructor.
     
     - `fill`: float - Specifies what value to fill the matrix with, if not random.
     
@@ -302,9 +423,9 @@ class SquareMatrix:
         array: list[list[float]] | None = None, 
         size:      int           | None = None, 
         random:    bool          | None = False,
-        enablevalidation: bool   | None = True,  # Used for AugmentedMatrix building
+        validate:  bool          | None = True,  # Used for AugmentedMatrix building
         fill:      float         | None = 0,
-        randtype: type           | None = float,
+        randtype:  type          | None = float,
         randrange: tuple         | None = (-1, 1),
     ):
         if size == 0:
@@ -325,19 +446,19 @@ class SquareMatrix:
         if not size and not array:
             raise MissingParameters("Missing both array and size parameters! SquareMatrix() needs atleast 1!")
 
-        if any(len(row) != len(array) for row in array) and enablevalidation:
+        if any(len(row) != len(array) for row in array) and validate:
             raise ValueError("Matrix must be square")
         
         self._data = array
         self._dim = len(array)
 
-    def __getitem__(self, idx) -> list:
+    def __getitem__(self, idx: int) -> list:
         return self._data[idx]
-    def __setitem__(self, key, value) -> None:
+    def __setitem__(self, key: int, value: list[float]) -> None:
         if isinstance(value, list):
-            self._data[key] = [_validateFloat(item) for item in value]
+            self._data[key] = [_validate_float(item) for item in value]
         else:
-            self._data[key] = _validateFloat(value)
+            self._data[key] = _validate_float(value)
     def __format__(self, format_spec: str) -> str:
         match format_spec:
             case '':
@@ -345,15 +466,22 @@ class SquareMatrix:
             case '_':
                 return str(self)
         return str(self)
+    def __bool__(self) -> bool:
+        return any(any(cell != 0 for cell in row) for row in self._data)
     def __iter__(self):
         return iter(self._data)
+    def __len__(self) -> int:
+        return self._dim
+    def __abs__(self) -> float:
+        return sqrt(sum(cell * cell for row in self._data for cell in row))
     def __str__(self) -> str:
         returnStr = ""
         for row in self:
             returnStr += str(row) + "\n"
             
         return returnStr
-    
+    def __neg__(self) -> SquareMatrix:
+        return SquareMatrix([[(self[idx1][idx2] * -1) for idx2 in range(self._dim)] for idx1 in range(self._dim)])
     def __eq__(self, other) -> bool:
         if isinstance(other, SquareMatrix):
             return _isClose(self._data, other._data) and self._dim == other._dim
@@ -361,8 +489,6 @@ class SquareMatrix:
             return _isClose(self._data, other._data) and self._dim == other._rows and self._dim == other._cols
         else:
             return self._data == other
-    def __neg__(self) -> SquareMatrix:
-        return SquareMatrix([[(self[idx1][idx2] * -1) for idx2 in range(self._dim)] for idx1 in range(self._dim)])
     
     def __add__(self, other) -> SquareMatrix:
         if isinstance(other, SquareMatrix):
@@ -396,8 +522,37 @@ class SquareMatrix:
         elif isinstance(other, (int, float)):
             return SquareMatrix([[other - self[i][j] for j in range(self._dim)] for i in range(self._dim)])
         return NotImplemented
+    def __truediv__(self, other: float | int) -> SquareMatrix:
+        if isinstance(other, (int, float)):
+            return SquareMatrix([[self[i][j] / other for j in range(self._dim)] for i in range(self._dim)])
+        return NotImplemented
+    def __rtruediv__(self, other: float | int):
+        return NotImplemented
+    def __pow__(self, power: int, modulo=None) -> SquareMatrix:
+        if not isinstance(power, int):
+            raise TypeError("SquareMatrix exponent must be an integer")
+        if modulo is not None:
+            raise ValueError("Modulo exponentiation is not supported for SquareMatrix")
+
+        if power == 0:
+            return self.to_identity()
+
+        base = self
+        if power < 0:
+            inverse = self.inverse
+            if inverse is None:
+                raise ValueError("Negative power requires invertible matrix")
+            base = inverse
+            power = -power
+
+        result = base.to_identity()
+        for _ in range(power):
+            result = result @ base
+        return result
+    def __rpow__(self, other):
+        return NotImplemented
     
-    def __matmul__(self, other) -> SquareMatrix | D3Vector | NDVector:
+    def __matmul__(self, other: SquareMatrix | D3Vector | NDVector | float | int) -> SquareMatrix | D3Vector | NDVector:
         if isinstance(other, SquareMatrix):
 
             result = [[0.0 for _ in range(self._dim)] for _ in range(self._dim)]
@@ -425,22 +580,22 @@ class SquareMatrix:
             result = [sum(self[i][k] * other[k] for k in range(self._dim)) for i in range(self._dim)]
             return NDVector(result)
         return NotImplemented
-    def __rmatmul__(self, other) -> SquareMatrix | D3Vector | NDVector:
+    def __rmatmul__(self, other: SquareMatrix | D3Vector | NDVector | float | int) -> SquareMatrix | D3Vector | NDVector:
         return self.__matmul__(other)
-    
-    def set_row(self, idx: int, newrow: list) -> None:
+
+    def set_row(self, idx: int, newrow: list[float]) -> None:
         self[idx] = newrow
-    def row(self, idx: int) -> list:
+    def row(self, idx: int) -> list[float]:
         return self[idx]
-    def set_column(self, idx: int, newcolumn: list) -> None:
+    def set_column(self, idx: int, newcolumn: list[float]) -> None:
         for j in range(len(self._data)):
-            self[j][idx] = newcolumn[j] 
-    def column(self, idx: int) -> list:
+            self[j][idx] = newcolumn[j]
+    def column(self, idx: int) -> list[float]:
         return [self[j][idx] for j in range(len(self[0]))]
     
     @staticmethod
-    def __sign(idx) -> int:
-        return (-1)**abs(idx)
+    def __sign(expr: float, idx: int) -> float:
+        return expr * (-1)**abs(idx)
     @staticmethod
     def __2x2_det(_array: list[list[float]]) -> float:
         if len(_array) == 2 and all(len(row) == 2 for row in _array):
@@ -461,7 +616,7 @@ class SquareMatrix:
         
         for idx1, _ in enumerate(M[0]):
             minor = M.__minor_extract(M._data, 0, idx1)
-            detsum += M.__sign(idx1) * (M[0][idx1] * M._det(minor))
+            detsum += M.__sign((M[0][idx1] * M._det(minor)), idx1)
             
         return detsum
     @property
@@ -791,5 +946,3 @@ def Rz(θ: float) -> SquareMatrix:
         [sin(θ),  cos(θ), 0], 
         [0,       0,      1]
     ])
-                                                              
-     

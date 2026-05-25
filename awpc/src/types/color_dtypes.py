@@ -13,6 +13,7 @@ ANSI_COLORS = {
     "orange": "\033[38;5;208m",
     "yellow": "\033[33m",
     "green":  "\033[32m",
+    "cyan":   "\033[36m",
     "blue":   "\033[34m",
     "violet": "\033[38;5;93m",
     "gray":   "\033[90m",
@@ -21,8 +22,11 @@ ANSI_COLORS = {
     "silver": "\033[38;5;7m",
 } 
 
-def xColorText(Text: str, Color: str) -> str:
+def x_color_text(Text: str, Color: str) -> str:
     """Returns the given text in the given color using `ANSI` escape codes. If the color is not found, it returns the text without coloring."""
+    if Color is None or Color.lower() not in ANSI_COLORS:
+        return str(Text)
+    
     Text = str(Text)
     ANSI = ANSI_COLORS.get(Color.lower(), '\033[0m')
     return ANSI + Text + '\033[0m'
@@ -54,6 +58,12 @@ class _BaseColor:
         return self.colorname
     def __repr__(self):
         return self.colorname
+    def __eq__(self, other):
+        if isinstance(other, _BaseColor):
+            return self.colorname == other.colorname
+        return False
+    def __hash__(self):
+        return hash(self.colorname)
 
 class RGB(_BaseColor):
     "RGB color data type."
@@ -187,4 +197,4 @@ class CMYK(_BaseColor):
         """Converts the CMYK color values to a hexadecimal color code in the format "#RRGGBB"."""
         r, g, b = self.toRGB()
         return HEX(None, f"#{r:02x}{g:02x}{b:02x}")
-    
+

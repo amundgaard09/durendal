@@ -4,34 +4,33 @@ This module provides a collection of functions for performing various mathematic
 including geometry, algebra, calculus, and more.
 """
 
-import sympy, matplotlib.pyplot as mpl
+from matplotlib.pyplot import plot, xlabel, ylabel, axhline, axvline, show
+from awpc.src.types.color_dtypes import x_color_text
+from sympy import Eq, symbols, diff, solve, sympify
+from math import sin, asin, cos, acos, sqrt, log
 
-from math import sin, asin, cos, acos, sqrt
-
-from typing import Literal
-from awpc.src.types.color_dtypes import xColorText
-from awpc.src.types.linalg_dtypes import SquareMatrix, D3Vector
-from awpc.src.commons.constants import PI
 from awpc.src.commons.exceptions import ImpossibleTriangleError
+from awpc.src.commons.constants import PI
+from typing import Literal
 
 def _plotXY(XVals: list[float], YVals: list[float]) -> None:
-    """Initialize a plot where `x[idx]` and `y[idx]` are coordinate pairs of a function."""
-    mpl.plot(XVals, YVals, color='red', linestyle='-', marker='o')
-    mpl.xlabel('X')
-    mpl.ylabel('Y')
-    mpl.axhline(0, color='black')
-    mpl.axvline(0, color='black')
-    mpl.show()
+    """Initialize a plot where `x`[`idx`] and `y`[`idx`] are coordinate pairs of a function."""
+    plot(XVals, YVals, color='red', linestyle='-', marker='o')
+    xlabel('X')
+    ylabel('Y')
+    axhline(0, color='black')
+    axvline(0, color='black')
+    show()
     
     return
 
-def TriExtrapolate(a: float, b: float, c: float, A: float | None = None, B: float | None = None, C: float | None = None) -> str:
+def Extrapolate_Triangle(a: float, b: float, c: float, A: float | None = None, B: float | None = None, C: float | None = None) -> str:
     """Extrapolate the sides of a triangle from the AAAS case (3x Angle + 1x Side)"""
 
     if sum((a, b, c)) != 180:
         raise ImpossibleTriangleError
 
-    SinA = sin(D2R)(a)
+    SinA = sin(D2R(a))
     SinB = sin(D2R(b))
     SinC = sin(D2R(c))
     
@@ -140,7 +139,7 @@ def SineRule(
     return [Angles_out, Sides]
 def CosineRule(LengthA: float, LengthB: float, AngleA: float) -> float:
     return sqrt(LengthA ** 2 + LengthB ** 2 - ((2 * LengthA * LengthB) * cos(D2R(AngleA))))
-def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[float]:
+def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[float, float, float]:
     """ 
     Returns a tuple of the three angles in degrees, in the order of AngleA, AngleB, and AngleC.
     
@@ -187,10 +186,10 @@ def Distance(x1: float, y1: float, x2: float, y2: float) -> float:
     return sqrt((x2-x1)**2 + (y2-y1)**2)
 def Derivative(Function: str, x: float | None = None, h: float = 1e-5) -> float:
     """Returns `f'(x)` if `x` is not given, else returns the numerical derivative of the function at the given x-value using the definition of the derivative."""
-    x_sym = sympy.symbols('x')
-    f = sympy.sympify(Function)
+    x_sym = symbols('x')
+    f = sympify(Function)
     if x is None:
-        return sympy.diff(f, x_sym)
+        return diff(f, x_sym)
     else:
         return (f.subs(x_sym, x + h) - f.subs(x_sym, x - h)) / (2 * h)
 
@@ -228,13 +227,13 @@ def QuadraticSolutions(A: float, B: float, C: float) -> str:
     if D > 0:
         x1 = (-B - sqrt(D)) / (2 * A)
         x2 = (-B + sqrt(D)) / (2 * A)
-        return f"x1: {xColorText(x1, 'green')}, x2: {xColorText(x2, 'green')}"
+        return f"x1: {x_color_text(x1, 'green')}, x2: {x_color_text(x2, 'green')}"
     
     elif D == 0:
         x1 = -B / (2 * A)
-        return f"x: {xColorText(x1, 'green')}"
+        return f"x: {x_color_text(x1, 'green')}"
     else: 
-        return xColorText('No real solutions', 'red')
+        return x_color_text('No real solutions', 'red')
 def QuadraticFactorizedForm(a: float, b: float, c: float) -> str:
     """Returns the factorized form of a quadratic function in the form of `a(x - x1)(x - x2)` where `x1` and `x2` are the roots of the function."""
     D = b**2 - 4*a*c
@@ -247,83 +246,103 @@ def QuadraticFactorizedForm(a: float, b: float, c: float) -> str:
         x1 = -b / (2 * a)
         return f"{a}(x - {x1})^2"
     else: 
-        return xColorText('No real solutions', 'red')
+        return x_color_text('No real solutions', 'red')
 def QuadraticZeros(a: float, b: float, c: float) -> str:
     """Returns the x-values where the quadratic function crosses the x-axis."""
     D = b**2 - 4*a*c
     if D > 0:
         x1 = (-b - sqrt(D)) / (2 * a)
         x2 = (-b + sqrt(D)) / (2 * a)
-        return f"Zeros: {xColorText((x1, 0), 'green')}, {xColorText((x2, 0), 'green')}"
+        return f"Zeros: {x_color_text((x1, 0), 'green')}, {x_color_text((x2, 0), 'green')}"
     
     elif D == 0:
         x1 = -b / (2 * a)
-        return f"Zero: {xColorText((x1, 0), 'green')}"
+        return f"Zero: {x_color_text((x1, 0), 'green')}"
     else: 
-        return xColorText('No real zeros', 'red')
+        return x_color_text('No real zeros', 'red')
 def QuadraticEvaluation(a: float, b: float, c: float, x: float) -> str:
-    return f"{a}x^2 + {b}x + {c} = {a*x**2 + b*x + c}"
+    return f"{a}x² + {b}x + {c} = {a*x**2 + b*x + c}"
 
 def CubicVertex(a: float, b: float, c: float, d: float) -> str:
     """Returns the vertex (aka the minimum/maximum point) of a cubic function in the form of `(x, y)`."""
-    x = sympy.symbols('x')
-    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
-    df = sympy.diff(f, x)
-    critical_points = sympy.solve(df, x)
+    x = symbols('x')
+    f = sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
+    df = diff(f, x)
+    critical_points = solve(df, x)
     
     vertices = []
     for point in critical_points:
         y = f.subs(x, point)
         vertices.append((point, y))
     
-    return f"Vertices: {xColorText(vertices, 'green' if all(v[1].is_real for v in vertices) else 'red')}"
+    return f"Vertices: {x_color_text(vertices, 'green' if all(v[1].is_real for v in vertices) else 'red')}"
 def CubicNumRoots(a: float, b: float, c: float, d: float) -> int:
     """Returns the number of roots of a cubic function based on the discriminant."""
     D = 18*a*b*c*d - 4*b**3*d + b**2*c**2 - 4*a*c**3 - 27*a**2*d**2
     return 3 if D > 0 else 2 if D == 0 else 1
 def CubicSolutions(a: float, b: float, c: float, d: float) -> str:
     """Returns the roots of a cubic function in a tuple."""
-    x = sympy.symbols('x')
-    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
-    solutions = sympy.solve(f, x)
-    return f"Solutions: {xColorText(solutions, 'green' if all(sol.is_real for sol in solutions) else 'red')}"
+    x = symbols('x')
+    f = sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
+    solutions = solve(f, x)
+    return f"Solutions: {x_color_text(solutions, 'green' if all(sol.is_real for sol in solutions) else 'red')}"
 def CubicZeros(a: float, b: float, c: float, d: float) -> str:
     """Returns the x-values where the cubic function crosses the x-axis."""
-    x = sympy.symbols('x')
-    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
-    zeros = sympy.solve(f, x)
-    return f"Zeros: {xColorText(zeros, 'green' if all(z.is_real for z in zeros) else 'red')}"
+    x = symbols('x')
+    f = sympify(f"{a}*x³ + {b}*x² + {c}*x + {d}")
+    zeros = solve(f, x)
+    return f"Zeros: {x_color_text(zeros, 'green' if all(z.is_real for z in zeros) else 'red')}"
 def CubicEvaluation(a: float, b: float, c: float, d: float, x: float) -> tuple[str, float]:
     """Cubic Evaluation function"""
     result = a*x**3 + b*x**2 + c*x + d
-    return (f"f({x}) = {a}x^3 + {b}x^2 + {c}x^+ {d} = {result}", result)
-def CubicEvaluationBruteForce(a: float, b: float, c: float, d: float, LowerBound: int, UpperBound: int) -> str:
+    return (f"f({x}) = {a}*{x}³ + {b}*{x}² + {c}*{x} + {d} = {result}", result)
+def CubicEvaluationBruteForce(a: float, b: float, c: float, d: float, LowerBound: int, UpperBound: int, plot: bool = False) -> str:
     """Brute Force evaluation of a third-degree polynomial. The function checks all evaluations from `LowerBound` to `UpperBound` and highlights roots as green, as well as plotting the given function."""
-    xvals, yvals, roots = [], [], []
+    x_vals, y_vals, roots = [], [], []
     
     for x in range(int(LowerBound), int(UpperBound+1)):
         string, result = CubicEvaluation(a, b, c, d, x)
-        xvals.append(x)
-        yvals.append(result)
+        x_vals.append(x)
+        y_vals.append(result)
         roots.append(x) if result == 0 else None
-        print(xColorText(string, 'green' if result == 0 else 'red'))
+        print(x_color_text(string, 'green' if result == 0 else 'red'))
         
     print(f"Roots: {roots}")
-    _plotXY(xvals, yvals)
+    _plotXY(x_vals, y_vals) if plot else None
     return
+
+def ExponentialEvaluation(Base: float, Exponent: float) -> str:
+    """Returns the result of an exponential evaluation in the form of `Base^Exponent = Result`."""
+    return f"{Base}^{Exponent} = {Base ** Exponent}"
+def LogarithmicEvaluation(Base: float, Argument: float) -> str:
+    """Returns the result of a logarithmic evaluation in the form of `log_Base(Argument) = Result`."""
+    if Base <= 1 or Argument <= 0:
+        return x_color_text("Invalid input! Base must be greater than 1 and Argument must be greater than 0.", 'red')
+    return f"log_{Base}({Argument}) = {log(Argument, Base)}"
+def Factorial(n: int) -> int:
+    """Returns the factorial of a non-negative integer `n`."""
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    elif n == 0 or n == 1:
+        return 1
+    else:
+        result = 1
+        for i in range(2, n + 1):
+            result *= i
+        return result
 
 ### UNSTABLE - ALPHA - DO NOT USE
 def TangentFormula(Function1: str, Function2: str) -> list[str]:
     """Returns the tangent(s) between two functions by finding the points where the derivatives are equal and then calculating the slope of the tangent line at those points."""
-    x = sympy.symbols('x')
-    f1 = sympy.sympify(Function1)
-    f2 = sympy.sympify(Function2)
+    x = symbols('x')
+    f1 = sympify(Function1)
+    f2 = sympify(Function2)
 
-    df1 = sympy.diff(f1, x)
-    df2 = sympy.diff(f2, x)
+    df1 = diff(f1, x)
+    df2 = diff(f2, x)
 
-    slope_eq = sympy.Eq(df1, df2)
-    tangent_points = sympy.solve(slope_eq, x)
+    slope_eq = Eq(df1, df2)
+    tangent_points = solve(slope_eq, x)
 
     tangents = []
     for idx, point in enumerate(tangent_points, 1):
@@ -350,6 +369,4 @@ def PrimeFactorize(Number: int) -> list[int]:
 ### - More functions for geometry, such as area and volume calculations for various shapes, surface area calculations, and more.
 ### - More functions for algebra, such as polynomial expansion, factorization, and more.
 ### - More functions for calculus, such as integration, limits, and more.
-### - More functions for linear algebra, such as matrix operations, determinants, eigenvalues, and more.
 ### - More functions for number theory, such as GCD, LCM, modular arithmetic, and more.
-### - More functions for engineering and physics, such as kinematics equations, projectile motion calculations, work and energy calculations, and more.

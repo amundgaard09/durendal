@@ -35,3 +35,6 @@ def TsiolkovskyRocketEquation(ExhaustVelocity: float, InitialMass: float, FinalM
         return Quantity(0, UNITS["Δv"])
     
     return Quantity((ExhaustVelocity * log(InitialMass / FinalMass)), UNITS["Δv"])
+
+def HubbleLaw(Distance: float) -> Quantity:
+    return Quantity((HUBBLE * Distance), UNITS["m/s"])

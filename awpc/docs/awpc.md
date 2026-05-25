@@ -18,7 +18,6 @@
       - [UniPower](#unipower)
       - [UniSpace](#unispace)
       - [UniViz](#univiz)
-    - [JSON Toolchain](#json---toolchain)
   - [Contributing to AWPC](#contributing-to-amundworks)
   - [License and Usage](#license-and-usage)
 
@@ -40,9 +39,6 @@
 #### UniPower
 #### UniSpace
 #### UniViz
-
-
-### JSON Toolchain
 
 ## Contributing to AWPC
 

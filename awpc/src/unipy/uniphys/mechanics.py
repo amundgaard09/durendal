@@ -4,7 +4,7 @@ The Classical Mechanics module for `AWPC` `UniPhys`
 This module contains resources for calculations and simulations for Classical Mechanics. 
 """
 
-from awpc.src.types.color_dtypes import xColorText as ColorText
+from awpc.src.types.color_dtypes import x_color_text as color_text
 from awpc.src.types.phys_dtypes import Quantity, UNITS
 from awpc.src.commons.constants import EARTH_G, PI, C 
 from awpc.src.unipy.unimath import D2R
@@ -16,9 +16,9 @@ def GearRatio(DrivingGearTeethCount: int, DrivenGearTeethCount: int) -> str:
     """Returns the gear ratio from the driving gear's teeth count and the driven gear's teeth count."""
     Ratio = DrivenGearTeethCount / DrivingGearTeethCount
     if Ratio > 1:
-        return f"{Ratio} - {ColorText('Speed-', 'red')} - {ColorText('Torque+', 'green')}"
+        return f"{Ratio} - {color_text('Speed-', 'red')} - {color_text('Torque+', 'green')}"
     elif Ratio < 1:
-        return f"{Ratio} - {ColorText('Speed+', 'green')} - {ColorText('Torque-', 'red')}"
+        return f"{Ratio} - {color_text('Speed+', 'green')} - {color_text('Torque-', 'red')}"
     else:
         return f"{Ratio} - Same Speed - Same Torque"
 

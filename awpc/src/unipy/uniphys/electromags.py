@@ -4,7 +4,7 @@ The `AWPC` Electromagnetics module for `UniPhys`
 This module provides resources for calculations related to charged particles, electric and magnetic fields, optics and other related branches.
 """
 
-from awpc.src.types.color_dtypes import xColorText as ct
+from awpc.src.types.color_dtypes import x_color_text as ct
 from awpc.src.commons.constants import PLANCK, INF, C
 
 __WAVLN_UV_SPEC: dict[tuple[float, float], str] = {
@@ -57,3 +57,16 @@ def ems(λ: float) -> tuple[str, float, str]:
     Hz = hz(λ)
     
     return label, Hz, f'{label} - {Hz} Hz'
+
+def photon_energy_λ(λ: float) -> float:
+    """Calculate the energy of a photon with wavelength `λ`."""
+    return PLANCK * hz(λ)
+def photon_energy_hz(Hz: float) -> float:
+    """Calculate the energy of a photon with frequency `Hz`."""
+    return PLANCK * Hz
+def photon_energy_ev_λ(λ: float) -> float:
+    """Calculate the energy of a photon with wavelength `λ` in electron volts."""
+    return photon_energy_λ(λ) / 1.60218e-19
+def photon_energy_ev_hz(Hz: float) -> float:
+    """Calculate the energy of a photon with frequency `Hz` in electron volts."""
+    return photon_energy_hz(Hz) / 1.60218e-19
