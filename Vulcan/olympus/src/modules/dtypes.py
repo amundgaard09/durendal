@@ -1,3 +1,4 @@
+from __future__ import annotations
 
 from awpc.src.types.color_dtypes import x_color_text as color_text
 from typing import Literal, get_args, get_origin, get_type_hints
@@ -75,7 +76,7 @@ class _serializable:
     """
     Base class for serializable objects. 
     
-    Provides methods for converting to and from dictionaries, which can be easily serialized to JSON. 
+    Provides methods for converting to and from dictionaries, which can be easily serialized to `JSON`. 
     All data types within this file inherit from this class to ensure consistent serialization and deserialization behavior across the application.
     """
     @staticmethod
@@ -179,6 +180,10 @@ class PRTable(_serializable):
     def __init__(self, sport: str, pr_data: dict[str, float]):
         self.sport = sport
         self.pr_data = pr_data
+        
+    def __str__(self) -> str:
+        pr_summary = ", ".join(f"{dist}: {time:.2f}s" for dist, time in self.pr_data.items())
+        return f"PR Table for {self.sport}: {pr_summary}"
 
 class Step(_serializable):
     """
@@ -252,7 +257,9 @@ class Exercise(_serializable):
         self.desc = desc
         self.type = type
         self.steps: list[Step] = steps
-
+    def __str__(self) -> str:
+        return f"{self.name} | {self.type} \n {self.desc} \n --- \n Steps: {len(self.steps)} Duration: {self.duration // 3600} hours and {self.duration % 60} minutes"
+    
     @property
     def step_count(self):
         return len(self.steps)
@@ -284,6 +291,8 @@ class Session(_serializable):
         self.exercises = exercises
         self.start_at = start_at
         self.end_at = start_at + self.duration
+    def __str__(self) -> str:
+        return f"{self.name} | {self.type} \n {self.desc} \n --- \n Exercises: {len(self.exercises)} Duration: {self.duration // 3600} hours and {self.duration % 60} minutes"
 
     @property
     def duration(self) -> int:
@@ -295,6 +304,9 @@ class Session(_serializable):
         """The total number of exercises in the session."""
         return len(self.exercises)
 class LoggedSession(Session):
+    """
+    Class for a logged training session, inherited from `Session`\n
+    """
     def __init__(
         self,
         name: str,
@@ -320,12 +332,19 @@ class DayPlan(_serializable):
     
     An example day plan could be:: 
         
-        DayPlan(sessions=[...]),
+        DayPlan(
+            name='Z2 Run and Swim Sprints',
+            sessions=[...]
+        ),
         
     which represents a single day's worth of training sessions.
     """
-    def __init__(self, sessions: list[Session]):
+    def __init__(self, name: str, day: str, sessions: list[Session]):
+        self.name = name
+        self.day = day
         self.sessions = sessions
+    def __str__(self) -> str:
+        return f"Day Plan: {len(self.sessions)} sessions, total duration {self.duration // 3600} hours and {self.duration % 60} minutes"
         
     @property
     def session_count(self):
@@ -343,7 +362,6 @@ class DayPlan(_serializable):
         self.sessions = [s for s in self.sessions if s.name != session_name]
     def clear_sessions(self):
         self.sessions = []
-     
 class WeekPlan(_serializable):
     def __init__(
         self, 
@@ -352,7 +370,11 @@ class WeekPlan(_serializable):
     ):
         self.weeknum = weeknum
         self.days = days or {day: [] for day in _DAYS}
-
+    def __str__(self) -> str:
+        total_sessions = self.session_count
+        total_duration = self.duration
+        return f"Week {self.weeknum} Plan: {total_sessions} sessions, total duration {total_duration // 3600} hours and {total_duration % 60} minutes"
+    
     @property
     def session_count(self):
         return sum(len(sessions) for sessions in self.days.values())
@@ -377,34 +399,53 @@ class WeekPlan(_serializable):
     def to_json(self):
         return json.dumps(self.to_dict(), indent=4)
 class TrainingBlock(_serializable):
+    """Class for Training blocks, with name, focus, week duration"""
     def __init__(
         self,
         name: str,
         focus: str,
         duration_weeks: int,
-        sessions: list[Session],
+        weeks: list[WeekPlan],
     ):
         self.name = name
         self.focus = focus
         self.duration_weeks = duration_weeks
-        self.sessions = sessions
-        
+        self.weeks = weeks
+    def __str__(self) -> str:
+        return f"{self.name} | Focus: {self.focus} | Duration: {self.duration_weeks} weeks \n Sessions: {sum(week.session_count for week in self.weeks)} Total Duration: {sum(week.duration for week in self.weeks) // 3600} hours and {self.duration % 60} minutes"
+class SeasonPlan(_serializable):
+    def __init__(
+        self,
+        year: int,
+        training_blocks: list[TrainingBlock],
+        events: list[Event],
+    ):
+        self.year = year
+        self.training_blocks = training_blocks
+        self.events = events
+    def __str__(self) -> str:
+        blocks_summary = "\n".join(str(block) for block in self.training_blocks)
+        events_summary = "\n".join(str(event) for event in self.events)
+        return f"Season Plan for {self.year}\nTraining Blocks:\n{blocks_summary}\n\nEvents:\n{events_summary}"
+      
 class Event(_serializable):
     def __init__(
         self,
         name: str,
+        start_time: int, # Military Time (e.g. 1430)
         date: str,
-        type: str,
+        sport: str,
         city: str,
         state: str,
         country: str,
-        distance: float | list[float] | None = None,
+        distance: list[float] | None = None,
         priority: Literal["Primary", "Secondary", "Tertiary", "Supporting"] | None = None,
         notes: str | None = None,
     ):
         self.name = name
+        self.start_time=start_time
         self.date = date
-        self.type = type
+        self.sport = sport
         self.distance = distance
         self.location = [city, state, country]
         self.priority = priority
@@ -428,6 +469,9 @@ class AthleteProfile(_serializable):
         self.sports = sports
         self.pr_tables = pr_tables
         self.level = level
+    def __str__(self) -> str:
+        pr_summary = "\n".join(str(pr) for pr in self.pr_tables)
+        return f"Athlete Profile: {self.name}, Age: {self.age}, Weight: {self.weight} kg, Height: {self.height} cm, Sports: {', '.join(self.sports)}, Level: {self.level}\nPR Tables:\n{pr_summary}"
 class StudentAthleteProfile(AthleteProfile):
     def __init__(
         self,
@@ -452,6 +496,8 @@ class StudentAthleteProfile(AthleteProfile):
         )
         self.school = school
         self.graduation_year = graduation_year
-
+    def __str__(self) -> str:
+        base_profile = super().__str__()
+        return f"{base_profile}\nStudent Athlete Profile: School: {self.school}, Graduation Year: {self.graduation_year}"
 
 

@@ -42,10 +42,6 @@ The **AmundWorks Python Collective** is the complete collection of all Python pr
 
 **Vulcan** is a personal productivity platform developed as part of the AWPC. Vulcan is especially built for student-athletes, but it is designed to be flexible and adaptable for anyone looking to improve their productivity and organization. Combined with a GUI, it uses a simple intent-driven pipeline to process user input and route tasks to specialized tool modules, generating structured outputs like training schedules, study plans, and daily priorities. Built with scalability in mind, **Vulcan** starts as a lightweight text-based system but is designed to evolve into a fully integrated GUI and voice-enabled assistant tailored to optimize performance, learning, and long-term progression.
 
-### MAX-Q - Composable Systems Engine
-
-**MAX-Q** is a *Composable Systems Engine* (**CSE**) designed to streamline the assembly and management of modular IT resources and business processes. By acting as a central orchestration layer, MAX-Q allows developers to "compose" sophisticated systems from independent, best-of-breed services and microservices. It enables rapid scalability, modularity and quick and easy maintenance.
-
 ## ARCHIVED PROJECTS
 
 This is the list of old projects no longer being maintained / further developed by AmundWorks. Projects may be restarted again at any time.
@@ -57,6 +53,11 @@ This is the list of old projects no longer being maintained / further developed 
 ### TANGO I - Tactical Aerospace Networked Global Operator
 
 **TANGO I** was the first iteration of what would be the **TANGO** Series. As the title suggests, **TANGO** was supposed to be a useful program for aerospace-based mission planning and control tasks, featuring a complete suite of tools for visualisation, communications, navigation, and other neccessities. **TANGO** was and still is abandoned, but a successor may be built in the future.
+
+### MAX-Q - Composable Systems Engine
+
+**MAX-Q** is a *Composable Systems Engine* (**CSE**) designed to streamline the assembly and management of modular IT resources and business processes. By acting as a central orchestration layer, MAX-Q allows developers to "compose" sophisticated systems from independent, best-of-breed services and microservices. It enables rapid scalability, modularity and quick and easy maintenance.
+
 
 ## AmundWorks Open Source Philosophy
 

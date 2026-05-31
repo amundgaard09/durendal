@@ -24,10 +24,10 @@ The interface is designed to be user-friendly and efficient, enabling athletes t
 
 ### ------------------------------------------------------------------ ###
 
-SCHEDULEPATH, SESSIONFILE, SLEEP_SCORES, GOALS, LOGFILE, LOGPATH, EVENTFILE, SCHEDULE = 0
+SCHEDULEPATH, SESSIONFILE, SLEEP_SCORES, GOALS, LOGFILE, LOGPATH, EVENTFILE, SCHEDULE = (None for _ in range(8))
 
 import sys, json, time, datetime, questionary
-from awpc.src.types.color_dtypes import xColorText as color_text
+from awpc.src.types.color_dtypes import x_color_text as color_text
 from awpc.src.unipy.uniCLI.uniCLI import clearTerminal as clearterminal
 
 from vulcan.olympus.src import (
