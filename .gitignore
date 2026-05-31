@@ -4,7 +4,6 @@
 **/__pycache__
 **/database
 __pycache__/
-archive/
 target/
 venv/
 .venv/

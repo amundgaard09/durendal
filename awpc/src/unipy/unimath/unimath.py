@@ -317,17 +317,6 @@ def LogarithmicEvaluation(Base: float, Argument: float) -> str:
     if Base <= 1 or Argument <= 0:
         return x_color_text("Invalid input! Base must be greater than 1 and Argument must be greater than 0.", 'red')
     return f"log_{Base}({Argument}) = {math.log(Argument, Base)}"
-def Factorial(n: int) -> int:
-    """Returns the factorial of a non-negative integer `n`."""
-    if n < 0:
-        raise ValueError("Factorial is not defined for negative numbers.")
-    elif n == 0 or n == 1:
-        return 1
-    else:
-        result = 1
-        for i in range(2, n + 1):
-            result *= i
-        return result
 
 ### UNSTABLE - ALPHA - DO NOT USE
 def TangentFormula(Function1: str, Function2: str) -> list[str]:
@@ -362,6 +351,22 @@ def PrimeFactorize(Number: int) -> list[int]:
             Divisor += 1
             
     return Factors
+
+def factorial(n: int) -> int:
+    """Returns the factorial of a non-negative integer `n`."""
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    elif n == 0 or n == 1:
+        return 1
+    else:
+        result = 1
+        for i in range(2, n + 1):
+            result *= i
+        return result
+def subfactorial(n: int) -> int:
+    if n < 0: 
+        raise ValueError("Subfactorial and Factorial are not defined for negative numbers.")
+    return int(factorial(n) * sum((((-1)**k) / factorial(k)) for k in range(n)))
 
 ### - TODO: Add more functions for various mathematical calculations, such as:
 ### - More functions for geometry, such as area and volume calculations for various shapes, surface area calculations, and more.
