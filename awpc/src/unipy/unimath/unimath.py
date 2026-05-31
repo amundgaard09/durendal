@@ -4,10 +4,8 @@ This module provides a collection of functions for performing various mathematic
 including geometry, algebra, calculus, and more.
 """
 
-from matplotlib.pyplot import plot, xlabel, ylabel, axhline, axvline, show
 from awpc.src.types.color_dtypes import x_color_text
-from sympy import Eq, symbols, diff, solve, sympify
-from math import sin, asin, cos, acos, sqrt, log
+import math, sympy, matplotlib.pyplot as plt
 
 from awpc.src.commons.exceptions import ImpossibleTriangleError
 from awpc.src.commons.constants import PI
@@ -15,12 +13,12 @@ from typing import Literal
 
 def _plotXY(XVals: list[float], YVals: list[float]) -> None:
     """Initialize a plot where `x`[`idx`] and `y`[`idx`] are coordinate pairs of a function."""
-    plot(XVals, YVals, color='red', linestyle='-', marker='o')
-    xlabel('X')
-    ylabel('Y')
-    axhline(0, color='black')
-    axvline(0, color='black')
-    show()
+    plt.plot(XVals, YVals, color='red', linestyle='-', marker='o')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.axhline(0, color='black')
+    plt.axvline(0, color='black')
+    plt.show()
     
     return
 
@@ -30,9 +28,9 @@ def Extrapolate_Triangle(a: float, b: float, c: float, A: float | None = None, B
     if sum((a, b, c)) != 180:
         raise ImpossibleTriangleError
 
-    SinA = sin(D2R(a))
-    SinB = sin(D2R(b))
-    SinC = sin(D2R(c))
+    SinA = math.sin(D2R(a))
+    SinB = math.sin(D2R(b))
+    SinC = math.sin(D2R(c))
     
     if A is not None:
         B = (A * SinB) / SinA
@@ -62,11 +60,11 @@ def Pythagoras(A: float | None = None, B: float | None = None, C: float | None =
         return None
     
     if A is None:
-        A = sqrt(C**2 - B**2)
+        A = math.sqrt(C**2 - B**2)
     elif B is None:
-        B = sqrt(C**2 - A**2)
+        B = math.sqrt(C**2 - A**2)
     elif C is None:
-        C = sqrt(A**2 + B**2)
+        C = math.sqrt(A**2 + B**2)
     
     return f"A: {A}, B: {B}, C: {C}"
 
@@ -106,7 +104,7 @@ def SineRule(
     # Find the first known side and angle to establish the reference ratio for the Sine Rule
     for idx in range(3):
         if Sides[idx] is not None and angles_rad[idx] is not None:
-            ReferenceRatio = Sides[idx] / sin(angles_rad[idx])
+            ReferenceRatio = Sides[idx] / math.sin(angles_rad[idx])
             break
     
     # If the reference couldn't be established, return None
@@ -116,12 +114,12 @@ def SineRule(
     # Loop through the sides and angles to calculate the missing values using the Sine Rule
     for idx in range(3):
         if Sides[idx] is None and angles_rad[idx] is not None:
-            Sides[idx] = ReferenceRatio * sin(angles_rad[idx])
+            Sides[idx] = ReferenceRatio * math.sin(angles_rad[idx])
         elif angles_rad[idx] is None and Sides[idx] is not None:
             value = Sides[idx] / ReferenceRatio
             if not -1 <= value <= 1:
                 return None
-            asin_val = asin(value)
+            asin_val = math.asin(value)
             known_sum = sum(a for a in angles_rad if a is not None)
             
             # Check for the ambiguous case of the sine rule, where there may be two possible angles that satisfy the equation
@@ -138,7 +136,7 @@ def SineRule(
 
     return [Angles_out, Sides]
 def CosineRule(LengthA: float, LengthB: float, AngleA: float) -> float:
-    return sqrt(LengthA ** 2 + LengthB ** 2 - ((2 * LengthA * LengthB) * cos(D2R(AngleA))))
+    return math.sqrt(LengthA ** 2 + LengthB ** 2 - ((2 * LengthA * LengthB) * math.cos(D2R(AngleA))))
 def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[float, float, float]:
     """ 
     Returns a tuple of the three angles in degrees, in the order of AngleA, AngleB, and AngleC.
@@ -148,9 +146,9 @@ def ReverseCosineRule(LengthA: float, LengthB: float, LengthC: float) -> tuple[f
     """
 
     return (
-        R2D(acos((LengthB ** 2 + LengthC ** 2 - LengthA ** 2) / (2 * LengthB * LengthC))),  # AngleA
-        R2D(acos((LengthC ** 2 + LengthA ** 2 - LengthB ** 2) / (2 * LengthC * LengthA))),  # AngleB
-        R2D(acos((LengthA ** 2 + LengthB ** 2 - LengthC ** 2) / (2 * LengthA * LengthB)))   # AngleC
+        R2D(math.acos((LengthB ** 2 + LengthC ** 2 - LengthA ** 2) / (2 * LengthB * LengthC))),  # AngleA
+        R2D(math.acos((LengthC ** 2 + LengthA ** 2 - LengthB ** 2) / (2 * LengthC * LengthA))),  # AngleB
+        R2D(math.acos((LengthA ** 2 + LengthB ** 2 - LengthC ** 2) / (2 * LengthA * LengthB)))   # AngleC
     )
 
 def SASArea(LengthA: float, LengthB: float, AngleC: float) -> float:
@@ -158,7 +156,7 @@ def SASArea(LengthA: float, LengthB: float, AngleC: float) -> float:
     Returns the area of a triangle from two sides and the included angle.
     Formula: `Area = 0.5 * LengthA * LengthB * sin(AngleC)` where AngleC is in degrees.
     """
-    return (0.5 * LengthA * LengthB * sin(D2R(AngleC)))
+    return (0.5 * LengthA * LengthB * math.sin(D2R(AngleC)))
 def HeronsFormula(LengthA: float, LengthB: float, LengthC: float) -> float:
     """
     Returns the area of a triangle from the side lengths.
@@ -169,7 +167,7 @@ def HeronsFormula(LengthA: float, LengthB: float, LengthC: float) -> float:
 
     """
     S = (LengthA + LengthB + LengthC) / 2
-    return sqrt(S * (S - LengthA) * (S - LengthB) * (S - LengthC))
+    return math.sqrt(S * (S - LengthA) * (S - LengthB) * (S - LengthC))
 
 def D2R(Degrees: float) -> float:
     """Return radians from degrees."""
@@ -183,13 +181,13 @@ def Slope(x1: float, y1: float, x2: float, y2: float) -> str:
     return f"Slope = {(y2 - y1) / (x2 - x1)}"
 def Distance(x1: float, y1: float, x2: float, y2: float) -> float:
     """Return the distance between two points `(x1, y1)` and `(x2, y2)`"""
-    return sqrt((x2-x1)**2 + (y2-y1)**2)
+    return math.sqrt((x2-x1)**2 + (y2-y1)**2)
 def Derivative(Function: str, x: float | None = None, h: float = 1e-5) -> float:
     """Returns `f'(x)` if `x` is not given, else returns the numerical derivative of the function at the given x-value using the definition of the derivative."""
-    x_sym = symbols('x')
-    f = sympify(Function)
+    x_sym = sympy.symbols('x')
+    f = sympy.sympify(Function)
     if x is None:
-        return diff(f, x_sym)
+        return sympy.diff(f, x_sym)
     else:
         return (f.subs(x_sym, x + h) - f.subs(x_sym, x - h)) / (2 * h)
 
@@ -225,8 +223,8 @@ def QuadraticSolutions(A: float, B: float, C: float) -> str:
         return ValueError("Invalid quadratic equation! A cannot be 0.")
     D = B**2 - 4*A*C
     if D > 0:
-        x1 = (-B - sqrt(D)) / (2 * A)
-        x2 = (-B + sqrt(D)) / (2 * A)
+        x1 = (-B - math.hypot(0, D)) / (2 * A)
+        x2 = (-B + math.hypot(0, D)) / (2 * A)
         return f"x1: {x_color_text(x1, 'green')}, x2: {x_color_text(x2, 'green')}"
     
     elif D == 0:
@@ -238,8 +236,8 @@ def QuadraticFactorizedForm(a: float, b: float, c: float) -> str:
     """Returns the factorized form of a quadratic function in the form of `a(x - x1)(x - x2)` where `x1` and `x2` are the roots of the function."""
     D = b**2 - 4*a*c
     if D > 0:
-        x1 = (-b - sqrt(D)) / (2 * a)
-        x2 = (-b + sqrt(D)) / (2 * a)
+        x1 = (-b - math.hypot(0, D)) / (2 * a)
+        x2 = (-b + math.hypot(0, D)) / (2 * a)
         return f"{a}(x - {x1})(x - {x2})"
     
     elif D == 0:
@@ -251,8 +249,8 @@ def QuadraticZeros(a: float, b: float, c: float) -> str:
     """Returns the x-values where the quadratic function crosses the x-axis."""
     D = b**2 - 4*a*c
     if D > 0:
-        x1 = (-b - sqrt(D)) / (2 * a)
-        x2 = (-b + sqrt(D)) / (2 * a)
+        x1 = (-b - math.hypot(0, D)) / (2 * a)
+        x2 = (-b + math.hypot(0, D)) / (2 * a)
         return f"Zeros: {x_color_text((x1, 0), 'green')}, {x_color_text((x2, 0), 'green')}"
     
     elif D == 0:
@@ -265,10 +263,10 @@ def QuadraticEvaluation(a: float, b: float, c: float, x: float) -> str:
 
 def CubicVertex(a: float, b: float, c: float, d: float) -> str:
     """Returns the vertex (aka the minimum/maximum point) of a cubic function in the form of `(x, y)`."""
-    x = symbols('x')
-    f = sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
-    df = diff(f, x)
-    critical_points = solve(df, x)
+    x = sympy.symbols('x')
+    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
+    df = sympy.diff(f, x)
+    critical_points = sympy.solve(df, x)
     
     vertices = []
     for point in critical_points:
@@ -282,15 +280,15 @@ def CubicNumRoots(a: float, b: float, c: float, d: float) -> int:
     return 3 if D > 0 else 2 if D == 0 else 1
 def CubicSolutions(a: float, b: float, c: float, d: float) -> str:
     """Returns the roots of a cubic function in a tuple."""
-    x = symbols('x')
-    f = sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
-    solutions = solve(f, x)
+    x = sympy.symbols('x')
+    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
+    solutions = sympy.solve(f, x)
     return f"Solutions: {x_color_text(solutions, 'green' if all(sol.is_real for sol in solutions) else 'red')}"
 def CubicZeros(a: float, b: float, c: float, d: float) -> str:
     """Returns the x-values where the cubic function crosses the x-axis."""
-    x = symbols('x')
-    f = sympify(f"{a}*x³ + {b}*x² + {c}*x + {d}")
-    zeros = solve(f, x)
+    x = sympy.symbols('x')
+    f = sympy.sympify(f"{a}*x³ + {b}*x² + {c}*x + {d}")
+    zeros = sympy.solve(f, x)
     return f"Zeros: {x_color_text(zeros, 'green' if all(z.is_real for z in zeros) else 'red')}"
 def CubicEvaluation(a: float, b: float, c: float, d: float, x: float) -> tuple[str, float]:
     """Cubic Evaluation function"""
@@ -318,7 +316,7 @@ def LogarithmicEvaluation(Base: float, Argument: float) -> str:
     """Returns the result of a logarithmic evaluation in the form of `log_Base(Argument) = Result`."""
     if Base <= 1 or Argument <= 0:
         return x_color_text("Invalid input! Base must be greater than 1 and Argument must be greater than 0.", 'red')
-    return f"log_{Base}({Argument}) = {log(Argument, Base)}"
+    return f"log_{Base}({Argument}) = {math.log(Argument, Base)}"
 def Factorial(n: int) -> int:
     """Returns the factorial of a non-negative integer `n`."""
     if n < 0:
@@ -334,15 +332,15 @@ def Factorial(n: int) -> int:
 ### UNSTABLE - ALPHA - DO NOT USE
 def TangentFormula(Function1: str, Function2: str) -> list[str]:
     """Returns the tangent(s) between two functions by finding the points where the derivatives are equal and then calculating the slope of the tangent line at those points."""
-    x = symbols('x')
-    f1 = sympify(Function1)
-    f2 = sympify(Function2)
+    x = sympy.symbols('x')
+    f1 = sympy.sympify(Function1)
+    f2 = sympy.sympify(Function2)
 
-    df1 = diff(f1, x)
-    df2 = diff(f2, x)
+    df1 = sympy.diff(f1, x)
+    df2 = sympy.diff(f2, x)
 
-    slope_eq = Eq(df1, df2)
-    tangent_points = solve(slope_eq, x)
+    slope_eq = sympy.Eq(df1, df2)
+    tangent_points = sympy.solve(slope_eq, x)
 
     tangents = []
     for idx, point in enumerate(tangent_points, 1):

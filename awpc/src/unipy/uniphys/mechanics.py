@@ -7,7 +7,8 @@ This module contains resources for calculations and simulations for Classical Me
 from awpc.src.types.color_dtypes import x_color_text as color_text
 from awpc.src.types.phys_dtypes import Quantity, UNITS
 from awpc.src.commons.constants import EARTH_G, PI, C 
-from awpc.src.unipy.unimath import D2R
+
+import math
 
 def Torque(MomentArmDistance: float, Force: float) -> Quantity:
     """Returns a `torque` quantity in newtonmeters from moment arm distance in meters and force in newtons."""
@@ -27,12 +28,12 @@ def AngularVelocityR(RPM: float) -> Quantity:
     return Quantity((RPM * PI / 30), UNITS["rad"])
 def AngularVelocityD(RPM: float) -> Quantity:
     """Returns angular velocity from RPM in degrees/s"""
-    return Quantity(D2R((RPM * PI / 30)), UNITS["deg"])
+    return Quantity(math.radians((RPM * PI / 30)), UNITS["deg"])
 
 def KineticEnergy(Mass: float, Velocity: float) -> Quantity:
     """Returns the kinetic energy from mass in kgs and velocity in m/s"""
     return Quantity((0.5 * Mass * Velocity**2), UNITS["J"])
-def PotentialEnergy(Mass: float, Height: float, Gravity: float | None = EARTH_G.value) -> Quantity:
+def PotentialEnergy(Mass: float, Height: float, Gravity: float | None = EARTH_G._value) -> Quantity:
     """Returns the potential energy of a mass. Gravity is defaulted to 9.8m /s^2"""
     return Quantity(Mass * Gravity * Height, UNITS["J"])
 

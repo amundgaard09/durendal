@@ -1,14 +1,12 @@
 """
-The `AWPC` `UNIx` `UniCLI` module. 
+The `AWPC` `UniPy` `UniCLI` module. 
 This module contains the standard command-line interface framework from the `AWPC` library. 
 It provides the necessary functions and classes to create a command-line interface for the `AWPC` library, 
 including command parsing, argument validation, and command dispatching.
 """
 
-import os, shlex, inspect
-
 from prompt_toolkit.completion import NestedCompleter
-
+from awpc.src.types.color_dtypes import x_color_text as color_text
 from awpc.src.commons.exceptions import (
     IncorrectArgumentCount,
     EmptyTokenList, 
@@ -17,16 +15,18 @@ from awpc.src.commons.exceptions import (
     UnknownModule
 )
 
+import os, shlex, inspect
+
 class ExitEnvironmentSignal(Exception):
     """Raise when the user wants to return to MAINEnv."""
     def __init__(self):
         super().__init__()
-
-def exitEnviroment() -> None:
+        
+def exit_env() -> None:
     """Exit the current environment and return to MAINEnv."""
     raise ExitEnvironmentSignal
 
-def GenerateCompleter(Map: dict[str, dict]) -> NestedCompleter:
+def generate_completer(Map: dict[str, dict]) -> NestedCompleter:
     """Generate a `NestedCompleter` dict with parameter names for each function."""
     
     CompleterDict = {}
@@ -38,7 +38,7 @@ def GenerateCompleter(Map: dict[str, dict]) -> NestedCompleter:
             CompleterDict[Module][SubcommandName] = {param: None for param in Signature.parameters}
     
     return NestedCompleter.from_nested_dict(CompleterDict)
-def Tokenize(RawCommandString: str) -> list[str]:
+def tokenize(RawCommandString: str) -> list[str]:
     """Tokenize a raw command string and return token list."""
     Tokens = shlex.split(RawCommandString)
     ProcessedTokens = []
@@ -49,10 +49,10 @@ def Tokenize(RawCommandString: str) -> list[str]:
         else:
             ProcessedTokens.append(Token)
     return ProcessedTokens
-def Dispatcher(RawCommandString: str, CommandMap: dict[str, dict[str, callable]], ArgMap: dict[str, dict[str, set]]) -> callable:
+def dispatcher(RawCommandString: str, CommandMap: dict[str, dict[str, callable]], ArgMap: dict[str, dict[str, set]]) -> callable:
     """The main dispatcher function that takes in a raw command string, tokenizes it, verifies the tokens, validates the arguments and dispatches the command to the correct function."""
-    Tokens = Tokenize(RawCommandString) 
-    ValidateCommand(Tokens, CommandMap, ArgMap)
+    Tokens = tokenize(RawCommandString) 
+    validate_command(Tokens, CommandMap, ArgMap)
     Module, Command, RawArgs = Tokens[0], Tokens[1], Tokens[2:]
     Args = []
     for arg in RawArgs:
@@ -65,7 +65,7 @@ def Dispatcher(RawCommandString: str, CommandMap: dict[str, dict[str, callable]]
                 Args.append(arg)
             
     return CommandMap[Module][Command](*Args)
-def ValidateCommand(tokens: list, cmd_map: dict, arg_map: dict):
+def validate_command(tokens: list, cmd_map: dict, arg_map: dict):
     if not tokens:
         raise EmptyTokenList
 
@@ -84,5 +84,23 @@ def ValidateCommand(tokens: list, cmd_map: dict, arg_map: dict):
     if len(args) not in arg_map[module][command]:
         raise IncorrectArgumentCount(cmd_map[module][command], len(args), arg_map[module][command])
 
-def clearTerminal() -> None:
+def clear_terminal() -> None:
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def _console_msg(sender: str, sender_color: str, info: str, info_color: str = "white") -> str:
+    return f"[{color_text(sender, sender_color)}] >>> {color_text(info, info_color)}"
+def console_print(sender: str, sender_color: str, info: str, info_color: str = "white") -> None:
+    print(_console_msg(sender, sender_color, info, info_color))
+def console_input(sender: str, sender_color: str, prompt_info: str, prompt_color: str = "white") -> str | float:
+    user_input = input(_console_msg(sender, sender_color, prompt_info, prompt_color) + " ")
+    try:               return float(user_input)
+    except ValueError: return user_input
+def console_confirm(sender: str, sender_color: str, prompt_info: str, prompt_color: str = "white") -> bool:
+    while True:
+        user_input = input(_console_msg(sender, sender_color, prompt_info + ":", prompt_color) + " ").lower().strip()
+        if user_input in ["y", "ye", "yes"]:
+            return True
+        elif user_input in ["n", "no"]:
+            return False
+        else:
+            print(f"Please enter {color_text('y', 'green')} or {color_text('n', 'red')}")

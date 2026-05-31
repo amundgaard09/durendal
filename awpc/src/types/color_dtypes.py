@@ -22,14 +22,19 @@ ANSI_COLORS = {
     "silver": "\033[38;5;7m",
 } 
 
-def x_color_text(Text: str, Color: str) -> str:
+def x_color_text(Text: str, Color: str, Bold: bool = False, Underline: bool = False, Italic: bool = False) -> str:
     """Returns the given text in the given color using `ANSI` escape codes. If the color is not found, it returns the text without coloring."""
+    
     if Color is None or Color.lower() not in ANSI_COLORS:
         return str(Text)
     
     Text = str(Text)
     ANSI = ANSI_COLORS.get(Color.lower(), '\033[0m')
-    return ANSI + Text + '\033[0m'
+    
+    if Bold:      ANSI += '\033[1m'
+    if Underline: ANSI += '\033[4m'
+    if Italic:    ANSI += '\033[3m'
+    return        ANSI + Text + '\033[0m'
 def _intclip(val: int, lower: int, upper: int) -> int:
     if val <= lower:
         return lower

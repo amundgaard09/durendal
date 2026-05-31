@@ -7,7 +7,7 @@ import time
 
 class ContinuousPIDController:
     """
-    A very crude first iteration of the Continuous PID Controller algorithms from AmundWorks.
+    A Continuous PID Controller algorithm.
     """
     def __init__(self, kp, ki, kd, setpoint=0):
         self.kp = kp

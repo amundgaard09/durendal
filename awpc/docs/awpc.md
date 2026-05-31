@@ -42,4 +42,13 @@
 
 ## Contributing to AWPC
 
-## License and Usage
+
+
+## License and Usage - AmundWorks Open Source Philosophy
+
+AWPC is part of the AmundWorks Github Repo and the AmundWorks Engineering Ecosystem.
+
+While this software and all other software under AmundWorks is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon AWPC or the rest of the AmundWorks repository to remain open source under the MIT License or a similarly permissive license. Projects that follow this philosophy may be recognized as part of the official AmundWorks ecosystem.
+
+By doing so, you help support an open, collaborative engineering ecosystem.
+

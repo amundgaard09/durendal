@@ -1,15 +1,10 @@
 from __future__ import annotations
 
-from copy import deepcopy
-from typing import overload
-from math import isclose, radians, sqrt, sin, cos
-from random import randint, uniform
+import math, copy, typing, random
 from awpc.src.commons.exceptions import MissingParameters, InvalidInput
 
 EPSILON = 1e-9
 
-def _pythagoras(A: float, B: float) -> float:
-    return sqrt(A*A + B*B)
 def _validate_float(n: float) -> float:
     try:
         toReturn = float(n)
@@ -18,16 +13,16 @@ def _validate_float(n: float) -> float:
     else:
         return toReturn
 
-@overload
+@typing.overload
 def _isClose(a: float, b: float) -> bool: ...
-@overload
+@typing.overload
 def _isClose(a: list[float], b: list[float]) -> bool: ...
-@overload
+@typing.overload
 def _isClose(a: list[list[float]], b: list[list[float]]) -> bool: ...
 def _isClose(a: float | list[float] | list[list[float]], b: float | list[float] | list[list[float]]) -> bool:
     """Overloaded function for checking if two floats / lists of floats are close"""
     if isinstance(a, (int, float)) and isinstance(b, (int, float)):
-        return isclose(a, b)
+        return math.isclose(a, b)
     
     if isinstance(a, list) and isinstance(b, list):
         if len(a) != len(b):
@@ -63,8 +58,8 @@ class D3Vector:
     
     @property
     def magnitude(self):
-        return _pythagoras(self._x, _pythagoras(self._y, self._z))
-    
+        return math.hypot(self._x, math.hypot(self._y, self._z))
+
     def toOppositeVec(self):
         return D3Vector(-self._x, -self._y, -self._z)
     def toUnitVec(self):
@@ -180,7 +175,7 @@ class NDVector:
     
     @property
     def magnitude(self) -> float:
-        return sqrt(sum([ component ** 2 for component in self._components ]))
+        return math.hypot(*self._components)
 
 class Matrix:
     """`AWPC` Dataclass for Matrices.
@@ -204,23 +199,23 @@ class Matrix:
     """
     def __init__(
         self, 
-        array: list[list[float]] | None = None, 
-        rows:      int           | None = None, 
-        cols:      int           | None = None, 
-        random:    bool          | None = False,
-        randtype:  type          | None = float,
-        randrange: tuple         | None = (-1, 1),
-        fill:      float         | None = 0,
+        array: list[list[float]]  | None = None, 
+        rows:       int           | None = None, 
+        cols:       int           | None = None, 
+        randomfill: bool          | None = False,
+        randtype:   type          | None = float,
+        randrange:  tuple         | None = (-1, 1),
+        fill:       float         | None = 0,
     ):
         if rows == 0 or cols == 0:
             raise ValueError("Matrix can't have 0 rows or columns!")
         
         if array is None and rows and cols:
-            if random:
+            if randomfill:
                 if randtype is float:
-                    array = [[uniform(*randrange) for _ in range(cols)] for _ in range(rows)]
+                    array = [[random.uniform(*randrange) for _ in range(cols)] for _ in range(rows)]
                 elif randtype is int:
-                    array = [[randint(*randrange) for _ in range(cols)] for _ in range(rows)]
+                    array = [[random.randint(*randrange) for _ in range(cols)] for _ in range(rows)]
                 else: 
                     array = [[0 for _ in range(cols)] for _ in range(rows)]
                     
@@ -251,6 +246,28 @@ class Matrix:
         Returns the total number of elements in the matrix.
         """
         return self._rows * self._cols
+    
+    @property
+    def zeros(self):
+        """
+        Returns the number of elements which are zero.
+        """
+        _zeros = 0
+        for row in self._data:
+            for element in row:
+                _zeros += 1 if element == 0 else None
+        return _zeros
+    
+    @property
+    def nonzeros(self):
+        """
+        Returns the number of elements which are not zero.
+        """
+        _nonzeros = 0
+        for row in self._data:
+            for element in row:
+                _nonzeros += 1 if element != 0 else None
+        return _nonzeros
     
     def __getitem__(self, idx: int) -> list:
         return self._data[idx]
@@ -374,7 +391,7 @@ class Matrix:
         return self._rows
 
     def __abs__(self) -> float:
-        return sqrt(sum(cell * cell for row in self._data for cell in row))
+        return math.sqrt(sum(cell * cell for row in self._data for cell in row))
 
     def __truediv__(self, other) -> Matrix:
         if isinstance(other, (int, float)):
@@ -385,58 +402,55 @@ class Matrix:
         return NotImplemented
 
     def set_row(self, idx: int, newrow: list) -> None:
-        if len(newrow) != self._cols: 
-            raise ValueError("New row length doesn't match the dimensions of the matrix!")
-        
+        if len(newrow) != self._cols: raise ValueError("New row length doesn't match the dimensions of the matrix!")
         self[idx] = newrow
     def row(self, idx: int) -> list:
         return self[idx]
     def set_column(self, idx: int, newcolumn: list) -> None:
-        if len(newcolumn) != self._rows: 
-            raise ValueError("New column length doesn't match the dimensions of the matrix!")
+        if len(newcolumn) != self._rows: raise ValueError("New column length doesn't match the dimensions of the matrix!")
         for j in range(len(self._data)):
             self[j][idx] = newcolumn[j] 
     def column(self, idx: int) -> list:
         return [self[j][idx] for j in range(len(self[0]))]
 class SquareMatrix:
     """
-    `AWPC` Dataclass for Square Matrices.
+    `AWPC` `UniMath` Dataclass for Square Matrices.
     
     Args
     ----
-    - `array`: list[list[float]] - The data to create the matrix from, unless empty or random values are preferred.
+    - `array`:     list[list[float]] - The data to create the matrix from, unless empty or random values are preferred.
     
-    - `size`: int - Create an empty matrix with dimensions `Size` x `Size`
+    - `size`:      int - Create an empty matrix with dimensions `Size` x `Size`
     
-    - `random`: bool - Create a matrix filled with uniform values ranging from -1 and 1 unless otherwise specified with the `randrange` parameter.
+    - `random`:    bool - Create a matrix filled with values from within the `randrange` parameter, defaulted to -1 to 1.
     
-    - `validate `: bool - Bypasses square-shape validation in the constructor.
+    - `validate`:  bool - Bypasses square-shape validation in the constructor.
     
-    - `fill`: float - Specifies what value to fill the matrix with, if not random.
+    - `fill`:      float - Specifies what value to fill the matrix with, if not random.
     
-    - `randtype`: tuple - Specifies if the matrix should be filled with random integers or floats.
+    - `randtype`:  tuple - Specifies if the matrix should be filled with random integers or floats.
     
     - `randrange`: tuple - Specifies the range for the `random`.`uniform` function.
     """
     def __init__(
         self, 
-        array: list[list[float]] | None = None, 
-        size:      int           | None = None, 
-        random:    bool          | None = False,
-        validate:  bool          | None = True,  # Used for AugmentedMatrix building
-        fill:      float         | None = 0,
-        randtype:  type          | None = float,
-        randrange: tuple         | None = (-1, 1),
+        array: list[list[float]]  | None = None, 
+        size:       int           | None = None, 
+        randomfill: bool          | None = False,
+        validate:   bool          | None = True,  # Used for AugmentedMatrix building NOTE remove after Matrix is finished
+        fill:       float         | None = 0,
+        randtype:   type          | None = float,
+        randrange:  tuple         | None = (-1, 1),
     ):
         if size == 0:
             raise ValueError("A matrix can't have a size of 0!")
         
         if array is None and size:
-            if random:
+            if randomfill:
                 if randtype is float:
-                    array = [[uniform(*randrange) for _ in range(size)] for _ in range(size)]
+                    array = [[random.uniform(*randrange) for _ in range(size)] for _ in range(size)]
                 elif randtype is int:
-                    array = [[randint(*randrange) for _ in range(size)] for _ in range(size)]
+                    array = [[random.randint(*randrange) for _ in range(size)] for _ in range(size)]
                 else: 
                     array = [[0, 0], [0, 0]]
                     
@@ -473,7 +487,7 @@ class SquareMatrix:
     def __len__(self) -> int:
         return self._dim
     def __abs__(self) -> float:
-        return sqrt(sum(cell * cell for row in self._data for cell in row))
+        return math.sqrt(sum(cell * cell for row in self._data for cell in row))
     def __str__(self) -> str:
         returnStr = ""
         for row in self:
@@ -650,7 +664,7 @@ class SquareMatrix:
         n = A.dim
         I = A.to_identity()
 
-        aug = SquareMatrix([[0 for _ in range(2 * n)] for _ in range(n)], enablevalidation=False)
+        aug = SquareMatrix([[0 for _ in range(2 * n)] for _ in range(n)], validate=False)
 
         for i in range(n):
             for j in range(n):
@@ -704,7 +718,7 @@ class SquareMatrix:
     
     @staticmethod
     def _rank(A: SquareMatrix) -> int:
-        A = deepcopy(A._data)
+        A = copy.deepcopy(A._data)
         N = A._dim
         
         rank, row_idx = N, 0
@@ -755,7 +769,7 @@ class SquareMatrix:
                 R[I][J] = sum(x * y for x, y in zip(QI, A.column(J)))
                 v = [(v[idx] - R[I][J] * QI[idx]) for idx in range(N)]
                 
-            norm = sqrt(sum(x**2 for x in v))
+            norm = math.sqrt(sum(x**2 for x in v))
             R[J][J] = norm
             
             if norm > 1e-12:
@@ -778,13 +792,13 @@ class SquareMatrix:
             Ak = R @ Q
             I = I @ Q
             
-            off_diag_sum = 0.0
+            off_diagonal_sum = 0.0
             for r in range(n):
                 for c in range(n):
                     if r != c:
-                        off_diag_sum += abs(Ak[r][c])
+                        off_diagonal_sum += abs(Ak[r][c])
                         
-            if off_diag_sum < EPSILON:
+            if off_diagonal_sum < EPSILON:
                 break
                 
         eigenvalues = [Ak[i][i] for i in range(n)]
@@ -822,11 +836,12 @@ class SquareMatrix:
         """
         Returns the diagonal of the matrix as a list.
         """
-        
         return [self[idx][idx] for idx in range(self._dim)]
     
     def to_identity(self) -> SquareMatrix:
-        """Matrix constructor that returns the identity matrix of the given size."""
+        """
+        Matrix constructor that returns the identity matrix of the given size.
+        """
         matrix = SquareMatrix(size=self._dim)
         for idx in range(self._dim):    
             matrix[idx][idx] = 1
@@ -926,23 +941,23 @@ class SquareMatrix:
         return all(value > 0 for value in self.eigen[0])
       
 def Rx(θ: float) -> SquareMatrix:
-    θ = radians(θ)
+    θ = math.radians(θ)
     return SquareMatrix([
-        [1, 0,       0     ], 
-        [0, cos(θ), -sin(θ)], 
-        [0, sin(θ),  cos(θ)]
+        [1, 0,            0          ], 
+        [0, math.cos(θ), -math.sin(θ)], 
+        [0, math.sin(θ),  math.cos(θ)]
     ])
 def Ry(θ: float) -> SquareMatrix:
-    θ = radians(θ)
+    θ = math.radians(θ)
     return SquareMatrix([
-        [cos(θ),  0,  sin(θ)], 
-        [0,       1,  0     ], 
-        [-sin(θ), 0,  cos(θ)]
+        [math.cos(θ),  0,  math.sin(θ)], 
+        [0,            1,  0          ], 
+        [-math.sin(θ), 0,  math.cos(θ)]
     ])
 def Rz(θ: float) -> SquareMatrix:
-    θ = radians(θ)
+    θ = math.radians(θ)
     return SquareMatrix([
-        [cos(θ), -sin(θ), 0], 
-        [sin(θ),  cos(θ), 0], 
-        [0,       0,      1]
+        [math.cos(θ), -math.sin(θ), 0], 
+        [math.sin(θ),  math.cos(θ), 0], 
+        [0,            0,           1]
     ])
