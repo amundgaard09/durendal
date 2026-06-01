@@ -28,9 +28,9 @@ SCHEDULEPATH, SESSIONFILE, SLEEP_SCORES, GOALS, LOGFILE, LOGPATH, EVENTFILE, SCH
 
 import sys, json, time, datetime, questionary
 from awpc.src.types.color_dtypes import x_color_text as color_text
-from awpc.src.unipy.uniCLI.uniCLI import clearTerminal as clearterminal
+from awpc.src.unipy.uniCLI.uniCLI import clear_terminal
 
-from vulcan.olympus.src import (
+from Vulcan.olympus.src.modules.dtypes import (
     Step,
     Exercise,
     Session,
@@ -101,7 +101,7 @@ def load_schedule() -> dict[str, list[str]] | None:
     except (FileNotFoundError, json.JSONDecodeError):
         return None
 def edit_schedule():
-    clearterminal()
+    clear_terminal()
     print(color_text("Schedule Editor", "cyan") + "\n")
     print("not implemented yet, returning to main screen...")
     time.sleep(2)
@@ -131,7 +131,7 @@ morninglogged: bool = False
 eveninglogged: bool = False
 
 def mainscreen():
-    clearterminal()
+    clear_terminal()
     global morninglogged, eveninglogged
     datetime_now = datetime.datetime.now()
     datetime_str = get_current_datetime_str()
@@ -291,14 +291,14 @@ def evening_log():
         mainscreen()
 
 def weekly_opi_report():
-    clearterminal()
+    clear_terminal()
     print(color_text("Weekly OPI Report", "cyan") + "\n")
     print("not implemented yet, returning to main screen...")
     time.sleep(2)
     mainscreen()
 
 def scheduleoverview():
-    clearterminal()
+    clear_terminal()
     print(color_text("Schedule Overview", "cyan") + "\n")
     
     schedule = load_schedule()
@@ -325,7 +325,7 @@ def scheduleoverview():
             mainscreen()
 
 def exercisebuilder():
-    clearterminal()
+    clear_terminal()
     print(color_text("Exercise Builder", "cyan") + "\n")
     
     steps: list[Step] = []
@@ -337,7 +337,7 @@ def exercisebuilder():
     
     while addsteps:
         stepadded = False
-        clearterminal()
+        clear_terminal()
         print(color_text(f"Exercise Builder - {exercisename}", "cyan") + "\n")
         print(color_text(f"Added steps: {[step.name for step in steps]}", "green") + "\n")
         
@@ -403,7 +403,7 @@ def exercisebuilder():
 
     return newexercise
 def sessionbuilder():
-    clearterminal()
+    clear_terminal()
     print(color_text("Session Builder", "cyan") + "\n")
     print(color_text("New session:", "green") + "\n")
     
@@ -430,7 +430,7 @@ def sessionbuilder():
     time.sleep(1)
     sessionsoverview()
 def sessionviewer():
-    clearterminal()
+    clear_terminal()
     print(color_text("Session Viewer", "cyan") + "\n")
     sessions = load_sessions()
     
@@ -452,7 +452,7 @@ def sessionviewer():
     if returnconfirmed:
         sessionsoverview()    
 def sessionsoverview():
-    clearterminal()
+    clear_terminal()
     print(color_text("Sessions Overview", "cyan") + "\n")
     selection: str = questionary.select(
         "Select an option:",
@@ -475,14 +475,14 @@ def sessionsoverview():
         case "Return":
             mainscreen()
 def sessioneditor():
-    clearterminal()
+    clear_terminal()
     print(color_text("Session Editor", "cyan") + "\n")
     print("not implemented yet, returning to main screen...")
     time.sleep(2)
     mainscreen()
 
 def add_event():
-    clearterminal()
+    clear_terminal()
     print(color_text("Add Event", "cyan") + "\n")
     name: str = questionary.text("Event Name:").ask()
     date: str = questionary.text("Event Date (DD-MM-YYYY):").ask()
@@ -519,7 +519,7 @@ def add_event():
     mainscreen()
     
 def racecalendar():
-    clearterminal()
+    clear_terminal()
         
     print(color_text("Race Calendar", "cyan") + "\n")
     print("Upcoming Events:" + "\n")
@@ -547,13 +547,13 @@ def racecalendar():
         ]).ask()
     match selection:
         case selection if selection.startswith("Add Event"):
-            clearterminal()
+            clear_terminal()
             add_event()
         case selection if selection.startswith("Return"):
             mainscreen()
 
 def pr_tracker():
-    clearterminal()
+    clear_terminal()
     print(color_text("PR Tracker", "cyan") + "\n")
     choice = questionary.select(
         "Select an option:",
@@ -565,13 +565,13 @@ def pr_tracker():
     ).ask()
     match choice:
         case "View PRs":
-            clearterminal()
+            clear_terminal()
             print(color_text("PRs Overview", "cyan") + "\n")
             print("No functionality yet, returning to main screen...")
             time.sleep(2)
             mainscreen()
         case "Add PR":
-            clearterminal()
+            clear_terminal()
             print(color_text("Add PR", "cyan") + "\n")
             print("No functionality yet, returning to main screen...")
             time.sleep(2)

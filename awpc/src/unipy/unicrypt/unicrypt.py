@@ -4,14 +4,14 @@ This module contains all the encryption and decryption functions of the `AWPC` l
 These include methods such as binary, ceasar, vigenere, railfence and OTP with encryption and decryption for all cryptography methods.
 """
 
-def BinaryEncrypt(InputString: str) -> str:
+def binary_encrypt(InputString: str) -> str:
     RawBinary = ''.join(format(ord(i), '08b') for i in InputString)
     OutputString = ' '.join(RawBinary[i:i+8] for i in range(0, len(RawBinary), 8))
     return OutputString
-def BinaryDecrypt(InputString: str) -> str:
+def binary_decrypt(InputString: str) -> str:
     OutputString = ''.join(chr(int(b, 2)) for b in InputString.split())
     return OutputString
-def CeasarEncrypt(InputString: str, Shift: int) -> str:
+def ceasar_encrypt(InputString: str, Shift: int) -> str:
     OutputString = ""
     for Character in InputString:
         if Character.isalpha():               
@@ -22,7 +22,7 @@ def CeasarEncrypt(InputString: str, Shift: int) -> str:
         else:                                
             OutputString += Character 
     return OutputString
-def CeasarDecrypt(InputString: str, Shift: int) -> str:
+def ceasar_decrypt(InputString: str, Shift: int) -> str:
     OutputString = ""
     for Character in InputString:
         if Character.isalpha():               
@@ -33,7 +33,7 @@ def CeasarDecrypt(InputString: str, Shift: int) -> str:
         else:                                 
             OutputString += Character
     return OutputString 
-def VigenereEncrypt(InputString: str, KeyString: str) -> str:
+def vigenere_encrypt(InputString: str, KeyString: str) -> str:
     OutputString = ""
 
     for idx, Character in enumerate(InputString):
@@ -45,7 +45,7 @@ def VigenereEncrypt(InputString: str, KeyString: str) -> str:
         else:
             OutputString += Character
     return OutputString
-def VigenereDecrypt(InputString: str, KeyString: str) -> str:
+def vigenere_decrypt(InputString: str, KeyString: str) -> str:
     OutputString = ""
     KeyString = KeyString.lower()
     KeyIdx = 0
@@ -63,7 +63,7 @@ def VigenereDecrypt(InputString: str, KeyString: str) -> str:
             OutputString += Character
 
     return OutputString
-def RailfenceEncrypt(InputString: str, Key: int) -> str:
+def railfence_encrypt(InputString: str, Key: int) -> str:
     Key = int(Key)
     Position = 0
     Direction = 1
@@ -77,7 +77,7 @@ def RailfenceEncrypt(InputString: str, Key: int) -> str:
             Direction *= -1
     
     return ''.join([''.join(Row) for Row in Rows])
-def RailfenceDecrypt(InputString: str, Key: int) -> str:
+def railfence_decrypt(InputString: str, Key: int) -> str:
     Key = int(Key)
     Pattern, Rows = [], []
     Position, Idx =  0, 0
@@ -103,12 +103,12 @@ def RailfenceDecrypt(InputString: str, Key: int) -> str:
         RowPointers[r] += 1
 
     return Plaintext
-def OTPEncrypt(InputString: str, KeyString: str) -> str:
+def OTP_encrypt(InputString: str, KeyString: str) -> str:
     BinaryText = ''.join(format(ord(i), '08b') for i in InputString)
     BinaryKey = ''.join(format(ord(i), '08b') for i in KeyString)
     Cipher = ''.join(str(int(b1) ^ int(b2)) for b1, b2 in zip(BinaryText, BinaryKey))
     return ' '.join(Cipher[i:i+8] for i in range(0, len(Cipher), 8))
-def OTPDecrypt(InputString: str, KeyString: str) -> str:
+def OTP_decrypt(InputString: str, KeyString: str) -> str:
     BinaryKey = ''.join(format(ord(i), '08b') for i in KeyString)
     plaintext_bits = ''.join(str(int(b1) ^ int(b2)) for b1, b2 in zip(InputString, BinaryKey))
     return ''.join(chr(int(plaintext_bits[i:i+8], 2)) for i in range(0, len(plaintext_bits), 8))

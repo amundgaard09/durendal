@@ -26,7 +26,7 @@ HOHMANNVER= "v.0.0.1.alpha"
 
 ### ENVIROMENTS 
 
-def _mainEnv() -> None:
+def main_env() -> None:
     clear_terminal()
     print(MAINVER)
     while True:        
@@ -39,7 +39,7 @@ def _mainEnv() -> None:
             
         except Exception as e:
             print(f"[{x_color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
-def _pidEnv() -> None:
+def pid_env() -> None:
     clear_terminal()
     print(f"ORION PID Testing Environment {PIDVER}")
     while True:
@@ -55,7 +55,7 @@ def _pidEnv() -> None:
             break
         except Exception as e:
             print(f"[{x_color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
-def _hohmannEnv() -> None:
+def hohmann_env() -> None:
     clear_terminal()
     print(f"ORION Hohmann Calculation & Visualization Environment {HOHMANNVER}")
     while True:
@@ -107,8 +107,8 @@ MAINCMDMAP:    dict[str, dict[str, callable]] = {
     "unialgo":   mt.UNIALGOCALLMAP,
     "unicrypt":  mt.UNICRYPTCALLMAP,
     "enterenv": {
-        "PIDEnv": _pidEnv,
-        "HohmannEnv": _hohmannEnv,
+        "PIDEnv": pid_env,
+        "HohmannEnv": hohmann_env,
     }
 }
 PIDCMDMAP:     dict[str, dict[str, callable]] = {
@@ -127,4 +127,4 @@ PIDCOMPLETER     = generate_completer(PIDCMDMAP)
 HOHMANNCOMPLETER = generate_completer(HOHMANNCMDMAP)
 
 if __name__ == "__main__":
-   _mainEnv()
+   main_env()

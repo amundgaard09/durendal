@@ -4,7 +4,7 @@ This module contains a collection of mathematical algorithms that are used throu
 such as the Fibonacci sequence generator and Lovelace's algorithm for solving systems of linear equations.
 """
 
-def FibonacciList(ListLength: float) -> list[int]:
+def fibonacci_list(ListLength: float) -> list[int]:
     """Fibonacci sequence generator that returns a list of the sequence up to the given length."""
     
     try:
@@ -24,7 +24,7 @@ def FibonacciList(ListLength: float) -> list[int]:
         FiboList.append(fib2)
         
     return FiboList   
-def FibonacciInteger(FiboIndex: float) -> int:
+def fibonacci_integer(FiboIndex: float) -> int:
     """Fibonacci integer generator that returns the Fibonacci integer at the given index.""" 
     
     try:
@@ -46,7 +46,7 @@ def FibonacciInteger(FiboIndex: float) -> int:
         
     return fib2
 
-def LovelacesAlgorithm(a: float, b: float, c: float, d: float, e: float, f: float) -> tuple:
+def lovelace(a: float, b: float, c: float, d: float, e: float, f: float) -> tuple:
     """Lovelace's algorithm for solving systems of linear equations."""
     if a*e == b*d: 
         raise ValueError("The system has no unique solution.")

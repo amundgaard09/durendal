@@ -495,7 +495,7 @@ class SquareMatrix:
             
         return returnStr
     def __neg__(self) -> SquareMatrix:
-        return SquareMatrix([[(self[idx1][idx2] * -1) for idx2 in range(self._dim)] for idx1 in range(self._dim)])
+        return SquareMatrix([[-(self[idx1][idx2]) for idx2 in range(self._dim)] for idx1 in range(self._dim)])
     def __eq__(self, other) -> bool:
         if isinstance(other, SquareMatrix):
             return _isClose(self._data, other._data) and self._dim == other._dim
@@ -637,6 +637,8 @@ class SquareMatrix:
     def det(self) -> float:
         """
         Returns the determinant of the matrix through Laplace Expansion.
+        
+        The determinant is used to determine if the Matrix is invertible or singular (collapses space).
         """
         return self._det(self)
     
