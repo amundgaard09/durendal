@@ -2,7 +2,7 @@
 from modules.page_ir import PageIR
 from pathlib import Path
 from wikipediaapi import WikipediaPage, WikipediaPageSection
-from awpc.src.unipy.uniCLI import console_print
+from durapy.src.unipy.uniCLI import console_print
 
 def _render_sections(sections: list[WikipediaPageSection], level: str = 2) -> str:
     console_print("RENDERER", "BLUE", "Rendering sections into Markdown...", "green")

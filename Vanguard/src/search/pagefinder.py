@@ -13,7 +13,7 @@ from wikipediaapi import Wikipedia, WikipediaPage
 from modules.article import Article
 from modules.metadata import Metadata
 from md_compiler.compiler.main import main as md_compile
-from awpc.src.unipy.uniCLI import console_print
+from durapy.src.unipy.uniCLI import console_print
 
 _ARTICLE_JSON_DIR = r"C:\\Users\\Administrator\\.vscode\\amundworks\\Vanguard\\data\\article_db"
 _MARKDOWN_DIR = r"C:\\Users\\Administrator\\.vscode\\amundworks\\Vanguard\\data\\markdown_db"

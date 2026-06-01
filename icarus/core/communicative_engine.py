@@ -14,7 +14,7 @@ import pydub.utils as pd_utils
 
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
-from awpc.src.unipy.uniCLI import console_print
+from durapy.src.unipy.uniCLI import console_print
 
 # ICARUS Wake Word Detector Model path
 _I_WWD_MODEL = r""

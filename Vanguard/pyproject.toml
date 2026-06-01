@@ -2,7 +2,7 @@
 [project]
 name = "Vanguard"
 version = "0.0.0.1"
-description = "Vanguard Knowledge Database System - An AmundWorks Project"
+description = "Vanguard Knowledge Database System - A Durendal Project"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "LICENSE"}

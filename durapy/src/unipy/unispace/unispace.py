@@ -1,0 +1,23 @@
+"""
+The `DuraPy` `UniSpace` module provides a collection of functions and classes for performing calculations related to orbital mechanics, astrodynamics, and space physics.
+"""
+
+import math
+
+from durapy.src.types.phys_dtypes import Quantity, UNITS
+from durapy.src.commons.constants import G, EARTH_M, EARTH_R
+
+def orbital_period(SemiMajorAxis: float, M: float, m: float) -> Quantity:
+    return Quantity((2 * math.pi * math.sqrt(SemiMajorAxis ** 3 / (G * (M + m)))), UNITS["S"])
+def orbital_velocity(OrbitalRadius: float = EARTH_R, Mass: float = EARTH_M) -> Quantity:
+    return Quantity((math.sqrt((G * Mass) / OrbitalRadius)), UNITS["m/s"])
+def escape_velocity(Radius: float = EARTH_R, Mass: float = EARTH_M) -> Quantity:
+    return Quantity((math.sqrt(2) * orbital_velocity(Radius, Mass)), UNITS["m/s"])
+
+def gravitational_force(Mass1: float, Mass2: float, Distance: float) -> Quantity:
+    return Quantity((G * Mass1 * Mass2 / Distance ** 2), UNITS["N"])
+def surface_gravity(Mass: float, Radius: float) -> Quantity:
+    return Quantity((G * Mass / Radius ** 2), UNITS["m/s^2"])
+
+def tsiolkovsky_rocket_equation(ExhaustVelocity: float, InitialMass: float, FinalMass: float) -> Quantity:
+    return Quantity((ExhaustVelocity * math.log(InitialMass / FinalMass)), UNITS["Δv"])

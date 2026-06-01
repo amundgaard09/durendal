@@ -1,6 +1,6 @@
 
 import socket
-from awpc.src.unipy.uniCLI import console_print, console_input
+from durapy.src.unipy.uniCLI import console_print, console_input
 
 SERVER_IP = '192.168.0.106'
 PORT = 5000

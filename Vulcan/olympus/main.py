@@ -9,7 +9,7 @@ allowing athletes to track their progress and make informed decisions about thei
 
 The interface is designed to be user-friendly and efficient, enabling athletes to quickly log their data and access neccesary tools for optimal performace.
 
-Docs and other resources can be found in the [AmundWorks GitHub](https://github.com/amundgaard09/amundworks/)
+Docs and other resources can be found in the [Durendal GitHub](https://github.com/amundgaard09/durendal/)
 """
 
 ### ------------------------------------------------------------------ ###
@@ -37,8 +37,8 @@ Docs and other resources can be found in the [AmundWorks GitHub](https://github.
 #|#                                                                    #|#
 ### ------------------------------------------------------------------ ###
 
-from awpc.src.types.color_dtypes import x_color_text as color_text
-from awpc.src.unipy.uniCLI.uniCLI import clear_terminal
+from durapy.src.types.color_dtypes import x_color_text as color_text
+from durapy.src.unipy.uniCLI.uniCLI import clear_terminal
 
 #from src.modules.dtypes import (
 #    Step,

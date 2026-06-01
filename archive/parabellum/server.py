@@ -1,7 +1,7 @@
 
 import socket
 import threading
-from awpc.src.unipy.uniCLI import console_print
+from durapy.src.unipy.uniCLI import console_print
 
 HOST = str('0.0.0.0')
 PORT = int(5000)
