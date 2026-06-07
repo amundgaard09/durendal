@@ -22,7 +22,7 @@ This is the list of projects built / currently being built under Durendal. This 
 
 [View DuraPy README](durapy/README.md)
 
-The **DuraPy** is the complete collection of all Python projects built under Durendal. It is a collection of Python libraries, tools, and applications that are designed to be used for scientific computing, data analysis, machine learning, and more. The **DuraPy** is an open-source project that is constantly evolving and growing as new projects are added and existing ones are updated. It is intended to be a resource for developers, researchers, and anyone interested in using Python for their projects. The **DuraPy** is organized into submodules, each of which contains a specific set of tools and libraries that are designed to work together to provide a comprehensive Python ecosystem for any purpose imaginable. 
+**DuraPy** is the complete collection of all Python projects built under Durendal. It is a collection of Python libraries, tools, and applications that are designed to be used for scientific computing, data analysis, machine learning, and more. **DuraPy** is an open-source project that is constantly evolving and growing as new projects are added and existing ones are updated. It is intended to be a resource for developers, researchers, and anyone interested in using Python for their projects. The **DuraPy** is organized into submodules, each of which contains a specific set of tools and libraries that are designed to work together to provide a comprehensive Python ecosystem for any purpose imaginable. 
 
 ### UniForge CLI - The Ultimate Command Line Interface STEMP Toolchain
 
