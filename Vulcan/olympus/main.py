@@ -33,7 +33,7 @@ import json, time, datetime, questionary
 
 from awpc.src.types.color_dtypes import xColorText as colorText
 from awpc.src.unipy.uniCLI.uniCLI import clearTerminal
-from vulcan.olympus.src import (
+from Vulcan.olympus.src.core.modules.types import (
     Step,
     Exercise,
     Session,

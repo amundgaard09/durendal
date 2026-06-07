@@ -9,8 +9,6 @@ def _insertJSON(PathToJSON: str, ContentDict: dict) -> None:
 
     with open(PathToJSON, "w", encoding="utf-8") as JSONFile:
         json.dump(ContentDict, JSONFile, indent=4, sort_keys=True)
-
-
 def _extractJSON(PathToJSON: str) -> dict | None:
     """Extracts a `JSON` file and returns the content as a dictionary."""
 
@@ -20,9 +18,7 @@ def _extractJSON(PathToJSON: str) -> dict | None:
     except Exception:
         return None
 
-
 _DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-
 
 class _Serializable:
     """

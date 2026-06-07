@@ -31,7 +31,7 @@ def TriExtrapolate(a: float, b: float, c: float, A: float | None = None, B: floa
     if sum((a, b, c)) != 180:
         raise ImpossibleTriangleError
 
-    SinA = sin(D2R)(a)
+    SinA = sin(D2R(a))
     SinB = sin(D2R(b))
     SinC = sin(D2R(c))
     
