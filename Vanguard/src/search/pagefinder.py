@@ -15,9 +15,11 @@ from modules.metadata import Metadata
 from md_compiler.compiler.main import main as md_compile
 from durapy import uniCLI
 
-_ARTICLE_JSON_DIR = r"C:\\Users\\Administrator\\.vscode\\durendal\\Vanguard\\data\\articles"
-_MARKDOWN_DIR = r"C:\\Users\\Administrator\\.vscode\\durendal\\Vanguard\\data\\markdown"
-_TEMPLATE_DIR = r"C:\\Users\\Administrator\\.vscode\\durendal\\Vanguard\\data\\templates"
+__DATA_PATH =  r"C:\\Users\\Administrator\\.vscode\\durendal\\Vanguard\\data"
+
+_ARTICLE_JSON_DIR = __DATA_PATH + r"\\articles"
+_MARKDOWN_DIR = __DATA_PATH + r"\\markdown"
+_TEMPLATE_DIR = __DATA_PATH + r"\\templates"
 
 def insert_json(path_to_json: str, content_dict: dict) -> bool:
     """Inserts a dictionary into a `JSON` file. If the file does not exist, it creates it."""
@@ -80,7 +82,6 @@ def main(page: WikipediaPage) -> None:
 
         md_compile(title, page, Path(_MARKDOWN_DIR))
         insert_json(jsonpath, article.to_dict())
-        uniCLI.console_print("PAGEFINDER", "white", "Successful save and article creation!", "green")
             
     except FileExistsError:
         uniCLI.console_print("PAGEFINDER", "white", "File already exists! Use the search engine instead", "red")

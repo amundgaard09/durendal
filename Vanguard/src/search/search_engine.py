@@ -5,7 +5,7 @@ The Vanguard Wikipedia API Search Engine System
 import os, re
 from collections import defaultdict
 
-_DATA_PATH = r"C:\\Users\\Administrator\\.vscode\\amundworks\\Vanguard\\data"
+_DATA_PATH = r"C:\\Users\\Administrator\\.vscode\\durendal\\Vanguard\\data"
 
 # ====================================================== #
 # NOTE THIS IS NOT COMPATIBLE WITH THE ARTICLE()-SYSTEM! #

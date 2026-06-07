@@ -7,7 +7,7 @@ from wikipediaapi import WikipediaPage, WikipediaPageSection
 from durapy import uniCLI
 
 ### MCD Enhancement proposals:
-### 1. Use an LLM API (e.g. OpenAI) to optimize the article (e.g. make links at the See Also section actual links.)
+### 1. Use an LLM API (e.g. OpenAI) to clean up the article (e.g. make links at the See Also section actual links.)
 
 def check_if_article_exists(name: str, path: Path) -> bool:
     """Checks if an article with the given name already exists in the specified path."""
@@ -130,17 +130,17 @@ def save_markdown(IR: PageIR, name: str, path: Path) -> None:
     """
     Saves the given Markdown content to a file named `{name}.md` in the specified path. If the file already exists, it will ask the user if they want to overwrite or not.
     """
-    uniCLI.console_print("MDC", "white", f"Saving Markdown to {path}...", "green")
+    uniCLI.console_print("MD SAVER", "white", f"Saving Markdown to {path}...", "green")
     """Saves the given Markdown content to the specified path."""
     full_path = path / f"{name}.md"
     
     if full_path.exists():
-        continue_ = uniCLI.console_confirm("MDC", "white", f"Warning: File '{full_path}' already exists and will be overwritten. Overwrite? (y/n)", "yellow")
+        continue_ = uniCLI.console_confirm("MD SAVER", "white", f"Warning: File '{full_path}' already exists and will be overwritten. Overwrite? (y/n)", "yellow")
         if not continue_:
-            uniCLI.console_print("MDC", "red", "Operation cancelled.", "red")
+            uniCLI.console_print("MD SAVER", "red", "Operation cancelled.", "red")
             return
         else:
-            uniCLI.console_print("MDC", "white", "Proceeding...", "green")
+            uniCLI.console_print("MD SAVER", "white", "Proceeding...", "green")
     
     full_path.write_text(IR.markdown_text, encoding="utf-8")
 
