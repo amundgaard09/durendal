@@ -78,6 +78,16 @@ from src.modules.builders import (
 
 import json, time, datetime, questionary
 
+from awpc.src.types.color_dtypes import xColorText as colorText
+from awpc.src.unipy.uniCLI.uniCLI import clearTerminal
+from vulcan.olympus.src import (
+    Step,
+    Exercise,
+    Session,
+    DayPlan,
+    WeekPlan,
+    Event,)
+
 ### ------------------------------------------------------------------ ###
 
 def console():
