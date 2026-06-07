@@ -39,16 +39,10 @@ def extrapolate_triangle(a: float, b: float, c: float, A: float | None = None, B
     if sum((a, b, c)) != 180:
         raise exceptions.ImpossibleTriangleError
 
-<<<<<<< HEAD:awpc/src/unipy/unimath/unimath.py
-    SinA = sin(D2R(a))
-    SinB = sin(D2R(b))
-    SinC = sin(D2R(c))
-=======
     SinA = math.sin(D2R(a))
     SinB = math.sin(D2R(b))
     SinC = math.sin(D2R(c))
->>>>>>> a9c2864da146c81e8909c1942899b3b23765df84:durapy/src/unipy/unimath/unimath.py
-    
+
     if A is not None:
         B = (A * SinB) / SinA
         C = (A * SinC) / SinA

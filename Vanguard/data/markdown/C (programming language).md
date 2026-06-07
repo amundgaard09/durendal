@@ -1,12 +1,12 @@
 # [[C]] (programming language)
 
 ## Summary
+
 C is a general-purpose programming language created in the 1970s by Dennis Ritchie. By design, C gives the programmer relatively direct access to the features of the typical CPU architecture, customized for the target instruction set. It has been and continues to be used to implement operating systems (especially kernels), device drivers, and protocol stacks, but its use in application software has been decreasing. C is used on computers that range from the largest supercomputers to the smallest microcontrollers and embedded systems.
 A successor to the programming language B, C was originally developed at Bell Labs by Ritchie between 1972 and 1973 to construct utilities running on [[Unix]]. It was applied to re-implementing the kernel of the Unix operating system. During the 1980s, C gradually gained popularity. It has become one of the most widely used programming languages, with C compilers available for practically all modern computer architectures and operating systems. The book The C Programming Language, co-authored by the original language designer, served for many years as the de facto standard for the language. C has been standardized since 1989 by the American National Standards Institute (ANSI) and, subsequently, jointly by the International Organization for Standardization (ISO) and the International Electrotechnical Commission (IEC).
 C is an imperative procedural language, supporting structured programming, lexical variable scope, and recursion, with a static type system. It was designed to be compiled to provide low-level access to memory and language constructs that map efficiently to machine instructions, all with minimal runtime support. Despite its low-level capabilities, the language was designed to encourage cross-platform programming. A standards-compliant C program written with portability in mind can be compiled for a wide variety of computer platforms and operating systems with few changes to its source code.
 Although neither C nor its standard library provide some popular features found in other languages, it is flexible enough to support them. For example, object orientation and garbage collection are provided by external libraries [[GLib]] Object System and Boehm garbage collector, respectively.
 Since 2000, C has typically ranked as the most or second-most popular language in the TIOBE index.
-
 
 ## Characteristics
 
@@ -27,13 +27,9 @@ The closing curly brace indicates the end of the main function. Prior to [[C99]]
 
 ## History
 
-
-
-
 ### Early developments
 
 The origin of C is closely tied to the development of the Unix operating system, originally implemented in assembly language on a [[PDP-7]] by Dennis Ritchie and Ken Thompson, incorporating several ideas from colleagues. Eventually, they decided to port the operating system to a [[PDP-11]]. The original PDP-11 version of Unix was also developed in assembly language.
-
 
 #### B
 
@@ -118,7 +114,7 @@ In 2008, the C Standards Committee published a technical report extending the C 
 
 ## Definition
 
-C has a formal grammar specified by the C standard. Line endings are generally not significant in C; however, line boundaries do have significance during the preprocessing phase. Comments may appear either between the delimiters /* and */, or (since C99) following // until the end of the line. Comments delimited by /* and */ do not nest, and these sequences of characters are not interpreted as comment delimiters if they appear inside string or character literals.
+C has a formal grammar specified by the C standard. Line endings are generally not significant in C; however, line boundaries do have significance during the preprocessing phase. Comments may appear either between the delimiters /* and */, or (since C99) following // until the end of the line. Comments delimited by / * and */ do not nest, and these sequences of characters are not interpreted as comment delimiters if they appear inside string or character literals.
 C source files contain declarations and function definitions. Function definitions, in turn, contain declarations and statements. Declarations either define new types using keywords such as struct, union, and enum, or assign types to and perhaps reserve storage for new variables, usually by writing the type followed by the variable name. Keywords such as char and int specify built-in types. Sections of code are enclosed in braces ({ and }, sometimes called "curly brackets") to limit the scope of declarations and to act as a single statement for control structures.
 As an imperative language, C uses statements to specify actions. The most common statement is an expression statement, consisting of an expression to be evaluated, followed by a semicolon; as a side effect of the evaluation, functions may be called and variables assigned new values. To modify the normal sequential execution of statements, C provides several control-flow statements identified by reserved keywords. Structured programming is supported by if ... [else] conditional execution and by do ... while, while, and for iterative execution (looping). The for statement has separate initialization, testing, and reinitialization expressions, any or all of which can be omitted. break and continue can be used within the loop. Break is used to leave the innermost enclosing loop statement and continue is used to skip to its reinitialisation. There is also a non-structured goto statement, which branches directly to the designated label within the function. switch selects a case to be executed based on the value of an integer expression. Different from many other languages, control-flow will fall through to the next case unless terminated by a break.
 Expressions can use a variety of built-in operators and may contain function calls. The order in which arguments to functions and operands to most operators are evaluated is unspecified. The evaluations may even be interleaved. However, all side effects (including storage to variables) will occur before the next "sequence point"; sequence points include the end of each expression statement, and the entry to and return from each function call. Sequence points also occur during evaluation of expressions containing certain operators (&&, ||, [[?:]] and the comma operator). This permits a high degree of object code optimization by the compiler, but requires C programmers to take more care to obtain reliable results than is needed for other programming languages.
@@ -185,7 +181,6 @@ C is often used in low-level systems programming where escapes from the type sys
 Some find C's declaration syntax unintuitive, particularly for function pointers. (Ritchie's idea was to declare identifiers in contexts resembling their use: "declaration reflects use".)
 C's usual arithmetic conversions allow for efficient code to be generated, but can sometimes produce unexpected results. For example, a comparison of signed and unsigned integers of equal width requires a conversion of the signed value to unsigned. This can generate unexpected results if the signed value is negative.
 
-
 #### Pointers
 
 C supports the use of pointers, a type of reference that records the address or location of an object or function in memory. Pointers can be dereferenced to access data stored at the address pointed to, or to invoke a pointed-to function. Pointers can be manipulated using assignment or pointer arithmetic. The run-time representation of a pointer value is typically a raw memory address (perhaps augmented by an offset-within-word field), but since a pointer's type includes the type of the thing pointed to, expressions including pointers can be type-checked at compile time. Pointer arithmetic is automatically scaled by the size of the pointed-to data type.
@@ -244,7 +239,6 @@ Memory management checking tools like Purify or [[Valgrind]] and linking with li
 
 C has been widely used to implement end-user and system-level applications.
 
-
 ### Rationale for use in systems programming
 
 C is widely used for systems programming in implementing operating systems and embedded system applications. This is for several reasons:
@@ -302,7 +296,6 @@ The language does not directly support object orientation, introspection, run-ti
 There are few guards against misuse of language features, which may enable unmaintainable code. In particular, the C preprocessor can hide troubling effects such as double evaluation and worse. This capability for obfuscated code has been celebrated with competitions such as the International Obfuscated C Code Contest and the Underhanded C Contest.
 C lacks standard support for exception handling and only offers return codes for error checking. The setjmp and longjmp standard library functions have been used to implement a try-catch mechanism via macros. Also, goto statements are commonly used for error handling.
 
-
 ### Mitigations for C's problems
 
 For some purposes, restricted styles of C have been adopted, e.g. MISRA C or CERT C, in an attempt to reduce the opportunity for unwanted behaviour. Databases such as CWE attempt to count the ways that systems in general, especially those coded in C, have potential vulnerabilities, along with recommendations for mitigation.
@@ -329,22 +322,13 @@ Outline of the C programming language
 
 ## Notes
 
-
-
 ## References
-
-
 
 ## Sources
 
-
-
 ## Further reading
 
-
-
 ## External links
-
 
 ISO C Working Group official website
 ISO/IEC 9899, publicly available official C documents, including the C99 Rationale

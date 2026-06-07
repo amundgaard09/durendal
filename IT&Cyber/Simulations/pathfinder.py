@@ -1,9 +1,8 @@
 
-import pygame
-import random 
-import math 
+import math, random, pygame
 
 pygame.init() 
+
 DISPLAYSIZE = (800, 800) 
 HUNTERCOLOR = (255, 0, 0) 
 PREYCOLOR = (0, 0, 255) 
@@ -12,7 +11,7 @@ hunterR = 10
 preyR = 5 
 hunterSpeed = 3 # pixels per frame 
 
-pygame.display.set_caption("Pathfinder Algorith Test | Amundworks") 
+pygame.display.set_caption("Pathfinder Algorith Test | Durendal") 
 window = pygame.display.set_mode(DISPLAYSIZE) 
 
 class Hunter: 
@@ -26,7 +25,7 @@ class Hunter:
         newX = self.pos[0] + math.cos(rad) * hunterSpeed 
         newY = self.pos[1] + math.sin(rad) * hunterSpeed 
         self.pos = (newX, newY) 
-    def updateTrail(self): 
+    def update_trail(self): 
         self.trail.append(trailParticle(self.pos)) 
         for p in self.trail: p.update() 
         self.trail = [p for p in self.trail if p.life > 0] 
@@ -52,18 +51,18 @@ class trailParticle:
         b = int(HUNTERCOLOR[2] * fade) 
         pygame.draw.circle(window, (r, g, b), self.pos, self.radius) 
 
-def coordinateDelta(pos1: float, pos2: float) -> float: 
+def coordinate_delta(pos1: float, pos2: float) -> float: 
     return abs(pos1 - pos2) 
 
-def getRandomPos(screensize: tuple) -> tuple: 
+def get_random_pos(screensize: tuple) -> tuple: 
     x = random.randint(0, screensize[0]) 
     y = random.randint(0, screensize[1]) 
     return (x, y) 
 
-def checkIfTouch(hunterPos: tuple, preypos: tuple) -> bool: 
+def check_contact(hunterPos: tuple, preypos: tuple) -> bool: 
     if None in [hunterPos, preypos]: 
         return False 
-    distance = math.hypot(coordinateDelta(hunterPos[0], preypos[0]), coordinateDelta(hunterPos[1], preypos[1])) 
+    distance = math.hypot(coordinate_delta(hunterPos[0], preypos[0]), coordinate_delta(hunterPos[1], preypos[1])) 
     if distance <= (hunterR + preyR): 
         return True 
     else: return False 
@@ -71,7 +70,7 @@ def checkIfTouch(hunterPos: tuple, preypos: tuple) -> bool:
 run = True 
 clock = pygame.time.Clock() 
 hunterinit: bool = False # True when user has initialized the agent 
-preypos: tuple = getRandomPos(DISPLAYSIZE) 
+preypos: tuple = get_random_pos(DISPLAYSIZE) 
 trailParticles: list = [] 
 hunter = None 
 
@@ -92,11 +91,11 @@ while run:
             
     if hunter: 
         hunter.move(preypos) 
-        hunter.updateTrail() 
+        hunter.update_trail() 
         hunter.draw()
         
-        if checkIfTouch(hunter.pos, preypos): 
-            preypos = getRandomPos(DISPLAYSIZE) 
+        if check_contact(hunter.pos, preypos): 
+            preypos = get_random_pos(DISPLAYSIZE) 
             hunterR += 1 
             print(f"prey caught. Current size: {hunterR}") 
 

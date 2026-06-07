@@ -1,1 +1,0 @@
-"""First Generation of Durendal Transformer Architechture Neural Nets"""

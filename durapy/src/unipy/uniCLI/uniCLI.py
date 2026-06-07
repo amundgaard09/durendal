@@ -1,20 +1,14 @@
 """
-The `AWPC` `UniPy` `UniCLI` module. 
-This module contains the standard command-line interface framework from the `AWPC` library. 
-It provides the necessary functions and classes to create a command-line interface for the `AWPC` library, 
+The `DuraPy` `UniCLI` module. 
+This module contains the standard command-line interface framework from the `DuraPy` library. 
+It provides the necessary functions and classes to create a command-line interface for the `DuraPy` library, 
 including command parsing, argument validation, and command dispatching.
 """
 
 from prompt_toolkit.completion import NestedCompleter
-from durapy import color_text
-from durapy.src.commons.exceptions import (
-    IncorrectArgumentCount,
-    EmptyTokenList, 
-    MissingSubCommand, 
-    UnknownSubCommand, 
-    UnknownModule
-)
-
+from ...types.color_dtypes import color_text
+from ...commons import exceptions
+ 
 import os, shlex, inspect
 
 class ExitEnvironmentSignal(Exception):
@@ -67,22 +61,22 @@ def dispatcher(RawCommandString: str, CommandMap: dict[str, dict[str, callable]]
     return CommandMap[Module][Command](*Args)
 def validate_command(tokens: list, cmd_map: dict, arg_map: dict):
     if not tokens:
-        raise EmptyTokenList
+        raise exceptions.EmptyTokenList
 
     module = tokens[0]
     if module not in cmd_map:
-        raise UnknownModule(module)
+        raise exceptions.UnknownModule(module)
 
     if len(tokens) < 2:
-        raise MissingSubCommand(module)
+        raise exceptions.MissingSubCommand(module)
 
     command = tokens[1]
     if command not in cmd_map[module]:
-        raise UnknownSubCommand(module, command)
+        raise exceptions.UnknownSubCommand(module, command)
 
     args = tokens[2:]
     if len(args) not in arg_map[module][command]:
-        raise IncorrectArgumentCount(cmd_map[module][command], len(args), arg_map[module][command])
+        raise exceptions.IncorrectArgumentCount(cmd_map[module][command], len(args), arg_map[module][command])
 
 def clear_terminal() -> None:
     os.system('cls' if os.name == 'nt' else 'clear')

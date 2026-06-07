@@ -38,4 +38,4 @@ from .src.types.color_dtypes import (
 )
 
 __all__ = ["src"]
-__version__ = "0.0.1.2"
+__version__ = "0.0.1.6"

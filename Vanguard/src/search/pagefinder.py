@@ -15,8 +15,9 @@ from modules.metadata import Metadata
 from md_compiler.compiler.main import main as md_compile
 from durapy import uniCLI
 
-_ARTICLE_JSON_DIR = r"C:\\Users\\Administrator\\.vscode\\amundworks\\Vanguard\\data\\articles"
-_MARKDOWN_DIR = r"C:\\Users\\Administrator\\.vscode\\amundworks\\Vanguard\\data\\markdown"
+_ARTICLE_JSON_DIR = r"C:\\Users\\Administrator\\.vscode\\durendal\\Vanguard\\data\\articles"
+_MARKDOWN_DIR = r"C:\\Users\\Administrator\\.vscode\\durendal\\Vanguard\\data\\markdown"
+_TEMPLATE_DIR = r"C:\\Users\\Administrator\\.vscode\\durendal\\Vanguard\\data\\templates"
 
 def insert_json(path_to_json: str, content_dict: dict) -> bool:
     """Inserts a dictionary into a `JSON` file. If the file does not exist, it creates it."""
