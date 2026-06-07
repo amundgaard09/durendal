@@ -27,7 +27,7 @@ The interface is designed to be user-friendly and efficient, enabling athletes t
 SCHEDULEPATH, SESSIONFILE, SLEEP_SCORES, GOALS, LOGFILE, LOGPATH, EVENTFILE, SCHEDULE = (None for _ in range(8))
 
 import sys, json, time, datetime, questionary
-from durapy.src.types.color_dtypes import color_text as color_text
+from durapy.src.types.color_dtypes import color_text as color_dtypes.color_text
 from durapy.src.unipy.uniCLI.uniCLI import clear_terminal
 
 from Vulcan.olympus.src.modules.dtypes import (
@@ -102,7 +102,7 @@ def load_schedule() -> dict[str, list[str]] | None:
         return None
 def edit_schedule():
     clear_terminal()
-    print(color_text("Schedule Editor", "cyan") + "\n")
+    print(color_dtypes.color_text("Schedule Editor", "cyan") + "\n")
     print("not implemented yet, returning to main screen...")
     time.sleep(2)
     mainscreen()
@@ -125,7 +125,7 @@ def ask_int(prompt: str, min_val: int | None = None, max_val: int | None = None)
                 raise ValueError
             return value
         except (TypeError, ValueError):
-            print(color_text("Invalid input. Try again.", "red"))
+            print(color_dtypes.color_text("Invalid input. Try again.", "red"))
 
 morninglogged: bool = False
 eveninglogged: bool = False
@@ -152,11 +152,11 @@ def mainscreen():
         print("\n Log text file not found!")
     
     print(f"Olympus Interface - {datetime_str}" + "\n")
-    print(color_text("Today's Schedule:", "green") + "\n")
+    print(color_dtypes.color_text("Today's Schedule:", "green") + "\n")
     counter = 1
     
     for workout in SCHEDULE[datetime_now.strftime("%A").lower()]:
-        print(color_text(f"{counter}. {workout}", "green"))
+        print(color_dtypes.color_text(f"{counter}. {workout}", "green"))
         counter += 1
     
     print("\n")
@@ -195,27 +195,27 @@ def mainscreen():
         case selection if selection.startswith("PR Tracker"):
             pr_tracker()
         case "Exit":
-            print(color_text("Exiting Olympus Interface. Goodbye!", "red"))
+            print(color_dtypes.color_text("Exiting Olympus Interface. Goodbye!", "red"))
             sys.exit()
     
 def morning_log():
     datetime_now = datetime.datetime.now()
     date_str = datetime_now.strftime("%Y-%m-%d %H:%M:%S")
-    print(color_text(f"Morning Log - {date_str}", "cyan"))
+    print(color_dtypes.color_text(f"Morning Log - {date_str}", "cyan"))
     print("no functionality yet, returning to main screen...")
     time.sleep(2)
     mainscreen()
 def evening_log():
     datetime_now = datetime.datetime.now()
     date_str = datetime_now.strftime("%Y-%m-%d %H:%M:%S")
-    print(color_text(f"Evening Log - {date_str}", "cyan"))
+    print(color_dtypes.color_text(f"Evening Log - {date_str}", "cyan"))
     try:
         with open(LOGPATH, "r") as f:
             lines = f.readlines()
             if lines:
                 for line in lines: 
                     if line.startswith(f"E|{date_str[:10]}"):  # Check for today's date in the log
-                        print(color_text("Today's Log:", "yellow") + "\n")
+                        print(color_dtypes.color_text("Today's Log:", "yellow") + "\n")
                         log_details = line.strip().split("|")
                         print(f"Date: {log_details[1]}")
                         print(f"Completed Workouts: {log_details[2]}")
@@ -238,7 +238,7 @@ def evening_log():
     
     counter = 1
     for workout in SCHEDULE[datetime_now.strftime("%A").lower()]:
-        print(color_text(f"{counter}. Planned Workout: {workout}", "green"))
+        print(color_dtypes.color_text(f"{counter}. Planned Workout: {workout}", "green"))
         counter += 1
     
     checklist = questionary.checkbox(
@@ -247,7 +247,7 @@ def evening_log():
     )
     completed_workouts = checklist.ask()
     daily_completion_score = (len(completed_workouts) / len(SCHEDULE[datetime_now.strftime("%A").lower()])) * 100
-    print(color_text(f"Daily Completion Score: {daily_completion_score:.2f}%", "green" if daily_completion_score >= 85 else "yellow" if daily_completion_score >= 50 else "red"))
+    print(color_dtypes.color_text(f"Daily Completion Score: {daily_completion_score:.2f}%", "green" if daily_completion_score >= 85 else "yellow" if daily_completion_score >= 50 else "red"))
 
     stepgoalbool = questionary.confirm("Did you meet your step goal today?").ask()
     injurybool = questionary.confirm("Did you experience any injuries or discomfort today?").ask()
@@ -281,7 +281,7 @@ def evening_log():
     + int(mentalscale) 
     + int(strenghtscale) 
     + round((daily_completion_score / 10)))
-    print(color_text(f"Overall Day Score: {dayscore}/100", "green" if dayscore >= 85 else "yellow" if dayscore >= 50 else "red"))
+    print(color_dtypes.color_text(f"Overall Day Score: {dayscore}/100", "green" if dayscore >= 85 else "yellow" if dayscore >= 50 else "red"))
     
     understood = questionary.confirm("Complete").ask()
     
@@ -292,22 +292,22 @@ def evening_log():
 
 def weekly_opi_report():
     clear_terminal()
-    print(color_text("Weekly OPI Report", "cyan") + "\n")
+    print(color_dtypes.color_text("Weekly OPI Report", "cyan") + "\n")
     print("not implemented yet, returning to main screen...")
     time.sleep(2)
     mainscreen()
 
 def scheduleoverview():
     clear_terminal()
-    print(color_text("Schedule Overview", "cyan") + "\n")
+    print(color_dtypes.color_text("Schedule Overview", "cyan") + "\n")
     
     schedule = load_schedule()
     if schedule is None:
-        print(color_text("Schedule is empty! \n", "red"))
+        print(color_dtypes.color_text("Schedule is empty! \n", "red"))
         
     else:
         for day, workouts in schedule.items():
-            print(color_text(f"{day.capitalize()}: {', '.join(workouts) if workouts else 'No workouts scheduled'}", "green"))
+            print(color_dtypes.color_text(f"{day.capitalize()}: {', '.join(workouts) if workouts else 'No workouts scheduled'}", "green"))
     
         print("\n")
 
@@ -326,7 +326,7 @@ def scheduleoverview():
 
 def exercisebuilder():
     clear_terminal()
-    print(color_text("Exercise Builder", "cyan") + "\n")
+    print(color_dtypes.color_text("Exercise Builder", "cyan") + "\n")
     
     steps: list[Step] = []
     exercisename = questionary.text("Exercise Name:").ask()
@@ -338,8 +338,8 @@ def exercisebuilder():
     while addsteps:
         stepadded = False
         clear_terminal()
-        print(color_text(f"Exercise Builder - {exercisename}", "cyan") + "\n")
-        print(color_text(f"Added steps: {[step.name for step in steps]}", "green") + "\n")
+        print(color_dtypes.color_text(f"Exercise Builder - {exercisename}", "cyan") + "\n")
+        print(color_dtypes.color_text(f"Added steps: {[step.name for step in steps]}", "green") + "\n")
         
         if not firststepadded: # Prevents copy option on first step before any steps exist
             copystep = False
@@ -372,9 +372,9 @@ def exercisebuilder():
                 steps.append(copiedstep)
                 stepadded = True
             else:
-                print(color_text("Selected step not found. Creating new step.", "yellow"))
+                print(color_dtypes.color_text("Selected step not found. Creating new step.", "yellow"))
         if stepadded:
-            print(color_text(f"Step '{copystepname}' copied successfully!", "green"))
+            print(color_dtypes.color_text(f"Step '{copystepname}' copied successfully!", "green"))
             time.sleep(2)
             continue
         else:
@@ -404,8 +404,8 @@ def exercisebuilder():
     return newexercise
 def sessionbuilder():
     clear_terminal()
-    print(color_text("Session Builder", "cyan") + "\n")
-    print(color_text("New session:", "green") + "\n")
+    print(color_dtypes.color_text("Session Builder", "cyan") + "\n")
+    print(color_dtypes.color_text("New session:", "green") + "\n")
     
     exercises: list[Exercise] = []
     sessionname = questionary.text("Session Name:").ask()
@@ -426,16 +426,16 @@ def sessionbuilder():
     )
     
     save_session(newsession)
-    print(color_text(f"Session '{newsession.name}' saved!", "green"))
+    print(color_dtypes.color_text(f"Session '{newsession.name}' saved!", "green"))
     time.sleep(1)
     sessionsoverview()
 def sessionviewer():
     clear_terminal()
-    print(color_text("Session Viewer", "cyan") + "\n")
+    print(color_dtypes.color_text("Session Viewer", "cyan") + "\n")
     sessions = load_sessions()
     
     if not sessions:
-        action = questionary.confirm(color_text("No sessions found. Build a new one?", "yellow")).ask()
+        action = questionary.confirm(color_dtypes.color_text("No sessions found. Build a new one?", "yellow")).ask()
         if action:
             sessionbuilder()
         else:
@@ -443,9 +443,9 @@ def sessionviewer():
         return
 
     for session in sessions:
-        print(color_text(f"Session: {session.name}", "green"))
+        print(color_dtypes.color_text(f"Session: {session.name}", "green"))
         for exercise in session.exercises:
-            print(color_text(f"  Exercise: {exercise.name}", "yellow"))
+            print(color_dtypes.color_text(f"  Exercise: {exercise.name}", "yellow"))
     print("\n")
     
     returnconfirmed = questionary.confirm("Return?").ask()
@@ -453,7 +453,7 @@ def sessionviewer():
         sessionsoverview()    
 def sessionsoverview():
     clear_terminal()
-    print(color_text("Sessions Overview", "cyan") + "\n")
+    print(color_dtypes.color_text("Sessions Overview", "cyan") + "\n")
     selection: str = questionary.select(
         "Select an option:",
         choices = [
@@ -476,20 +476,20 @@ def sessionsoverview():
             mainscreen()
 def sessioneditor():
     clear_terminal()
-    print(color_text("Session Editor", "cyan") + "\n")
+    print(color_dtypes.color_text("Session Editor", "cyan") + "\n")
     print("not implemented yet, returning to main screen...")
     time.sleep(2)
     mainscreen()
 
 def add_event():
     clear_terminal()
-    print(color_text("Add Event", "cyan") + "\n")
+    print(color_dtypes.color_text("Add Event", "cyan") + "\n")
     name: str = questionary.text("Event Name:").ask()
     date: str = questionary.text("Event Date (DD-MM-YYYY):").ask()
     type: str = questionary.select("Event Type: ", choices=["Cycling", "Running", "Swimming", "Triathlon", "XC Ski", ]).ask()
     
     if type == "Triathlon":
-        print(color_text("\n Enter distances for each discipline in kilometers.", "yellow") + "\n")
+        print(color_dtypes.color_text("\n Enter distances for each discipline in kilometers.", "yellow") + "\n")
         swimdistance: float = questionary.text("Swim Distance:").ask()
         bikedistance: float = questionary.text("Bike Distance:").ask()
         rundistance: float = questionary.text("Run Distance:").ask()
@@ -514,30 +514,30 @@ def add_event():
     )
     
     save_event(new_event)
-    print(color_text("Event successfully saved!", "green"))
+    print(color_dtypes.color_text("Event successfully saved!", "green"))
     time.sleep(2)
     mainscreen()
     
 def racecalendar():
     clear_terminal()
         
-    print(color_text("Race Calendar", "cyan") + "\n")
+    print(color_dtypes.color_text("Race Calendar", "cyan") + "\n")
     print("Upcoming Events:" + "\n")
     
     events = sort_events_by_date(load_events())
     if not events:
-        print(color_text("No upcoming events found. Add an event to get started!", "yellow") + "\n")
+        print(color_dtypes.color_text("No upcoming events found. Add an event to get started!", "yellow") + "\n")
     else:
         for event in events:
             print("------------------------------")
-            print(f"{event.name} - {event.date} - {event.type} - Priority:" + color_text(" "+event.priority, "red" if event.priority == "Primary" else "yellow" if event.priority == "Secondary" else "green" if event.priority == "Tertiary" else "cyan"))
+            print(f"{event.name} - {event.date} - {event.type} - Priority:" + color_dtypes.color_text(" "+event.priority, "red" if event.priority == "Primary" else "yellow" if event.priority == "Secondary" else "green" if event.priority == "Tertiary" else "cyan"))
             if isinstance(event.distance, list):
-                print(color_text(f">>> Distances (km): Swim: {event.distance[0]}, Bike: {event.distance[1]}, Run: {event.distance[2]}", "yellow"))
+                print(color_dtypes.color_text(f">>> Distances (km): Swim: {event.distance[0]}, Bike: {event.distance[1]}, Run: {event.distance[2]}", "yellow"))
             else:
-                print(color_text(f">>> Distance (km): {event.distance}", "yellow"))
-            print(color_text(f">>> Location: {', '.join(event.location) if event.location else 'N/A'}", "yellow"))
+                print(color_dtypes.color_text(f">>> Distance (km): {event.distance}", "yellow"))
+            print(color_dtypes.color_text(f">>> Location: {', '.join(event.location) if event.location else 'N/A'}", "yellow"))
             if event.notes:
-                print(color_text(f">>> Notes: {event.notes}", "yellow"))
+                print(color_dtypes.color_text(f">>> Notes: {event.notes}", "yellow"))
         print("------------------------------")
     selection: str = questionary.select(
         "Select an option:",
@@ -554,7 +554,7 @@ def racecalendar():
 
 def pr_tracker():
     clear_terminal()
-    print(color_text("PR Tracker", "cyan") + "\n")
+    print(color_dtypes.color_text("PR Tracker", "cyan") + "\n")
     choice = questionary.select(
         "Select an option:",
         choices=[
@@ -566,13 +566,13 @@ def pr_tracker():
     match choice:
         case "View PRs":
             clear_terminal()
-            print(color_text("PRs Overview", "cyan") + "\n")
+            print(color_dtypes.color_text("PRs Overview", "cyan") + "\n")
             print("No functionality yet, returning to main screen...")
             time.sleep(2)
             mainscreen()
         case "Add PR":
             clear_terminal()
-            print(color_text("Add PR", "cyan") + "\n")
+            print(color_dtypes.color_text("Add PR", "cyan") + "\n")
             print("No functionality yet, returning to main screen...")
             time.sleep(2)
             mainscreen()

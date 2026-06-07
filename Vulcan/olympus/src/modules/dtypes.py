@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from durapy.src.types.color_dtypes import color_text as color_text
+from durapy import color_dtypes
 from typing import Literal, get_args, get_origin, get_type_hints
 import json, inspect
 
@@ -215,7 +215,7 @@ class Step(_serializable):
         self.trpe = trpe
 
     def __str__(self) -> str: 
-        return f"{self.name} | {self.sport} | {self.type} - {self.desc} for {self._duration // 3600} hours and {self._duration % 60} minutes at {color_text(self.thrz, _color_from_zone(self.thrz))} bpm (TRPE: {color_text(self.trpe, _color_from_trpe(self.trpe))})"
+        return f"{self.name} | {self.sport} | {self.type} - {self.desc} for {self._duration // 3600} hours and {self._duration % 60} minutes at {color_dtypes.color_text(self.thrz, _color_from_zone(self.thrz))} bpm (TRPE: {color_dtypes.color_text(self.trpe, _color_from_trpe(self.trpe))})"
     def __repr__(self) -> str:
         return f"Step(name={self.name!r}, description={self.desc!r}, sport={self.sport!r}, type={self.type!r}, duration={self._duration!r}, thrz={self.thrz!r}, trpe={self.trpe!r})"
     def __eq__(self, other) -> bool:

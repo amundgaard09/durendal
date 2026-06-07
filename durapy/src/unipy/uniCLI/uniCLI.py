@@ -5,9 +5,8 @@ It provides the necessary functions and classes to create a command-line interfa
 including command parsing, argument validation, and command dispatching.
 """
 
-import time
 from prompt_toolkit.completion import NestedCompleter
-from durapy.src.types.color_dtypes import color_text as color_text
+from durapy import color_text
 from durapy.src.commons.exceptions import (
     IncorrectArgumentCount,
     EmptyTokenList, 
