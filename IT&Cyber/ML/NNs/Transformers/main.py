@@ -1,1 +1,1 @@
-"""First Generation of AmundWorks Transformer Architechture Neural Nets"""
+"""First Generation of Durendal Transformer Architechture Neural Nets"""

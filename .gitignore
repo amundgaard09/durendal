@@ -2,8 +2,8 @@
 .DS_Store
 **/amundworks.egg-info
 **/__pycache__
+**/database
 __pycache__/
-Archive/
 target/
 venv/
 .venv/

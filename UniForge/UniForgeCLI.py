@@ -1,21 +1,21 @@
 """UniForge Engineering Assistant CLI - v1.1.5-beta"""
 
-from awpc.src.unipy.uniflight.uniflight import *
-from awpc.src.unipy.unispace.unispace import *
-from awpc.src.unipy.unicrypt.unicrypt import *
-from awpc.src.unipy.unipower.unipower import *
-from awpc.src.unipy.unimath.unimath import *
-from awpc.src.unipy.uniphys.mechanics import *
-from awpc.src.unipy.unialgo.unialgo import *
+from durapy.src.unipy.uniflight.uniflight import *
+from durapy.src.unipy.unispace.unispace import *
+from durapy.src.unipy.unicrypt.unicrypt import *
+from durapy.src.unipy.unipower.unipower import *
+from durapy.src.unipy.unimath.unimath import *
+from durapy.src.unipy.uniphys.mechanics import *
+from durapy.src.unipy.unialgo.unialgo import *
 
-from awpc.src.unipy import moduletools as mt
+from durapy.src.unipy import moduletools as mt
 
-from awpc.src.unipy.uniCLI.uniCLI import (
+from durapy.src.unipy.uniCLI.uniCLI import (
     ExitEnvironmentSignal,
-    clearTerminal, 
-    Dispatcher, 
-    GenerateCompleter,
-    exitEnviroment
+    clear_terminal, 
+    dispatcher, 
+    generate_completer,
+    exit_env
 )
 
 from prompt_toolkit import prompt
@@ -26,51 +26,51 @@ HOHMANNVER= "v.0.0.1.alpha"
 
 ### ENVIROMENTS 
 
-def _mainEnv() -> None:
-    clearTerminal()
+def main_env() -> None:
+    clear_terminal()
     print(MAINVER)
     while True:        
         try:
             CommandString = prompt("UniForge >>> ", completer=MAINCOMPLETER)
-            Result = Dispatcher(CommandString, MAINCMDMAP, MAINARGMAP)
-            clearTerminal()
+            Result = dispatcher(CommandString, MAINCMDMAP, MAINARGMAP)
+            clear_terminal()
             if Result is not None:
                 print(Result)
             
         except Exception as e:
-            print(f"[{xColorText('ERROR', 'red')}] {type(e).__name__}: {e}")
-def _pidEnv() -> None:
-    clearTerminal()
+            print(f"[{color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
+def pid_env() -> None:
+    clear_terminal()
     print(f"ORION PID Testing Environment {PIDVER}")
     while True:
         try:
             CommandString = prompt("PIDEnv >>> ", completer=PIDCOMPLETER)
-            Result = Dispatcher(CommandString, PIDCMDMAP, PIDARGMAP)
+            Result = dispatcher(CommandString, PIDCMDMAP, PIDARGMAP)
             if Result is not None:
                 print(Result)    
         
         except ExitEnvironmentSignal:
-            clearTerminal()
+            clear_terminal()
             print(f"ORION Environment {MAINVER}")
             break
         except Exception as e:
-            print(f"[{xColorText('ERROR', 'red')}] {type(e).__name__}: {e}")
-def _hohmannEnv() -> None:
-    clearTerminal()
+            print(f"[{color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
+def hohmann_env() -> None:
+    clear_terminal()
     print(f"ORION Hohmann Calculation & Visualization Environment {HOHMANNVER}")
     while True:
         try:
             CommandString = prompt("HohmannENV >>> ", completer=HOHMANNCOMPLETER)
-            Result = Dispatcher(CommandString, HOHMANNCMDMAP, HOHMANNARGMAP)
+            Result = dispatcher(CommandString, HOHMANNCMDMAP, HOHMANNARGMAP)
             if Result is not None:
                 print(Result)    
         
         except ExitEnvironmentSignal:
-            clearTerminal()
+            clear_terminal()
             print(MAINVER)
             break
         except Exception as e:
-            print(f"[{xColorText('ERROR', 'red')}] {type(e).__name__}: {e}")
+            print(f"[{color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
 
 ### MAPS
 
@@ -107,24 +107,24 @@ MAINCMDMAP:    dict[str, dict[str, callable]] = {
     "unialgo":   mt.UNIALGOCALLMAP,
     "unicrypt":  mt.UNICRYPTCALLMAP,
     "enterenv": {
-        "PIDEnv": _pidEnv,
-        "HohmannEnv": _hohmannEnv,
+        "PIDEnv": pid_env,
+        "HohmannEnv": hohmann_env,
     }
 }
 PIDCMDMAP:     dict[str, dict[str, callable]] = {
     "pidenv": {
-        "exit": exitEnviroment
+        "exit": exit_env
     }
 }
 HOHMANNCMDMAP: dict[str, dict[str, callable]] = {
     "hohmannenv": {
-        "exit": exitEnviroment
+        "exit": exit_env
     }
 }
 
-MAINCOMPLETER    = GenerateCompleter(MAINCMDMAP)
-PIDCOMPLETER     = GenerateCompleter(PIDCMDMAP)
-HOHMANNCOMPLETER = GenerateCompleter(HOHMANNCMDMAP)
+MAINCOMPLETER    = generate_completer(MAINCMDMAP)
+PIDCOMPLETER     = generate_completer(PIDCMDMAP)
+HOHMANNCOMPLETER = generate_completer(HOHMANNCMDMAP)
 
 if __name__ == "__main__":
-   _mainEnv()
+   main_env()

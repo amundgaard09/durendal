@@ -1,11 +1,11 @@
 
-# AmundWorks GitHub Repository Contribution Guidelines
+# Durendal GitHub Repository Contribution Guidelines
 
-Thank you for your interest in contributing to the AmundWorks GitHub repository! We welcome contributions from the community to help improve our projects. To ensure a smooth and efficient contribution process, please follow the guidelines outlined below.
+Thank you for your interest in contributing to the Durendal GitHub repository! We welcome contributions from the community to help improve our projects. To ensure a smooth and efficient contribution process, please follow the guidelines outlined below.
 
 ## 1. Fork the Repository
 
-To contribute to the AmundWorks repository, you need to fork the repository to your own GitHub account. This allows you to make changes without affecting the original repository.
+To contribute to the Durendal repository, you need to fork the repository to your own GitHub account. This allows you to make changes without affecting the original repository.
 
 ## 2. Create a New Branch
 
@@ -25,7 +25,7 @@ After committing your changes, push them to your forked repository on GitHub. Th
 
 ## 6. Create a Pull Request
 
-Once your changes are pushed to your forked repository, you can create a pull request to the original AmundWorks repository. In your pull request, provide a clear description of the changes you have made and why they are necessary. This will help us review your contribution effectively.
+Once your changes are pushed to your forked repository, you can create a pull request to the original Durendal repository. In your pull request, provide a clear description of the changes you have made and why they are necessary. This will help us review your contribution effectively.
 
 ## 7. Review Process
 
@@ -33,7 +33,7 @@ Our team will review your pull request and may provide feedback or request chang
 
 ## 8. Merge Your Changes
 
-Once your pull request has been reviewed and approved, it will be merged into the main branch of the AmundWorks repository. Congratulations on your contribution!
+Once your pull request has been reviewed and approved, it will be merged into the main branch of the Durendal repository. Congratulations on your contribution!
 
 # Additional Guidelines
 
@@ -42,5 +42,5 @@ Once your pull request has been reviewed and approved, it will be merged into th
 - Include tests for any new features or bug fixes you implement.
 - Be respectful and considerate in your communication with other contributors and maintainers.
 
-Thank you for contributing to the AmundWorks GitHub repository! We appreciate your efforts in helping us improve our projects. If you have any questions or need assistance, please feel free to reach out to us.
+Thank you for contributing to the Durendal GitHub repository! We appreciate your efforts in helping us improve our projects. If you have any questions or need assistance, please feel free to reach out to us.
 

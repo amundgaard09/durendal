@@ -1,3 +1,5 @@
 """PID - NN Flight Controller Hybrid for the ICARUS AeroCortex"""
 
-from AWPC.UniMath.unimath import ContinuousPIDController
+from durapy import uniops
+
+controller = uniops.ContinuousPIDController()
