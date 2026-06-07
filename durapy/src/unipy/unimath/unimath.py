@@ -4,14 +4,18 @@ This module provides a collection of functions for performing various mathematic
 including geometry, algebra, calculus, and more.
 """
 
-from durapy.src.types.color_dtypes import x_color_text
+
 import math, sympy, matplotlib.pyplot as plt
 
-from durapy.src.commons.exceptions import ImpossibleTriangleError
-from durapy.src.commons.constants import PI
+from ...unipy import uniCLI
+from ...commons import exceptions, constants
+
+
 from typing import Literal
 
-def _plotXY(XVals: list[float], YVals: list[float]) -> None:
+PI = constants.PI
+
+def plot(XVals: list[float], YVals: list[float]) -> None:
     """Initialize a plot where `x`[`idx`] and `y`[`idx`] are coordinate pairs of a function."""
     plt.plot(XVals, YVals, color='red', linestyle='-', marker='o')
     plt.xlabel('X')
@@ -22,11 +26,18 @@ def _plotXY(XVals: list[float], YVals: list[float]) -> None:
     
     return
 
+def D2R(Degrees: float) -> float:
+    """Return radians from degrees."""
+    return Degrees / 180 * PI
+def R2D(Radians: float) -> float:
+    """Return degrees from radians."""
+    return Radians / PI * 180
+
 def extrapolate_triangle(a: float, b: float, c: float, A: float | None = None, B: float | None = None, C: float | None = None) -> str:
     """Extrapolate the sides of a triangle from the AAAS case (3x Angle + 1x Side)"""
 
     if sum((a, b, c)) != 180:
-        raise ImpossibleTriangleError
+        raise exceptions.ImpossibleTriangleError
 
     SinA = math.sin(D2R(a))
     SinB = math.sin(D2R(b))
@@ -169,13 +180,6 @@ def herons_formula(LengthA: float, LengthB: float, LengthC: float) -> float:
     S = (LengthA + LengthB + LengthC) / 2
     return math.sqrt(S * (S - LengthA) * (S - LengthB) * (S - LengthC))
 
-def D2R(Degrees: float) -> float:
-    """Return radians from degrees."""
-    return Degrees / 180 * PI
-def R2D(Radians: float) -> float:
-    """Return degrees from radians."""
-    return Radians / PI * 180
-
 def slope(x1: float, y1: float, x2: float, y2: float) -> str:
     """Returns the slope of a line from two points `(x1, y1)` and `(x2, y2)`"""
     return f"Slope = {(y2 - y1) / (x2 - x1)}"
@@ -225,39 +229,43 @@ def quadratic_solutions(A: float, B: float, C: float) -> str:
     if D > 0:
         x1 = (-B - math.hypot(0, D)) / (2 * A)
         x2 = (-B + math.hypot(0, D)) / (2 * A)
-        return f"x1: {x_color_text(x1, 'green')}, x2: {x_color_text(x2, 'green')}"
+        return f"x1: {uniCLI.color_text(x1, 'green')}, x2: {uniCLI.color_text(x2, 'green')}"
     
     elif D == 0:
         x1 = -B / (2 * A)
-        return f"x: {x_color_text(x1, 'green')}"
+        return f"x: {uniCLI.color_text(x1, 'green')}"
     else: 
-        return x_color_text('No real solutions', 'red')
+        return uniCLI.color_text('No real solutions', 'red')
 def quadratic_factorized(a: float, b: float, c: float) -> str:
     """Returns the factorized form of a quadratic function in the form of `a(x - x1)(x - x2)` where `x1` and `x2` are the roots of the function."""
     D = b**2 - 4*a*c
+    
+    def sign(val: float) -> str:
+        return "-" if val < 0 else "+"
+    
     if D > 0:
         x1 = (-b - math.hypot(0, D)) / (2 * a)
         x2 = (-b + math.hypot(0, D)) / (2 * a)
-        return f"{a}(x - {x1})(x - {x2})"
+        return f"{a}(x {sign(x1)} {x1})(x {sign(x2)} {x2})"
     
     elif D == 0:
         x1 = -b / (2 * a)
-        return f"{a}(x - {x1})^2"
+        return f"{a}(x {sign(x1)} {x1})^2"
     else: 
-        return x_color_text('No real solutions', 'red')
+        return uniCLI.color_text('No real solutions', 'red')
 def quadratic_zeros(a: float, b: float, c: float) -> str:
     """Returns the x-values where the quadratic function crosses the x-axis."""
     D = b**2 - 4*a*c
     if D > 0:
         x1 = (-b - math.hypot(0, D)) / (2 * a)
         x2 = (-b + math.hypot(0, D)) / (2 * a)
-        return f"Zeros: {x_color_text((x1, 0), 'green')}, {x_color_text((x2, 0), 'green')}"
+        return f"Zeros: {uniCLI.color_text((x1, 0), 'green')}, {uniCLI.color_text((x2, 0), 'green')}"
     
     elif D == 0:
         x1 = -b / (2 * a)
-        return f"Zero: {x_color_text((x1, 0), 'green')}"
+        return f"Zero: {uniCLI.color_text((x1, 0), 'green')}"
     else: 
-        return x_color_text('No real zeros', 'red')
+        return uniCLI.color_text('No real zeros', 'red')
 def quadratic_evaluation(a: float, b: float, c: float, x: float) -> str:
     return f"{a}x² + {b}x + {c} = {a*x**2 + b*x + c}"
 
@@ -273,7 +281,7 @@ def cubic_vertex(a: float, b: float, c: float, d: float) -> str:
         y = f.subs(x, point)
         vertices.append((point, y))
     
-    return f"Vertices: {x_color_text(vertices, 'green' if all(v[1].is_real for v in vertices) else 'red')}"
+    return f"Vertices: {uniCLI.color_text(vertices, 'green' if all(v[1].is_real for v in vertices) else 'red')}"
 def cubic_num_roots(a: float, b: float, c: float, d: float) -> int:
     """Returns the number of roots of a cubic function based on the discriminant."""
     D = 18*a*b*c*d - 4*b**3*d + b**2*c**2 - 4*a*c**3 - 27*a**2*d**2
@@ -283,13 +291,13 @@ def cubic_solutions(a: float, b: float, c: float, d: float) -> str:
     x = sympy.symbols('x')
     f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
     solutions = sympy.solve(f, x)
-    return f"Solutions: {x_color_text(solutions, 'green' if all(sol.is_real for sol in solutions) else 'red')}"
+    return f"Solutions: {uniCLI.color_text(solutions, 'green' if all(sol.is_real for sol in solutions) else 'red')}"
 def cubic_zeros(a: float, b: float, c: float, d: float) -> str:
     """Returns the x-values where the cubic function crosses the x-axis."""
     x = sympy.symbols('x')
     f = sympy.sympify(f"{a}*x³ + {b}*x² + {c}*x + {d}")
     zeros = sympy.solve(f, x)
-    return f"Zeros: {x_color_text(zeros, 'green' if all(z.is_real for z in zeros) else 'red')}"
+    return f"Zeros: {uniCLI.color_text(zeros, 'green' if all(z.is_real for z in zeros) else 'red')}"
 def cubic_evaluation(a: float, b: float, c: float, d: float, x: float) -> tuple[str, float]:
     """Cubic Evaluation function"""
     result = a*x**3 + b*x**2 + c*x + d
@@ -303,10 +311,10 @@ def cubic_evaluation_bruteforce(a: float, b: float, c: float, d: float, LowerBou
         x_vals.append(x)
         y_vals.append(result)
         roots.append(x) if result == 0 else None
-        print(x_color_text(string, 'green' if result == 0 else 'red'))
+        print(uniCLI.color_text(string, 'green' if result == 0 else 'red'))
         
     print(f"Roots: {roots}")
-    _plotXY(x_vals, y_vals) if plot else None
+    plot(x_vals, y_vals) if plot else None
     return
 
 def exp_evaluation(Base: float, Exponent: float) -> str:
@@ -315,7 +323,7 @@ def exp_evaluation(Base: float, Exponent: float) -> str:
 def log_evaluation(Base: float, Argument: float) -> str:
     """Returns the result of a logarithmic evaluation in the form of `log_Base(Argument) = Result`."""
     if Base <= 1 or Argument <= 0:
-        return x_color_text("Invalid input! Base must be greater than 1 and Argument must be greater than 0.", 'red')
+        return uniCLI.color_text("Invalid input! Base must be greater than 1 and Argument must be greater than 0.", 'red')
     return f"log_{Base}({Argument}) = {math.log(Argument, Base)}"
 
 ### UNSTABLE - ALPHA - DO NOT USE

@@ -1,0 +1,9 @@
+LICENSE
+README.md
+pyproject.toml
+DuraPy.egg-info/PKG-INFO
+DuraPy.egg-info/SOURCES.txt
+DuraPy.egg-info/dependency_links.txt
+DuraPy.egg-info/requires.txt
+DuraPy.egg-info/top_level.txt
+durapy/__init__.py

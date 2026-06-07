@@ -1,7 +1,7 @@
 
 import socket
 import threading
-from durapy.src.unipy.uniCLI import console_print
+from durapy import uniCLI
 
 HOST = str('0.0.0.0')
 PORT = int(5000)
@@ -14,25 +14,23 @@ def _handle_client(connection: socket.socket, address: tuple[str, ...]) -> None:
     
     Args
     ----
-    
-    `connection`: The `socket`.`socket` object of the connection.
-    
-    `address`: A tupe of the host and port of the server.
+    `connection`: The `socket`.`socket` object of the connection. \n
+    `address`: A tupe of the host and port of the server. \n
     """
     
-    console_print("SERVER", "green", f'CONNECTED: {address}')
+    uniCLI.console_print("SERVER", "green", f'CONNECTED: {address}')
     
     while True:
         try:
             data = connection.recv(1024).decode()
             if not data:
                 break
-            console_print(address, "blue", data)
+            uniCLI.console_print(address, "blue", data)
             connection.sendall(f"ACK: {data}".encode())
         except:
             break
         
-    console_print("SERVER", "red", f'DISCONNECTED: {address}')
+    uniCLI.console_print("SERVER", "red", f'DISCONNECTED: {address}')
     
     connection.close()
     clients.remove(connection)
@@ -45,7 +43,7 @@ def server_kernel() -> None:
     server.bind((HOST, PORT))
     server.listen()
     
-    console_print("SERVER", "green", f"Listening on HOST: {HOST}| PORT: {PORT}")
+    uniCLI.console_print("SERVER", "green", f"Listening on HOST: {HOST}| PORT: {PORT}")
     
     while True:
         connection, address = server.accept()

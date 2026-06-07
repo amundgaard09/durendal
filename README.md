@@ -9,7 +9,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 *What is Durendal?*
-AWPC
+
 The **Durendal GitHub repository** is the open-source collection of all projects built by **Durendal**. It serves as a central hub for all the work and projects created by Durendal. It also provides a platform for sharing and collaborating on projects. The repository includes projects built for anything ranging from software development to defense application firmware. It is intended to be a resource for anyone interested in contributing to Durendal, and anyone that is interested in the work of Durendal. 
 
 ## PROJECTS

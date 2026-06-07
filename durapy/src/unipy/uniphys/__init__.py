@@ -6,10 +6,12 @@ The library is still in development and may contain some unstable functions that
 
 __all__ = [
     "acoustics.py",
-    "astro.py",
+    "astrophys.py",
+    "electromags.py",
     "fluidyn.py",
     "mechanics.py",
     "nuclear.py",
-    "optics.py",
+    "phys_dtypes.py"
+    "quantum.py",
     "thermodyn.py",
 ]

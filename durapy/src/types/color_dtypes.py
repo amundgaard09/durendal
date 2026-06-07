@@ -22,7 +22,7 @@ ANSI_COLORS = {
     "silver": "\033[38;5;7m",
 } 
 
-def x_color_text(Text: str, Color: str, Bold: bool = False, Underline: bool = False, Italic: bool = False) -> str:
+def color_text(Text: str, Color: str, Bold: bool = False, Underline: bool = False, Italic: bool = False) -> str:
     """Returns the given text in the given color using `ANSI` escape codes. If the color is not found, it returns the text without coloring."""
     
     if Color is None or Color.lower() not in ANSI_COLORS:

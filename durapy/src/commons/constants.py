@@ -9,7 +9,7 @@ The constants are stored as instances of the `PhysicalConstant` class, which inc
 # Theta - Θ θ, Iota - I ι, Kappa - K κ, Lambda - Λ λ, Mu - M μ,      Nu - N ν,   Xi - Ξ ξ,  Omicron - O ο, 
 # Pi - Π π,    Rho - P ρ,  Sigma - Σ σ ς, Tau - T τ,  Ypsilon - Y υ, Phi - Φ φ,  Chi - X χ, Psi - Ψ ψ, Omega - Ω ω
 
-from durapy.src.types.phys_dtypes import PhysicalConstant, UNITS
+from durapy.src.unipy.uniphys.phys_dtypes import PhysicalConstant, UNITS
 
 # Mathematical Constants (Numerical/Unitless Constants - NCONST)
 I       = PhysicalConstant(1j,                 UNITS["NCONST"], "Imaginary Unit - sqrt(-1)")
@@ -64,8 +64,7 @@ MARS_R  = PhysicalConstant(3.390e+6,  UNITS["m"],    "Radius of Mars")
 SUN_R   = PhysicalConstant(6.957e+8,  UNITS["m"],    "Radius of the Sun")
 
 # TODO Sort and implement all units 
-
-#HUBBLE           = PhysicalConstant(                   UNITS["km/s/prsc"],  "Hubbles Constant")
+HUBBLE           = PhysicalConstant(70.0,               UNITS["km/s/prsc"],  "Hubble Constant")
 #BOLTZMANN        = PhysicalConstant(1.380649e-23,      UNITS["J/K"],        "Boltzmann Constant")         # Relates the average relative kinetic energy of particles in a gas with the thermodynamic temperature of the gas.
 #GAS_CONSTANT     = PhysicalConstant(8.314462618,       UNITS["J/(mol*K)"],  "Universal Gas Constant")     # Work performed by one mole of a gas during a temperature change of 1 Kelvin at constant pressure.
 #AVOGADRO         = PhysicalConstant(6.02214076e+23,    UNITS["1/mol"],      "Avogadro Constant")          # Number of constituent particles (usually atoms or molecules) contained in one mole of a substance.

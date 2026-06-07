@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from durapy.src.types.color_dtypes import x_color_text as color_text
+from durapy.src.types.color_dtypes import color_text as color_text
 from typing import Literal, get_args, get_origin, get_type_hints
 import json, inspect
 

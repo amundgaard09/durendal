@@ -4,7 +4,7 @@ The Acoustic Physics module for `AWPC` `UniPhys`
 This module contains resources for calculations and simulations for Acoustic Physics. 
 """
 
-from durapy.src.types.phys_dtypes import Quantity, UNITS
+from durapy.src.unipy.uniphys.phys_dtypes import Quantity, UNITS
 from durapy.src.commons.constants import MACH
 import math
 

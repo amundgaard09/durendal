@@ -38,7 +38,7 @@ def main_env() -> None:
                 print(Result)
             
         except Exception as e:
-            print(f"[{x_color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
+            print(f"[{color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
 def pid_env() -> None:
     clear_terminal()
     print(f"ORION PID Testing Environment {PIDVER}")
@@ -54,7 +54,7 @@ def pid_env() -> None:
             print(f"ORION Environment {MAINVER}")
             break
         except Exception as e:
-            print(f"[{x_color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
+            print(f"[{color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
 def hohmann_env() -> None:
     clear_terminal()
     print(f"ORION Hohmann Calculation & Visualization Environment {HOHMANNVER}")
@@ -70,7 +70,7 @@ def hohmann_env() -> None:
             print(MAINVER)
             break
         except Exception as e:
-            print(f"[{x_color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
+            print(f"[{color_text('ERROR', 'red')}] {type(e).__name__}: {e}")
 
 ### MAPS
 

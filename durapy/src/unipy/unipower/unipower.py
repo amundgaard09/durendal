@@ -9,7 +9,7 @@ import math
 from types import MappingProxyType
 from typing_extensions import Literal
 from durapy.src.types.color_dtypes import ANSI_COLORS
-from durapy.src.types.phys_dtypes import (
+from durapy.src.unipy.uniphys.phys_dtypes import (
     Quantity,
     UNITS
 )

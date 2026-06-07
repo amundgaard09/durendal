@@ -4,7 +4,7 @@ The `DuraPy` `Exceptions` module.
 This module contains all the custom exceptions used in the `DuraPy` library.
 """
 
-from ..types.color_dtypes import x_color_text as color_text
+from ..types.color_dtypes import color_text
 
 class ImpossibleTriangleError(Exception):
     """Raise when the sum of the angles of a triangle is not 180 degrees, a mathematical impossibility."""
@@ -52,7 +52,7 @@ class UnknownModule(Exception):
         super().__init__(f"Unknown Module: {color_text(GivenModule, 'red')}") 
 class InvalidInput(Exception):
     """Raises when an invalid input gets caught, e.g. a str for a wanted float."""
-    def __init__(self, WantedType: str, GivenType: str):
+    def __init__(self, WantedType: type, GivenType: type):
         super().__init__(f"Invalid Input: WantedType: {color_text(WantedType, 'green')} GivenType: {color_text(GivenType, 'red')}") 
 
 

@@ -13,21 +13,21 @@ from wikipediaapi import Wikipedia, WikipediaPage
 from modules.article import Article
 from modules.metadata import Metadata
 from md_compiler.compiler.main import main as md_compile
-from durapy.src.unipy.uniCLI import console_print
+from durapy import uniCLI
 
-_ARTICLE_JSON_DIR = r"C:\\Users\\Administrator\\.vscode\\amundworks\\Vanguard\\data\\article_db"
-_MARKDOWN_DIR = r"C:\\Users\\Administrator\\.vscode\\amundworks\\Vanguard\\data\\markdown_db"
+_ARTICLE_JSON_DIR = r"C:\\Users\\Administrator\\.vscode\\amundworks\\Vanguard\\data\\articles"
+_MARKDOWN_DIR = r"C:\\Users\\Administrator\\.vscode\\amundworks\\Vanguard\\data\\markdown"
 
-def _insert_json(path_to_json: str, content_dict: dict) -> bool:
+def insert_json(path_to_json: str, content_dict: dict) -> bool:
     """Inserts a dictionary into a `JSON` file. If the file does not exist, it creates it."""
     
     try:
         with open(path_to_json, "w", encoding="utf-8") as JSONFile:
             json.dump(content_dict, JSONFile, indent=4, sort_keys=True)
     except Exception as e:
-        console_print("JSON Writer", "white", f"Error writing to JSON file: {e}", "red")
+        uniCLI.console_print("JSON Writer", "white", f"Error writing to JSON file: {e}", "red")
         return False
-    console_print("JSON Writer", "white", f"Successfully wrote to JSON file: {path_to_json}", "green")
+    uniCLI.console_print("JSON Writer", "white", f"Successfully wrote to JSON file: {path_to_json}", "green")
     return True
 
 def get_wiki(_user_agent: str, _language: str = "en") -> Wikipedia:
@@ -41,7 +41,7 @@ def get_source(source: Any) -> str:
 def parse(query: str) -> str:
     return query.strip().replace(" ", "_")
 
-def main(page: WikipediaPage) -> None:  
+def main(page: WikipediaPage) -> None:
     """
     The Pagefinder Main Function
     
@@ -51,9 +51,10 @@ def main(page: WikipediaPage) -> None:
     
     if page.exists():
         content, title = page.text, page.title
-        console_print("PAGEFINDER", "white", f"Found Wikipedia page: {title}", "green")
+        uniCLI.console_print("PAGEFINDER", "white", f"Found Wikipedia page: {title}", "green")
+    
     else:
-        console_print("PAGEFINDER", "white", "No Wikipedia page found.", "red")
+        uniCLI.console_print("PAGEFINDER", "white", "No Wikipedia page found.", "red")
         return
     
     try:
@@ -77,10 +78,10 @@ def main(page: WikipediaPage) -> None:
             )
 
         md_compile(title, page, Path(_MARKDOWN_DIR))
-        _insert_json(jsonpath, article.to_dict())
-        console_print("PAGEFINDER", "white", "Successful save and article creation!", "green")
+        insert_json(jsonpath, article.to_dict())
+        uniCLI.console_print("PAGEFINDER", "white", "Successful save and article creation!", "green")
             
     except FileExistsError:
-        console_print("PAGEFINDER", "white", "File already exists! Use the search engine instead", "red")
+        uniCLI.console_print("PAGEFINDER", "white", "File already exists! Use the search engine instead", "red")
     except Exception as e:
-        console_print("PAGEFINDER", "white", f"An error occurred: \n {e}", "red")
+        uniCLI.console_print("PAGEFINDER", "white", f"An error occurred: \n {e}", "red")

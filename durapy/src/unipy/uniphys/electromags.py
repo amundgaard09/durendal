@@ -4,7 +4,7 @@ The `AWPC` Electromagnetics module for `UniPhys`
 This module provides resources for calculations related to charged particles, electric and magnetic fields, optics and other related branches.
 """
 
-from durapy.src.types.color_dtypes import x_color_text as ct
+from durapy.src.types.color_dtypes import color_text as ct
 from durapy.src.commons.constants import PLANCK, INF, C
 
 __WAVLN_UV_SPEC: dict[tuple[float, float], str] = {

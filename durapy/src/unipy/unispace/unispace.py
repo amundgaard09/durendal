@@ -4,7 +4,7 @@ The `DuraPy` `UniSpace` module provides a collection of functions and classes fo
 
 import math
 
-from durapy.src.types.phys_dtypes import Quantity, UNITS
+from durapy.src.unipy.uniphys.phys_dtypes import Quantity, UNITS
 from durapy.src.commons.constants import G, EARTH_M, EARTH_R
 
 def orbital_period(SemiMajorAxis: float, M: float, m: float) -> Quantity:

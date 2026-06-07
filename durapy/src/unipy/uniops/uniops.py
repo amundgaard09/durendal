@@ -9,7 +9,7 @@ class ContinuousPIDController:
     """
     A Continuous PID Controller algorithm.
     """
-    def __init__(self, kp, ki, kd, setpoint=0):
+    def __init__(self, kp: float, ki: float, kd: float, setpoint=0) -> None:
         self.kp = kp
         self.ki = ki
         self.kd = kd
@@ -19,7 +19,7 @@ class ContinuousPIDController:
         self.prev_error = 0
         self.prev_time = time.time()
 
-    def update(self, measured_value):
+    def update(self, measured_value: float) -> float:
         now = time.time()
         dt = now - self.prev_time
 

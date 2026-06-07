@@ -1,6 +1,5 @@
 
 from pathlib import Path
-from .link import Link
 from .metadata import Metadata
 
 class Article:
@@ -16,7 +15,7 @@ class Article:
         idstr: str, 
         title: str, 
         contentpath: Path, 
-        links: list[Link], 
+        links: list[tuple[str, str]], 
         metadata: Metadata
     ):
         self.name = name
@@ -32,6 +31,6 @@ class Article:
             "idstr": self.idstr,
             "title": self.title,
             "content": str(self.content),
-            "links": [link.to_dict() for link in self.links],
+            "links": [link for link in self.links],
             "metadata": self.metadata.to_dict()
         }

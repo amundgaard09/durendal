@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: DuraPy
+Version: 0.0.1.6
+Summary: Durendal Python Collection - Multi-dicipline Engineering Software
+Author: Simon Stordal Amundgård
+License-File: LICENSE
+Requires-Dist: questionary
+Requires-Dist: prompt_toolkit
+Requires-Dist: numpy
+Dynamic: license-file

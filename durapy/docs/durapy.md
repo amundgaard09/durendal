@@ -46,9 +46,9 @@
 
 ## License and Usage - DuraPy Open Source Philosophy
 
-DuraPy is part of the DuraPy Github Repo and the DuraPy Engineering Ecosystem.
+DuraPy is part of the Durendal Github Repo and the Durendal Engineering Ecosystem.
 
-While this software and all other software under DuraPy is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon DuraPy or the rest of the DuraPy repository to remain open source under the MIT License or a similarly permissive license. Projects that follow this philosophy may be recognized as part of the official DuraPy ecosystem.
+While this software and all other software under Durendal is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon Durendal or the rest of the DuraPy repository to remain open source under the MIT License or a similarly permissive license. Projects that follow this philosophy may be recognized as part of the official DuraPy ecosystem.
 
 By doing so, you help support an open, collaborative engineering ecosystem.
 
