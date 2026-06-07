@@ -9,14 +9,14 @@ typedef struct {
     int capacity;     // How many elements it can hold 
 } Array;
 
-void InitArray(Array *a);
-void PrintArray(Array *a);
-void Append(Array *a, float data);
-void SetValue(Array *a, int Index, float Value);
-void Remove(Array *a, int Index);
-void FreeArray(Array *a);
+void init_array(Array *a);
+void print_array(Array *a);
+void append(Array *a, float data);
+void set_value(Array *a, int Index, float Value);
+void array_remove(Array *a, int Index);
+void free_array(Array *a);
 
-float GetValue(Array *a, int Index);
-int ArraySize(Array *a);
+float get_value(Array *a, int Index);
+int array_size(Array *a);
 
 #endif

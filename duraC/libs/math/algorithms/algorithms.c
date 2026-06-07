@@ -22,7 +22,7 @@ bool IsPrime(int Number) {
 // Return a `DLList` constisting of the prime factors of `Number`
 DLList PrimeFactorize(int Number) {
     DLList factors;
-    InitList(&factors);
+    init_list(&factors);
 
     if (Number <= 1) return factors;
 
@@ -30,14 +30,14 @@ DLList PrimeFactorize(int Number) {
 
     while (divisor * divisor <= Number) {
         while (Number % divisor == 0) {
-            InsertAtBack(&factors, divisor);
+            insert_at_back(&factors, divisor);
             Number /= divisor;
         }
         divisor++;
     }
 
     if (Number > 1) {
-        InsertAtBack(&factors, Number);
+        insert_at_back(&factors, Number);
     }
 
     return factors;

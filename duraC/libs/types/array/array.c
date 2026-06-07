@@ -6,13 +6,14 @@
 #include <stdlib.h>
 #include "array.h"
 
-void InitArray(Array *a) {
+void init_array(Array *a) {
     a->data = (float*)malloc(sizeof(float) * INITIAL_CAPACITY);
     if (a->data == NULL) { printf("Error: malloc failed\n"); return; }
     a->size = 0;
     a->capacity = INITIAL_CAPACITY;
 }
-void PrintArray(Array *a) {
+
+void print_array(Array *a) {
     printf("[");
     for (int i = 0; i < a->size; i++) {
         printf("%.2f", a->data[i]);
@@ -23,7 +24,7 @@ void PrintArray(Array *a) {
     printf("]\n");
 }
 
-void Append(Array *a, float data) {
+void append(Array *a, float data) {
     if (a->size == a->capacity) {
         a->capacity = a->capacity * 2;
         a->data = (float*)realloc(a->data, sizeof(float) * a->capacity);
@@ -33,52 +34,53 @@ void Append(Array *a, float data) {
     a->data[a->size] = data;
     a->size++;   
 }
-void SetValue(Array *a, int Index, float Value) {
-    if (Index < 0 || Index >= a->size) {
-        printf("Error: index out of range\n");
-        return;
-    }
 
-    a->data[Index] = Value;
+float get_value(Array *a, int idx) {
+    if (idx < 0 || idx >= a->size) {
+        printf("Error: index out of range\n");
+        return -1;
+    }
+    return a->data[idx];
 }
-void Remove(Array *a, int Index) {
-    if (Index < 0 || Index >= a->size) {
+
+void set_value(Array *a, int idx, float value) {
+    if (idx < 0 || idx >= a->size) {
         printf("Error: index out of range\n");
         return;
     }
 
-    for (int idx = Index; idx < a->size - 1; idx++) {
+    a->data[idx] = value;
+}
+void array_remove(Array *a, int idx) {
+    if (idx < 0 || idx >= a->size) {
+        printf("Error: index out of range\n");
+        return;
+    }
+
+    for (int idx = idx; idx < a->size - 1; idx++) {
         a->data[idx] = a->data[idx + 1];
     }
 
     a->size--;
 }
-void FreeArray(Array *a) {
+void free_array(Array *a) {
     free(a->data);
     a->data = NULL;
     a->size = 0;
     a->capacity = 0;
 }
 
-float GetValue(Array *a, int Index) {
-    if (Index < 0 || Index >= a->size) {
-        printf("Error: index out of range\n");
-        return -1;
-    }
-    return a->data[Index];
-}
-
-int ArraySize(Array *a) {
+int array_size(Array *a) {
     return a->size;
 } 
 
 int main(void) {
     Array a;
-    InitArray(&a);
+    init_array(&a);
 
-    Append(&a, 1.5f);
-    Append(&a, 2.5f);
-    Append(&a, 3.5f);
+    append(&a, 1.5f);
+    append(&a, 2.5f);
+    append(&a, 3.5f);
 
-    PrintArray(&a);
+    print_array(&a);
 }

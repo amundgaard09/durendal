@@ -4,17 +4,17 @@
 #include <stdlib.h>
 #include "dllist.h"
 
-void InitList(DLList *l) {
+void init_list(DLList *l) {
     l->head = NULL;
     l->tail = NULL;
     l->size = 0;
 }
 
-int IsEmpty(DLList *l) {
+int is_empty(DLList *l) {
     return (l->head == NULL);
 }
 
-int GetIndex(DLList *l, int value) {
+int get_idx(DLList *l, int value) {
     Node* CurrentNode = l->head;
     int index = 0;
 
@@ -30,11 +30,11 @@ int GetIndex(DLList *l, int value) {
     return -1;
 }
 
-int ListSize(DLList *l) {
+int list_size(DLList *l) {
     return l->size;
 } 
 
-void InsertAtFront(DLList *l, int value) {
+void insert_at_front(DLList *l, int value) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     if (newNode == NULL) {
         printf("Error: malloc failed\n");
@@ -55,7 +55,7 @@ void InsertAtFront(DLList *l, int value) {
     l->head = newNode;
     l->size++;
 }
-void InsertAtBack(DLList *l, int value) {
+void insert_at_back(DLList *l, int value) {
     Node* newNode = (Node*)malloc(sizeof(Node));
     if (newNode == NULL) {
         printf("Error: malloc failed\n");
@@ -76,7 +76,7 @@ void InsertAtBack(DLList *l, int value) {
     l->size++;
 
 }
-void PrintList(DLList *l) {
+void print_list(DLList *l) {
     printf("[");
     Node* CurrentNode = l->head;
     while (CurrentNode != NULL) {
@@ -89,8 +89,8 @@ void PrintList(DLList *l) {
 
     printf("]\n");
 }
-void Insert(DLList *l, int value, int Idx) {
-    if ((Idx + 1) > ListSize(l)) {
+void insert(DLList *l, int value, int Idx) {
+    if ((Idx + 1) > list_size(l)) {
         printf("List Index out of range!");
         return;
     }
@@ -105,10 +105,10 @@ void Insert(DLList *l, int value, int Idx) {
     int CurrentIdx = 0;
 
     if (Idx == 0) {
-        InsertAtFront(l, value);
+        insert_at_front(l, value);
         return;
-    } else if (Idx == ListSize(l) - 1) {
-        InsertAtBack(l, value);
+    } else if (Idx == list_size(l) - 1) {
+        insert_at_back(l, value);
         return;
     }
 
@@ -126,8 +126,8 @@ void Insert(DLList *l, int value, int Idx) {
         CurrentIdx++;   
     }
 }
-void Remove(DLList *l, int Idx) {
-    if ((Idx + 1) > ListSize(l)) {
+void list_remove(DLList *l, int Idx) {
+    if ((Idx + 1) > list_size(l)) {
         printf("List Index out of range!");
         return;
     }
@@ -143,7 +143,7 @@ void Remove(DLList *l, int Idx) {
         l->size--;
         return;
 
-    } else if (Idx == ListSize(l) - 1) {
+    } else if (Idx == list_size(l) - 1) {
         Node* temp = l->tail;
         l->tail = l->tail->prev;
         if (l->tail != NULL) {l->tail->next = NULL;} else {l->head = NULL;}
@@ -165,7 +165,7 @@ void Remove(DLList *l, int Idx) {
         CurrentIdx++;   
     }
 }
-void FreeList(DLList *l) {
+void free_list(DLList *l) {
     Node* CurrentNode = l->head;
     DLList *l;
 

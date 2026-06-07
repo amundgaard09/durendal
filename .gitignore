@@ -1,6 +1,6 @@
 .vscode/
 .DS_Store
-**/amundworks.egg-info
+**/DuraPy.egg-info
 **/__pycache__
 **/database
 __pycache__/
