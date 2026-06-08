@@ -1,113 +1,100 @@
-from __future__ import annotations
-
 """
 The DuraPy UniCogni Package for Machine Learning.
 """
 
-USE_GPU = False  # Set to True on your NVIDIA machine
+USE_GPU = False  # Set to True on CUDA-compatible machine
 
 if USE_GPU:
     import cupy as xp # type: ignore # 'xp' stands for cross-platform (numpy/cupy)
 else:
     import numpy as xp
 
-import math
-from ..unimath.linalg_dtypes import is_close
-from ...commons.constants import E, PI
-from ...commons.exceptions import MissingParameters
-
-### TODO REFACTOR LIST TYPE TO NP.NDARRAY
+from scipy import special
+from ...commons.constants import PI
 
 ### ACTIVATION FUNCTIONS
 
-def relu(x: float) -> float:
+def relu(x: xp.ndarray) -> xp.ndarray:
     """Returns the Rectified Linear Unit activation of x."""
-    return max(0.0, x)
-def d_relu(x: float) -> float:
+    return xp.maximum(0.0, x)
+def d_relu(x: xp.ndarray) -> xp.ndarray:
     """Returns the derivative of the Rectified Linear Unit activation function."""
-    return 1.0 if x > 0 else 0.0
+    return (x > 0).astype(xp.float32)
 
-def leaky_relu(x: float) -> float:
+def leaky_relu(x: xp.ndarray) -> xp.ndarray:
     """Returns the Leaky ReLU activation of X."""
-    return max(0.01 * x, x)
-def d_leaky_relu(x: float) -> float:
+    return xp.maximum(0.01 * x, x)
+def d_leaky_relu(x: xp.ndarray) -> xp.ndarray:
     """Returns the derivative of the Leaky ReLU activation function."""
-    return 1.0 if x > 0 else 0.01
+    return xp.where(x > 0, 1.0, 0.01).astype(xp.float32)
 
-def gelu(x: float) -> float: 
+def gelu(x: xp.ndarray) -> xp.ndarray:
     """Gaussian Error Linear Unit using the tanh approximation."""
-    return 0.5 * x * (1.0 + tanh(math.sqrt(2 / PI) * (x + 0.044715 * x**3)))
-def d_gelu(x: float) -> float:
+    return 0.5 * x * (1.0 + tanh(xp.sqrt(2.0 / PI) * (x + 0.044715 * x**3)))
+def d_gelu(x: xp.ndarray) -> xp.ndarray:
     """Derivative of GELU."""
     try:
-        gauss = math.exp(-0.5 * x**2)
+        gauss = xp.exp(-0.5 * x**2)
     except OverflowError:
         gauss = 0.0
-    cdf = 0.5 * (1.0 + math.erf(x / math.sqrt(2)))
-    pdf = (1.0 / math.sqrt(2 * PI)) * gauss
+    cdf = 0.5 * (1.0 + special.erf(x / xp.sqrt(2)))
+    pdf = (1.0 / xp.sqrt(2 * PI)) * gauss
     return cdf + x * pdf
 
-def silu(x: float) -> float:
+def silu(x: xp.ndarray) -> xp.ndarray:
     """Sigmoid Linear Unit."""
     return x * sigmoid(x)
-def d_silu(x: float) -> float:
+def d_silu(x: xp.ndarray) -> xp.ndarray:
     """Derivative of the SiLU activation function."""
     s = sigmoid(x)
     return s * (1.0 + x * (1.0 - s))
 
-def prelu(x: float, a: float) -> float:
+def prelu(x: xp.ndarray, a: float) -> xp.ndarray:
     """Parametric ReLU."""
-    return max(0.0, x) + a * min(0.0, x)
-def d_prelu(x: float, a: float) -> float:
+    return xp.maximum(0.0, x) + a * xp.minimum(0.0, x)
+def d_prelu(x: xp.ndarray, a: float) -> xp.ndarray:
     """Derivative of PReLU with respect to x. Note: you will also need a gradient w.r.t 'a' during backprop!"""
-    return 1.0 if x > 0 else a
+    return xp.where(x > 0, 1.0, a)
 
-def cdelu(x: float, alpha: float = 1.0) -> float:
+def cdelu(x: xp.ndarray, alpha: float = 1.0) -> xp.ndarray:
     """Continuously Differentiable Exponential Linear Unit (CELU)."""
-    return max(0.0, x) + min(0.0, alpha * (math.expm1(x / alpha)))
-def d_cdelu(x: float, alpha: float = 1.0) -> float:
+    return xp.maximum(0.0, x) + xp.minimum(0.0, alpha * xp.expm1(x / alpha))
+def d_cdelu(x: xp.ndarray, alpha: float = 1.0) -> xp.ndarray:
     """Derivative of the CELU activation function."""
-    return 1.0 if x > 0 else math.exp(x / alpha)
+    return xp.where(x > 0, 1.0, xp.exp(x / alpha))
 
-def sigmoid(x: float) -> float:
+def sigmoid(x: xp.ndarray) -> xp.ndarray:
     """Returns the Sigmoid activation of x with overflow protection."""
-    if x >= 0:
-        return 1.0 / (1.0 + math.exp(-x))
-    else:
-        z = math.exp(x)
-        return z / (1.0 + z)
-def d_sigmoid(x: float) -> float:
+    return xp.where(x >= 0, 1.0 / (1.0 + xp.exp(-x)), xp.exp(x) / (1.0 + xp.exp(x)))
+def d_sigmoid(x: xp.ndarray) -> xp.ndarray:
     """Returns the derivative of the Sigmoid activation function."""
     s = sigmoid(x)
     return s * (1.0 - s)
 
-def tanh(x: float) -> float:
+def tanh(x: xp.ndarray) -> xp.ndarray:
     """Returns the Tanh activation of x using a numerically stable approach."""
-    return math.tanh(x)
-def d_tanh(x: float) -> float:
+    return xp.tanh(x)
+def d_tanh(x: xp.ndarray) -> xp.ndarray:
     """Returns the derivative of the Tanh activation function."""
     t = tanh(x)
     return 1.0 - t**2
 
-def swish(x: float, β: float = 1.0) -> float:
+def swish(x: xp.ndarray, β: float = 1.0) -> xp.ndarray:
     """Swish activation function."""
     return x * sigmoid(x * β)
-def d_swish(x: float, β: float = 1.0) -> float:
+def d_swish(x: xp.ndarray, β: float = 1.0) -> xp.ndarray:
     """Derivative of the Swish activation function."""
     s = sigmoid(x * β)
     return s + (β * x * s * (1.0 - s))
 
-def mish(x: float) -> float: 
+def mish(x: xp.ndarray) -> xp.ndarray:
     """A self-regularized, smooth, non-monotonic activation function."""
-    try:
-        softplus = math.log1p(math.exp(x)) if x < 20 else x
-    except OverflowError:
-        softplus = x
+    softplus = xp.where(x < 20.0, xp.log1p(xp.exp(x)), x)
     return x * tanh(softplus)
-def d_mish(x: float) -> float:
+def d_mish(x: xp.ndarray) -> xp.ndarray:
     """Derivative of the Mish activation function."""
     try:
-        ex = math.exp(x)
+        ex = xp.exp(x)
     except OverflowError:
         return 1.0  # Becomes linear at large positive values
     
@@ -127,13 +114,13 @@ def mae(actual: xp.ndarray, pred: xp.ndarray) -> float:
     if len(pred) != len(actual):
         raise ValueError("Loss functions must be given two equal-length arrays/lists!")
     
-    return (sum((xp.abs(actual[i] - pred[i])) for i in range(len(actual)))) / len(actual)
+    return sum(xp.abs(actual - pred)) / len(actual)
 def mse(actual: xp.ndarray, pred: xp.ndarray) -> float:
     """Mean Squared Error metric function"""
     if len(pred) != len(actual):
         raise ValueError("Loss functions must be given two equal-length arrays/lists!")
     
-    return (sum(xp.mean((actual[i] - pred[i])**2) for i in range(len(actual)))) / len(actual)
+    return sum(xp.mean(actual - pred)**2) / len(actual)
 def rmse(actual: xp.ndarray, pred: xp.ndarray) -> float:
     """Root Mean Squared Error metric function"""
     if len(pred) != len(actual):
@@ -147,8 +134,7 @@ def cross_entropy_loss(actual: xp.ndarray, pred: xp.ndarray) -> float:
         raise ValueError("Loss functions must be given two equal-length arrays/lists!")
     
     array_len = actual.shape[0]
-    softmax_pred = softmax(pred)
-    clipped_pred = xp.clip(softmax_pred, 1e-15, 1 - 1e-15)
+    clipped_pred = xp.clip(softmax(pred), 1e-15, 1 - 1e-15)
     log_likelihood = -(xp.log(clipped_pred[range(array_len), actual.argmax(axis=1)]))
     return xp.sum(log_likelihood) / array_len
 

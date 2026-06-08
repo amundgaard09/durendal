@@ -16,8 +16,10 @@
 - Added `Icarus/core/__init__.py` complete with doc-string.
 - Added `entrypoint.py` as the main entrypoint for ICARUS.
 - Added functional STT and TTS capabilities for ICARUS. (`communicative_engine_rev3`). Icarus can now hear and speak. 
-- Added a simple `process()` function for processing the input text from the `communicative_engine`. This serves as a simple placeholder for future integration with the two other engines.
+- Added a simple `process()` function for processing the input text from the `communicative_engine`. This serves as a  placeholder for future integration with the two other engines.
 - Added `Icarus/skills` for SKILL.md files. Still need to figure out the architechture behind it.
   - Added placeholder skills for future development (`calendar_lookup`, `web_search`)
   - Added `skill_template.md`. It describes the structure of the skill folders for the intent/execution engines.
 - Added individual GitHub projects for each Durendal project, instead of the DuraPy project serving as the singular project for the entirety of Durendal.
+- Added XO Rev. IV. This will be optimalized to serve as the FNN/MLP as part of XO Rev. V, which will be a fully featured LLM, as part of the ICARUS complex.
+- Changed (derivative) activation functions in UniCogni to take `ndarray`s instead of floats.

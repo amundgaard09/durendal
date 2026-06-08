@@ -1,4 +1,4 @@
-""" Second Iteration - XO Neural Net Series | Matrix-Based Neural Net"""
+"""Second Iteration - XO Neural Net Series | Matrix-Based Neural Net"""
 
 import numpy as np
 import time
