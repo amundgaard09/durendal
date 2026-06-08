@@ -13,7 +13,7 @@ dotenv.load_dotenv(r"C:\\Users\\Administrator\\.vscode\\durendal\\.env", verbose
 _queue = queue.Queue()
 model = Model(_SPEECH_MODEL_PATH)
 recognizer = KaldiRecognizer(model, 16000)
-elevenlabs = ElevenLabs(api_key=os.environ.get("ELEVENLABS_API"))
+elevenlabs = ElevenLabs(api_key=os.environ.get("ELEVENLABS_API_KEY"))
 
 def console_print(*args):
     return uniCLI.console_print(*args)
@@ -71,13 +71,13 @@ def listen_for_command() -> str:
 
 def initialize() -> None:
     """Placeholder for future init logic for the Comms Engine."""
-    console_print("ICARUS", "blue", "Initializing Icarus Communicative Engine", "green")
+    console_print("ICARUS", "blue", "Initializing Icarus Communicative Engine...", "green")
 
 def process(text: str) -> str:
     if "hello" in text:
         return "Hello, Simon"
     elif "you" in text:
-        return "I am Icarus. I am a natural language AI agent built for engineering."
+        return "I am Icarus. I am a natural language AI agent built by Simon Stordal Amundgård for multi-diciplinary engineering tasks."
 
 def kernel() -> str:
     """The main speech kernel for the Icarus Communicative Engine."""

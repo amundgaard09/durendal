@@ -1,1 +1,1 @@
-# Vanguard - Large Knowledge Database System
+# Vanguard - Markdown Knowledge Database System

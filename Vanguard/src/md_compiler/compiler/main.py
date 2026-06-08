@@ -6,8 +6,8 @@ from pathlib import Path
 from wikipediaapi import WikipediaPage, WikipediaPageSection
 from durapy import uniCLI
 
-### MCD Enhancement proposals:
-### 1. Use an LLM API (e.g. OpenAI) to clean up the article (e.g. make links at the See Also section actual links.)
+### MCDP Enhancement proposals:
+### 1. Use an LLM API (e.g. OpenAI) to clean up the article (e.g. make links at the "See Also" section actual links.)
 
 def check_if_article_exists(name: str, path: Path) -> bool:
     """Checks if an article with the given name already exists in the specified path."""

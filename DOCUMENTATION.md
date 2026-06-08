@@ -69,7 +69,7 @@ To get started with the Durendal Python Collective, follow these steps:
     print(result)  # Output: 13
     ```
  
-If you're interested in using the UniForge CLI, which is a command-line interface for various tools and utilities built on top of DuraPy, you can access it as follows:
+If you're interested in using the UniForge CLI, which is a command-line interface for tools and utilities built on top of DuraPy, you can access it as follows:
 
 1. Access the UniForge CLI by running:
     ```bash
