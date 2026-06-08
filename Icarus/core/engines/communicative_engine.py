@@ -1,37 +1,31 @@
-"""
-The `ICARUS` Complex Speech Engine
 
-This file contains dependencies for ICARUS linked to speaking and listening.
+import io, os, json, queue, dotenv, sounddevice
+import pydub, pydub.playback as pd_playback
 
----
-
-The ICARUS Complex is a Durendal project. More information can be found at the [Durendal GitHub](https://github.com/amundgaard09/durendal/)
-"""
-
-import io, os, pydub, dotenv, struct, pyaudio, pvporcupine, speech_recognition
-import pydub.playback as playback
-import pydub.utils as pd_utils
-
+from vosk import Model, KaldiRecognizer
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
 from durapy import uniCLI
 
-# ICARUS Wake Word Detector Model path
-_I_WWD_MODEL = r""
-_MODELS_PATH = r"C:\\Users\\Administrator\\.vscode\\durendal\\Icarus\\core\\models"
-
+_SPEECH_MODEL_PATH = r"C:\Users\Administrator\.vscode\durendal\Icarus\core\models\vosk-model-small-en-us-0.15"
 dotenv.load_dotenv(r"C:\\Users\\Administrator\\.vscode\\durendal\\.env", verbose=True, encoding="utf-8")
 
-recognizer = speech_recognition.Recognizer()
+_queue = queue.Queue()
+model = Model(_SPEECH_MODEL_PATH)
+recognizer = KaldiRecognizer(model, 16000)
 elevenlabs = ElevenLabs(api_key=os.environ.get("ELEVENLABS_API"))
 
-pydub.AudioSegment.converter = pd_utils.which("C:/ffmpeg/bin/ffmpeg.exe")
+def console_print(*args):
+    return uniCLI.console_print(*args)
+
+def callback(indata, frames, time, status):
+    _queue.put(bytes(indata))
 
 def play_audio(audio_bytes: bytes) -> None:
     """Play the given audio bytes."""
     audio_buffer = io.BytesIO(audio_bytes)
     audio_segment = pydub.AudioSegment.from_file(audio_buffer)
-    playback.play(audio_segment)
+    pd_playback.play(audio_segment)
 
 def speak(text: str) -> None:
     """Speak the given text through `ElevenLabs` TTS."""
@@ -45,7 +39,7 @@ def speak(text: str) -> None:
             similarity_boost = 1.0,
             style = 0.0,
             use_speaker_boost = True,
-            speed = 1.0,
+            speed = 0.95,
         )
     )
     
@@ -58,68 +52,41 @@ def speak(text: str) -> None:
     play_audio(audio_stream.read())
     uniCLI.console_print("ICARUS", "blue", text)
     
-
-def initializer() -> bool:
-    """
-    Initialize ICARUS and listen for wake/hot word (`ICARUS`)
-    """
+def listen_for_command() -> str:
+    with sounddevice.RawInputStream(
+        samplerate=16000, 
+        blocksize=8000, 
+        dtype="int16", 
+        channels=1, 
+        callback=callback
+        ):
     
-    uniCLI.console_print("ICARUS", "blue", "Initializing Icarus Commicative Engine...", "blue")
-     
-    porcupine = pvporcupine.create(
-        access_key=os.environ.get("PICOVOICE_API"),
-        keyword_paths=[_I_WWD_MODEL]
-    )
-    
-    pa = pyaudio.PyAudio()
-    stream = pa.open(
-        rate=porcupine.sample_rate,
-        channels=1,
-        format=pyaudio.paInt16,
-        input=True,
-        frames_per_buffer=porcupine.frame_length
-    )
-    
-    uniCLI.console_print("ICARUS", "blue", "Icarus is up and running!", "green")
-    uniCLI.console_print("ICARUS", "blue", "Listening for Icarus ...")
-    
-    try:
         while True:
-            pcm = stream.read(porcupine.frame_length, exception_on_overflow=False)
-            pcm = struct.unpack_from("h" * porcupine.frame_length, pcm)
+            data = _queue.get()
 
-            if porcupine.process(pcm) >= 0: # Wake word detected
-                uniCLI.console_print("ICARUS", "blue", "Activating Icarus I ...", "green")
-                return True
-    finally:
-        stream.stop_stream()
-        stream.close()
-        pa.terminate()
-        porcupine.delete()
+            if recognizer.AcceptWaveform(data):
+                result: dict = json.loads(recognizer.Result())
+                console_print("USER", "green", result.get("text").capitalize())
+                return result.get("text", "")
 
-def listen_for_command(repeat: bool = False) -> str:
-    with speech_recognition.Microphone() as src:
-        if not repeat:
-            uniCLI.console_print("ICARUS", "blue", "Listening ...")
-            speak("At your service.")
+def initialize() -> None:
+    """Placeholder for future init logic for the Comms Engine."""
+    console_print("ICARUS", "blue", "Initializing Icarus Communicative Engine", "green")
+
+def process(text: str) -> str:
+    if "hello" in text:
+        return "Hello, Simon"
+    elif "you" in text:
+        return "I am Icarus. I am a natural language AI agent built for engineering."
+
+def kernel() -> str:
+    """The main speech kernel for the Icarus Communicative Engine."""
+    console_print("ICARUS", "blue", "Listening...")
+    user_input = listen_for_command()
+    if user_input:
+        speak(process(user_input))
+
+initialize()
+kernel()
             
-        sound = recognizer.listen(src)
-
-        try:
-            cmd = str(recognizer.recognize_tensorflow(sound, _MODELS_PATH + "\\conv_actions_frozen.pb", _MODELS_PATH + "\\conv_actions_labels.txt" ))
-            return cmd.lower()
-        
-        except speech_recognition.UnknownValueError:
-            speak("I didn't understand that.")
-            uniCLI.console_print("ICARUS", "blue", "speech_recognition.UnknownValueError", "red")
-            return listen_for_command(repeat=True)
-        
-        except speech_recognition.RequestError:
-            speak("I am unavailable at this time.")
-            uniCLI.console_print("ICARUS", "blue", "speech_recognition.RequestError", "red")
-            return ""
-
-# TODO Only for testing, remove once finished and shipped
-if __name__ == "__main__":
-    if initializer():
-        listen_for_command()
+            
