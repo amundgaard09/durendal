@@ -1,0 +1,17 @@
+
+[project]
+name = "icarus"
+version = "0.0.3.0-alpha"
+description = "ICARUS - Multipotent Agentic AI platform"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["engineering", "math", "physics", "science", "python", "cli", "agent", "ai"]
+authors = [{name = "Simon Stordal Amundgård"}]
+
+dependencies = [
+    "vosk",
+    "elevenlabs",
+    "numpy",
+]
+
+[project.scripts]

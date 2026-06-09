@@ -27,3 +27,16 @@
 - Changed (derivative) activation functions in UniCogni to take np/cp (xp) `ndarray`s instead of floats.
 - Closed a lot of issues in all github projects.
 - Made the `Article` class a dataclass.
+- Started work on the MCP system for ICARUS.
+- Made a `MCPTool` dataclass.
+- Added functions for retriveing skills from the skills directory. Not complete yet, though.
+
+### Tuesday - 09.06.2026
+
+- Added `mcp_tool.py`, `input_schema.py` and `mcp_property.py`, all of which are dataclasses. 
+- Added `mcp_server_kernel.py`.
+- Added `Icarus`/`README.MD`.
+- Added capabilities for exiting ICARUS by speech.
+- Added capabilities for speaking to ICARUS indefinetly by adding a while-loop.
+- Added `timeskill.py`, the first skill. It does not yet follow the standard skill template, but will be refactored.
+- Added `pyproject.toml`, and plans to add a ICARUS startup script & CLI command.

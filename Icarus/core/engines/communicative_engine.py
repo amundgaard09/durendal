@@ -2,6 +2,7 @@
 import io, os, json, queue, dotenv, sounddevice
 import pydub, pydub.playback as pd_playback
 
+from skills.timeskill import main as time_skill
 from vosk import Model, KaldiRecognizer
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
@@ -28,7 +29,7 @@ def play_audio(audio_bytes: bytes) -> None:
     pd_playback.play(audio_segment)
 
 def speak(text: str) -> None:
-    """Speak the given text through `ElevenLabs` TTS."""
+    """Speak the given text through `ElevenLabs` TTS. Also logs the text to the terminal"""
     response = elevenlabs.text_to_speech.stream(
         voice_id="pNInz6obpgDQGcFmaJgB",
         output_format="mp3_22050_32",
@@ -71,20 +72,35 @@ def listen_for_command() -> str:
 
 def initialize() -> None:
     """Placeholder for future init logic for the Comms Engine."""
-    console_print("ICARUS", "blue", "Initializing Icarus Communicative Engine...", "green")
+    console_print("ICARUS", "blue", "Initializing Icarus Communicative Engine...", "white")
 
 def process(text: str) -> str:
     if "hello" in text:
         return "Hello, Simon"
     elif "you" in text:
         return "I am Icarus. I am a natural language AI agent built by Simon Stordal Amundgård for multi-diciplinary engineering tasks."
-
+    elif "exit" in text or "goodbye" in text:
+        return "Goodbye, Simon"
+    elif "time" in text:
+        return time_skill()
+    else:
+        return "I didn't understand that."
+    
 def kernel() -> str:
     """The main speech kernel for the Icarus Communicative Engine."""
-    console_print("ICARUS", "blue", "Listening...")
-    user_input = listen_for_command()
-    if user_input:
-        speak(process(user_input))
+    console_print("ICARUS", "blue", "Listening...", "green")
+    while True:
+        user_input = listen_for_command()
+        if not user_input:
+            speak("I didn't understand that.")
+        
+        response = process(user_input)
+        
+        if response == "Goodbye, Simon":
+            speak(response)
+            exit(1)
+        else:
+            speak(response)
 
 initialize()
 kernel()
