@@ -26,7 +26,7 @@ async def handle_read_resource(uri: str) -> str:
     if uri == "skills://index":
         with open(os.path.join(SKILLS_DIR, "SKILL.md"), "r") as f:
             return f.read()
-    raise ValueError(ResourceNotFound)
+    raise ValueError("ResourceNotFound")
 
 @server.list_tools()
 async def handle_list_tools() -> list[types.Tool]:
@@ -53,4 +53,4 @@ async def handle_call_tool(name: str, arguments: dict) -> list[types.TextContent
         # Put your actual local engineering script execution logic here
         file_path = arguments.get("file_path")
         return [types.TextContent(type="text", text=f"Successfully analyzed {file_path}")]
-    raise ValueError(ToolNotFound)
+    raise ValueError("ToolNotFound")

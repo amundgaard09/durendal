@@ -9,7 +9,7 @@ class InputSchema:
     IS_type: object
     properties: list[MCPProperty]
     required: list[str]
-    schema = { # REMOVE THIS
+    schema = { # REMOVE THIS - ONLY A TEMPLATE
         "inputSchema": {
             "type": "object",
                 "properties": {

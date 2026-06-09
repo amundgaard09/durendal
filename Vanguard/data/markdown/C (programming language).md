@@ -223,7 +223,6 @@ The most common C library is the C standard library, which is specified by the I
 Another common set of C library functions are those used by applications specifically targeted for Unix and [[Unix-like]] systems, especially functions which provide an interface to the kernel. These functions are detailed in various standards such as POSIX and the Single UNIX Specification.
 Since many programs have been written in C, there are a wide variety of other libraries available. Libraries are often written in C because C compilers generate efficient object code; programmers then create interfaces to the library so that the routines can be used from higher-level languages like Java, [[Perl]], and Python.
 
-
 #### File handling and streams
 
 File input and output (I/O) is not part of the C language itself but instead is handled by libraries (such as the C standard library) and their associated header files (e.g. stdio.h). File handling is generally implemented through high-level I/O which works through streams. A stream is from this perspective a data flow that is independent of devices, while a file is a concrete device. The high-level I/O is done through the association of a stream to a file. In the C standard library, a buffer (a memory area or queue) is temporarily used to store data before it is sent to the final destination. This reduces the time spent waiting for slower devices, for example a hard drive or solid-state drive. Low-level I/O functions are not part of the standard C library but are generally part of "bare metal" programming (programming that is independent of any operating system such as most embedded programming). With few exceptions, implementations include low-level I/O.
@@ -299,8 +298,7 @@ C lacks standard support for exception handling and only offers return codes for
 ### Mitigations for C's problems
 
 For some purposes, restricted styles of C have been adopted, e.g. MISRA C or CERT C, in an attempt to reduce the opportunity for unwanted behaviour. Databases such as CWE attempt to count the ways that systems in general, especially those coded in C, have potential vulnerabilities, along with recommendations for mitigation.
-There are tools that can mitigate some of the drawbacks. Contemporary C compilers include checks which may generate warnings to help identify many potential bugs. 
-C's use of pointers can be made less risky by use of instruction set architecture extensions such as [[CHERI]] or Permission Overlay Extensions. These techniques change the fundamental nature of pointers at a hardware level to include bounds checks and purposes, which can help prevent buffer over-runs and inappropriate heap accesses.
+There are tools that can mitigate some of the drawbacks. Contemporary C compilers include checks which may generate warnings to help identify many potential bugs. C's use of pointers can be made less risky by use of instruction set architecture extensions such as [[CHERI]] or Permission Overlay Extensions. These techniques change the fundamental nature of pointers at a hardware level to include bounds checks and purposes, which can help prevent buffer over-runs and inappropriate heap accesses.
 Since the early 2020s the Linux kernel has sections written in Rust, a language which has specific measures to improve safety.
 
 ## Related languages
@@ -309,8 +307,7 @@ Many languages developed after C were influenced by and borrowed aspects of C, i
 Several C or near-C interpreters exist, including Ch and [[CINT]], which can also be used for scripting.
 When object-oriented programming languages became popular, C++ and Objective-C were two different extensions of C that provided object-oriented capabilities. Both languages were originally implemented as source-to-source compilers; source code was translated into C, and then compiled with a C compiler.
 The C++ programming language (originally named "C with Classes") was devised by Bjarne Stroustrup as an approach to providing object-oriented functionality with a C-like syntax. C++ adds greater typing strength, scoping, and other tools useful in object-oriented programming, and permits generic programming via templates. Nearly a superset of C, C++ now supports most of C, with a few exceptions.
-Objective-C was originally a thin layer on top of C, and remains a strict superset of C that permits object-oriented programming using a hybrid dynamic/static typing paradigm. Objective-C derives its syntax from both C and Smalltalk: syntax that involves preprocessing, expressions, function declarations, and function calls is inherited from C, while the syntax for object-oriented features was originally taken from [[Smalltalk]].
-In addition to C++ and Objective-C, Ch, [[Cilk]], and Unified Parallel C are nearly supersets of C.
+Objective-C was originally a thin layer on top of C, and remains a strict superset of C that permits object-oriented programming using a hybrid dynamic/static typing paradigm. Objective-C derives its syntax from both C and Smalltalk: syntax that involves preprocessing, expressions, function declarations, and function calls is inherited from C, while the syntax for object-oriented features was originally taken from [[Smalltalk]]. In addition to C++ and Objective-C, Ch, [[Cilk]], and Unified Parallel C are nearly supersets of C.
 
 ## See also
 
@@ -336,6 +333,3 @@ ISO/IEC 9899, publicly available official C documents, including the C99 Rationa
 comp.lang.c Frequently Asked Questions
 A History of C, by Dennis Ritchie
 C Library Reference and Examples
-
-
-

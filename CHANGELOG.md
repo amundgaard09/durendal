@@ -1,5 +1,7 @@
 # DURENDAL CHANGELOG 2026
 
+## ICARUS
+
 ### Sunday - 07.06.2026
 
 - Fixed circular import bugs in Vanguard - result of UniCLI importing straight from DuraPy instead of absolute import
@@ -15,7 +17,7 @@
 - Added a Vosk speech model. Vosk will serve as an offline fallback for STT. Whisper will serve as the main STT, when ICARUS is ran online.
 - Added `Icarus/core/__init__.py` complete with doc-string.
 - Added `entrypoint.py` as the main entrypoint for ICARUS.
-- Added functional STT and TTS capabilities for ICARUS. (`communicative_engine_rev3`). Icarus can now hear and speak. 
+- Added functional STT and TTS capabilities for ICARUS. (`communicative_engine_rev3`). Icarus can now hear and speak.
 - Added a simple `process()` function for processing the input text from the `communicative_engine`. This serves as a placeholder for future integration with the two other engines.
 - Added `Icarus/skills` for SKILL.md files. Still need to figure out the architechture behind it.
 - Added placeholder skills for future development (`calendar_lookup`, `web_search`)
@@ -33,10 +35,13 @@
 
 ### Tuesday - 09.06.2026
 
-- Added `mcp_tool.py`, `input_schema.py` and `mcp_property.py`, all of which are dataclasses. 
+- Added and finished `mcp_tool.py`, `input_schema.py` and `mcp_property.py`, all of which are dataclasses.
 - Added `mcp_server_kernel.py`.
 - Added `Icarus`/`README.MD`.
 - Added capabilities for exiting ICARUS by speech.
 - Added capabilities for speaking to ICARUS indefinetly by adding a while-loop.
 - Added `timeskill.py`, the first skill. It does not yet follow the standard skill template, but will be refactored.
 - Added `pyproject.toml`, and plans to add a ICARUS startup script & CLI command.
+- Added dynamic paths, and removed the old hardcoded ones, to enable much more streamlined cross-platform development.
+- Added `skil_loaders.py`, with the `get_py_skill()` to load the `execute()` function for each python-based skill, following the future multi-language execute-file architecture.
+- Moved the comms. kernel from `communicative_engine.py` to `entrypoint.py`. which will serve as the main entrypoint to ICARUS. This will also make combining the three engines much easier.

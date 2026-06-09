@@ -1,8 +1,8 @@
-# Durandel Python Collection (DuraPy) Documentation & Wiki
+# DuraPy Documentation and Wiki
 
 ## Table of Contents
 
-- [DuraPy Documentation & Wiki](#durapy-documentation-&-wiki)
+- [DuraPy Documentation & Wiki](#durapy-documentation-and-wiki)
   - [Table of Contents](#table-of-contents)
   - [DuraPy Overview](#durapy-overview)
   - [Quick Start Guide](#quick-start-guide)
@@ -19,7 +19,7 @@
       - [UniSpace](#unispace)
       - [UniViz](#univiz)
   - [Contributing to DuraPy](#contributing-to-durapy)
-  - [License and Usage](#license-and-usage)
+  - [License and Usage](#license-and-usage---durendal-open-source-philosophy)
 
 ## DuraPy Overview
 
@@ -30,25 +30,31 @@
 ### UniPy
 
 #### UniAlgo
+
 #### UniCLI
+
 #### UniCrypt
+
 #### UniFlight
+
 #### UniMath
+
 #### UniOps
+
 #### UniPhys
+
 #### UniPower
+
 #### UniSpace
+
 #### UniViz
 
 ## Contributing to DuraPy
 
-
-
-## License and Usage - DuraPy Open Source Philosophy
+## License and Usage - Durendal Open Source Philosophy
 
 DuraPy is part of the Durendal Github Repo and the Durendal Engineering Ecosystem.
 
 While this software and all other software under Durendal is licensed under the **MIT License** allowing full freedom of use, we strongly encourage all public projects built upon Durendal or the rest of the DuraPy repository to remain open source under the MIT License or a similarly permissive license. Projects that follow this philosophy may be recognized as part of the official DuraPy ecosystem.
 
 By doing so, you help support an open, collaborative engineering ecosystem.
-
