@@ -14,3 +14,5 @@
 ### execute.py
 
 ### config.json
+
+REMEMBER DICT TYPE! NOT LIST! START FILE WITH "{}"

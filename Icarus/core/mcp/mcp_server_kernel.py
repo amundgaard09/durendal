@@ -3,12 +3,17 @@ import os, json
 from pathlib import Path
 from types.mcptool import MCPTool
 from types.input_schema import InputSchema
+from core.utilities.decorators import logger
 
 _SKILLS_DIR = r"C:\Users\Administrator\.vscode\durendal\Icarus\skills"
 
+# Depecrate?
+
+@logger
 def create_input_schema() -> InputSchema:
     """Create a new MCPTool instance from a skill."""
 
+@logger
 def get_tools() -> list[MCPTool]:
     """Iterates through the skills directory and creates a list of MCPTools"""
     

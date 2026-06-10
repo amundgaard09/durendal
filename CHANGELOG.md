@@ -45,3 +45,18 @@
 - Added dynamic paths, and removed the old hardcoded ones, to enable much more streamlined cross-platform development.
 - Added `skil_loaders.py`, with the `get_py_skill()` to load the `execute()` function for each python-based skill, following the future multi-language execute-file architecture.
 - Moved the comms. kernel from `communicative_engine.py` to `entrypoint.py`. which will serve as the main entrypoint to ICARUS. This will also make combining the three engines much easier.
+
+### Wednesday 10.06.2026
+
+- Stopped use of hardcoded paths for good - Only Path().parents[x] ... from now on.
+- Fixed path in `communicative_engine.py`.
+- Added `process()` back to `communicative_engine.py` for now.
+- Added `Icarus`/`logs`, with `runtime_log.txt` & `debug_log.txt`.
+- Added `Icarus`/`core`/`utilities`, with `decorators.py` & `txtfiletools.py`.
+    - Added `@logger` to `decorators.py` for logging a function's inputs, outputs and errors, as well as `log()`, a helper function for writing to a specified log txt file - defaults to `runtime_log.txt`.
+- Implemented ColorMyText, that highlights failed functions in `runtime_log.txt` as red, and successful ones as green.
+- Updated `pyproject.toml`.
+- Finished `execution_engine.py` Rev. 1. Routing, skill finding and skill execution now works. Full modularity as well.
+- Added methods for skipping __ pycache __ folders, so that they don't get loaded as skills and crash the system.
+- Removed `process()` from `communicative_engine.py` again, and added it to `execution_engine.py`. 
+- Added a testing environment.

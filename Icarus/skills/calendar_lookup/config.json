@@ -1,0 +1,11 @@
+{
+    "name": "calendar_lookup",
+    "description": "Checks the calendar.",
+    "triggers": [
+        "check my calendar",
+        "check the calendar",
+        "calendar"
+    ],
+    "language": "python",
+    "entrypoint": "execute.py"
+}

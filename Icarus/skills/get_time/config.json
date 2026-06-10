@@ -1,0 +1,11 @@
+{
+    "name": "time",
+    "description": "Returns the current time.",
+    "triggers": [
+        "what time is it",
+        "what's the time",
+        "current time"
+    ],
+    "language": "python",
+    "entrypoint": "execute.py"
+}

@@ -5,7 +5,9 @@ from mcp.server.models import InitializationOptions
 
 server = Server("icarus-skill-engine")
 
-SKILLS_DIR = r"C:\Users\Administrator\.vscode\durendal\Icarus\skills"
+# ONLY AN EXAMPLE
+
+SKILLS_DIR = r"C:\Users\Administrator\.vscode\durendal\Icarus\skills" # HARAM !!!!!
 
 @server.list_resources()
 async def handle_list_resources() -> list[types.Resource]:

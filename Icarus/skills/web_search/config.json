@@ -1,0 +1,9 @@
+{
+    "name": "web_search",
+    "description": "Performs a web search.",
+    "triggers": [
+        "search"
+    ],
+    "language": "python",
+    "entrypoint": "execute.py"
+}

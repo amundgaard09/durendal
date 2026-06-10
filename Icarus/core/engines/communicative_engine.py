@@ -2,6 +2,7 @@
 import io, os, json, queue, dotenv, sounddevice
 import pydub, pydub.playback as pd_playback
 
+from core.utilities.decorators import logger
 from vosk import Model, KaldiRecognizer
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
@@ -11,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 _SPEECH_MODEL_PATH = ROOT / "core" / "models" / "vosk-model-small-en-us-0.15"
-dotenv.load_dotenv(Path(__file__).resolve().parents[4] / ".env", verbose=True, encoding="utf-8")
+dotenv.load_dotenv(Path(__file__).resolve().parents[3] / ".env", verbose=True, encoding="utf-8")
 
 _queue = queue.Queue()
 model = Model(str(_SPEECH_MODEL_PATH))
@@ -30,6 +31,7 @@ def _play_audio(audio_bytes: bytes) -> None:
     audio_segment = pydub.AudioSegment.from_file(audio_buffer)
     pd_playback.play(audio_segment)
 
+@logger
 def speak(text: str) -> None:
     """Speak the given text through `ElevenLabs` TTS. Also logs the text to the terminal"""
     response = elevenlabs.text_to_speech.stream(
@@ -54,7 +56,8 @@ def speak(text: str) -> None:
     audio_stream.seek(0)
     _play_audio(audio_stream.read())
     uniCLI.console_print("ICARUS", "blue", text)
-    
+
+@logger   
 def listen() -> str:
     with sounddevice.RawInputStream(
         samplerate=16000, 
@@ -72,6 +75,18 @@ def listen() -> str:
                 _console_print("USER", "green", result.get("text").capitalize())
                 return result.get("text", "")
 
+@logger     
+def process(text: str) -> str:
+    if "hello" in text:
+        return "Hello, Simon"
+    elif "you" in text:
+        return "I am Icarus. I am a natural language AI agent built by Simon Stordal Amundgård for multi-diciplinary engineering tasks."
+    elif "exit" in text or "goodbye" in text:
+        return "Goodbye, Simon"
+    else:
+        return "I didn't understand that."
+
+@logger
 def initialize() -> None:
     """Placeholder for future init logic for the Comms Engine."""
     _console_print("ICARUS", "blue", "Initializing Icarus Communicative Engine...", "white")

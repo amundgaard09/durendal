@@ -1,16 +1,25 @@
 
-import importlib.util
+from typing import Any
+import importlib.util, json
 from pathlib import Path
+from core.utilities.decorators import logger
 
-def get_py_skill(path: Path):
-    module_path = path / "execute.py"
+@logger
+def get_py_skill_and_triggers(path: Path):
+    py_path = path / "execute.py"
+    json_path = path / "config.json"
 
     spec = importlib.util.spec_from_file_location(
         "skill_module",
-        module_path
+        py_path
     )
 
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    
+    with open(json_path, mode="r", encoding="utf-8") as f:
+        jsondict: dict = json.load(f)
+   
+    triggers = jsondict.get("triggers", None)
 
-    return module
+    return module, triggers
