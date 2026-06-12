@@ -19,9 +19,6 @@ model = Model(str(_SPEECH_MODEL_PATH))
 recognizer = KaldiRecognizer(model, 16000)
 elevenlabs = ElevenLabs(api_key=os.environ.get("ELEVENLABS_API_KEY"))
 
-def _console_print(*args):
-    return uniCLI.console_print(*args)
-
 def _callback(indata, frames, time, status):
     _queue.put(bytes(indata))
 
@@ -72,22 +69,11 @@ def listen() -> str:
 
             if recognizer.AcceptWaveform(data):
                 result: dict = json.loads(recognizer.Result())
-                _console_print("USER", "green", result.get("text").capitalize())
+                uniCLI.console_print("USER", "green", result.get("text").capitalize())
                 return result.get("text", "")
-
-@logger     
-def process(text: str) -> str:
-    if "hello" in text:
-        return "Hello, Simon"
-    elif "you" in text:
-        return "I am Icarus. I am a natural language AI agent built by Simon Stordal Amundgård for multi-diciplinary engineering tasks."
-    elif "exit" in text or "goodbye" in text:
-        return "Goodbye, Simon"
-    else:
-        return "I didn't understand that."
 
 @logger
 def initialize() -> None:
     """Placeholder for future init logic for the Comms Engine."""
-    _console_print("ICARUS", "blue", "Initializing Icarus Communicative Engine...", "white")
+    uniCLI.console_print("ICARUS", "blue", "Initializing Icarus Communicative Engine...", "white")
 

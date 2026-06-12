@@ -1,1 +1,52 @@
 
+<12:33:09> - Starting get_py_skill_and_triggers with args=(WindowsPath('C:/Users/Administrator/.vscode/durendal/Icarus/skills/calendar_lookup'),), kwargs={} 
+<12:33:09> - Finished get_py_skill_and_triggers in 0.0015s. Result: (<module 'skill_module' from 'C:\\Users\\Administrator\\.vscode\\durendal\\Icarus\\skills\\calendar_lookup\\execute.py'>, ['check my calendar', 'check the calendar', 'calendar']) 
+<12:33:09> - Starting get_py_skill_and_triggers with args=(WindowsPath('C:/Users/Administrator/.vscode/durendal/Icarus/skills/get_time'),), kwargs={} 
+<12:33:09> - Finished get_py_skill_and_triggers in 0.0011s. Result: (<module 'skill_module' from 'C:\\Users\\Administrator\\.vscode\\durendal\\Icarus\\skills\\get_time\\execute.py'>, ['what time is it', "what's the time", 'current time']) 
+<12:33:09> - Starting get_py_skill_and_triggers with args=(WindowsPath('C:/Users/Administrator/.vscode/durendal/Icarus/skills/greet'),), kwargs={} 
+<12:33:09> - Finished get_py_skill_and_triggers in 0.0013s. Result: (<module 'skill_module' from 'C:\\Users\\Administrator\\.vscode\\durendal\\Icarus\\skills\\greet\\execute.py'>, ['hello', 'good morning', "what's up"]) 
+<12:33:09> - Starting get_py_skill_and_triggers with args=(WindowsPath('C:/Users/Administrator/.vscode/durendal/Icarus/skills/web_search'),), kwargs={} 
+<12:33:09> - Finished get_py_skill_and_triggers in 0.0013s. Result: (<module 'skill_module' from 'C:\\Users\\Administrator\\.vscode\\durendal\\Icarus\\skills\\web_search\\execute.py'>, ['search']) 
+<12:33:12> - Starting initialize with args=(), kwargs={} 
+<12:33:12> - Finished initialize in 0.0002s. Result: None 
+<12:33:12> - Starting listen with args=(), kwargs={} 
+<12:33:19> - Finished listen in 6.6895s. Result: hello icarus still under oath calculate 
+<12:33:19> - Starting speak with args=('Hello, Simon!',), kwargs={} 
+<12:33:21> - Finished speak in 2.7356s. Result: None 
+<12:33:21> - Starting listen with args=(), kwargs={} 
+<12:33:26> - Finished listen in 4.1303s. Result: what's that 
+<12:33:26> - Starting speak with args=("I didn't understand that.",), kwargs={} 
+<12:33:28> - Finished speak in 2.7138s. Result: None 
+<12:33:28> - Starting listen with args=(), kwargs={} 
+<12:33:34> - Finished listen in 5.6127s. Result: now wasn't the time okay goodbye interested 
+<12:33:34> - Starting speak with args=('Goodbye, Simon',), kwargs={} 
+<12:33:36> - Finished speak in 2.4850s. Result: None 
+<12:50:22> - Starting get_py_skill_and_triggers with args=(WindowsPath('C:/Users/Administrator/.vscode/durendal/Icarus/skills/calendar_lookup'),), kwargs={} 
+<12:50:22> - Finished get_py_skill_and_triggers in 0.0011s. Result: (<module 'skill_module' from 'C:\\Users\\Administrator\\.vscode\\durendal\\Icarus\\skills\\calendar_lookup\\execute.py'>, ['check my calendar', 'check the calendar', 'calendar']) 
+<12:50:22> - Starting get_py_skill_and_triggers with args=(WindowsPath('C:/Users/Administrator/.vscode/durendal/Icarus/skills/get_time'),), kwargs={} 
+<12:50:22> - Finished get_py_skill_and_triggers in 0.0010s. Result: (<module 'skill_module' from 'C:\\Users\\Administrator\\.vscode\\durendal\\Icarus\\skills\\get_time\\execute.py'>, ['what time is it', "what's the time", 'current time']) 
+<12:50:22> - Starting get_py_skill_and_triggers with args=(WindowsPath('C:/Users/Administrator/.vscode/durendal/Icarus/skills/greet'),), kwargs={} 
+<12:50:22> - Finished get_py_skill_and_triggers in 0.0012s. Result: (<module 'skill_module' from 'C:\\Users\\Administrator\\.vscode\\durendal\\Icarus\\skills\\greet\\execute.py'>, ['hello', 'good morning', "what's up"]) 
+<12:50:22> - Starting get_py_skill_and_triggers with args=(WindowsPath('C:/Users/Administrator/.vscode/durendal/Icarus/skills/web_search'),), kwargs={} 
+<12:50:22> - Finished get_py_skill_and_triggers in 0.0009s. Result: (<module 'skill_module' from 'C:\\Users\\Administrator\\.vscode\\durendal\\Icarus\\skills\\web_search\\execute.py'>, ['search']) 
+<12:50:24> - Starting initialize with args=(), kwargs={} 
+<12:50:24> - Finished initialize in 0.0003s. Result: None 
+<12:50:24> - Starting initialize with args=(), kwargs={} 
+<12:50:24> - Finished initialize in 0.0001s. Result: None 
+<12:50:24> - Starting listen with args=(), kwargs={} 
+<12:50:29> - Finished listen in 5.1169s. Result: add up 
+<12:50:29> - Starting match with args=('add up', {'check my calendar': <function execute at 0x0000024EC6AB2C20>, 'check the calendar': <function execute at 0x0000024EC6AB2C20>, 'calendar': <function execute at 0x0000024EC6AB2C20>, 'what time is it': <function execute at 0x0000024EC6AB2CB0>, "what's the time": <function execute at 0x0000024EC6AB2CB0>, 'current time': <function execute at 0x0000024EC6AB2CB0>, 'hello': <function execute at 0x0000024EC6AB2EF0>, 'good morning': <function execute at 0x0000024EC6AB2EF0>, "what's up": <function execute at 0x0000024EC6AB2EF0>, 'search': <function execute at 0x0000024EC6AB2DD0>}), kwargs={} 
+<12:50:29> - Finished match in 0.0000s. Result: None 
+<12:50:29> - Starting speak with args=("I didn't understand that.",), kwargs={} 
+<12:50:32> - Finished speak in 3.0908s. Result: None 
+<12:50:32> - Starting listen with args=(), kwargs={} 
+<12:50:35> - Finished listen in 2.6020s. Result: hello 
+<12:50:35> - Starting match with args=('hello', {'check my calendar': <function execute at 0x0000024EC6AB2C20>, 'check the calendar': <function execute at 0x0000024EC6AB2C20>, 'calendar': <function execute at 0x0000024EC6AB2C20>, 'what time is it': <function execute at 0x0000024EC6AB2CB0>, "what's the time": <function execute at 0x0000024EC6AB2CB0>, 'current time': <function execute at 0x0000024EC6AB2CB0>, 'hello': <function execute at 0x0000024EC6AB2EF0>, 'good morning': <function execute at 0x0000024EC6AB2EF0>, "what's up": <function execute at 0x0000024EC6AB2EF0>, 'search': <function execute at 0x0000024EC6AB2DD0>}), kwargs={} 
+<12:50:35> - Finished match in 0.0000s. Result: <function execute at 0x0000024EC6AB2EF0> 
+<12:50:35> - Starting speak with args=('Hello, Simon!',), kwargs={} 
+<12:50:37> - Finished speak in 2.2964s. Result: None 
+<12:50:37> - Starting listen with args=(), kwargs={} 
+<12:50:41> - Finished listen in 3.6195s. Result: what's that 
+<12:50:41> - Starting match with args=("what's that", {'check my calendar': <function execute at 0x0000024EC6AB2C20>, 'check the calendar': <function execute at 0x0000024EC6AB2C20>, 'calendar': <function execute at 0x0000024EC6AB2C20>, 'what time is it': <function execute at 0x0000024EC6AB2CB0>, "what's the time": <function execute at 0x0000024EC6AB2CB0>, 'current time': <function execute at 0x0000024EC6AB2CB0>, 'hello': <function execute at 0x0000024EC6AB2EF0>, 'good morning': <function execute at 0x0000024EC6AB2EF0>, "what's up": <function execute at 0x0000024EC6AB2EF0>, 'search': <function execute at 0x0000024EC6AB2DD0>}), kwargs={} 
+<12:50:41> - Finished match in 0.0000s. Result: None 
+<12:50:41> - Starting speak with args=("I didn't understand that.",), kwargs={} 

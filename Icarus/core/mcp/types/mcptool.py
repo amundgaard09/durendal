@@ -1,6 +1,6 @@
 
 from pathlib import Path
-from input_schema import InputSchema
+from Icarus.core.mcp.types.input_schema import InputSchema
 from dataclasses import dataclass
 
 @dataclass

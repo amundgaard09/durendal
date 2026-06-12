@@ -1,7 +1,19 @@
 """
 Linear Algebra Type Library for the `DuraPy` package.
 
-This module contains the base classes for the custom data types used in the `DuraPy` library, such as `D3Vector`, `NDVector`, `Matrix`, and `SquareMatrix`.
+This module contains data types for linear algebra. 
+
+Data Types
+----------
+`D3Vector` - 3-dimensional vector.
+
+`NDVector` - N-dimensional vector.
+
+`Matrix` - N*M-matrix.
+
+`SquareMatrix` - N*N-matrix.
+
+`D4Tensor` - 4-dimensional tensor (A matrix of matrices.)
 """
 
 from __future__ import annotations

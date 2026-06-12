@@ -1,0 +1,11 @@
+{
+    "name": "greet",
+    "description": "Greets the user.",
+    "triggers": [
+        "hello",
+        "good morning",
+        "what's up"
+    ],
+    "language": "python",
+    "entrypoint": "execute.py"
+}

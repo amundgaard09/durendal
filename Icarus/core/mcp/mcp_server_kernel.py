@@ -1,8 +1,8 @@
 
 import os, json
 from pathlib import Path
-from types.mcptool import MCPTool
-from types.input_schema import InputSchema
+from Icarus.core.mcp.types.mcptool import MCPTool
+from Icarus.core.mcp.types.input_schema import InputSchema
 from core.utilities.decorators import logger
 
 _SKILLS_DIR = r"C:\Users\Administrator\.vscode\durendal\Icarus\skills"

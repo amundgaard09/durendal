@@ -1,5 +1,5 @@
 
-from mcp_property import MCPProperty
+from Icarus.core.mcp.types.mcp_property import MCPProperty
 from dataclasses import dataclass
 
 @dataclass

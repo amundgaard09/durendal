@@ -1,7 +1,15 @@
 
 from durapy import uniCLI
-from core.mcp.skill_loaders import get_py_skill_and_triggers
-from core.engines.execution_engine import process
+
+from core.engines.intent_engine import (
+    initialize as intent_engine_init
+)
+
+from core.engines.execution_engine import (
+    initialize as exec_engine_init, 
+    respond
+)
+
 from core.engines.communicative_engine import (
     initialize as comms_engine_init, 
     listen, speak
@@ -18,8 +26,10 @@ def main() -> None:
             exit(1)
             
         else:
-            response = process(user_input)
+            response = respond(user_input)
             speak(response)
-    
+
+exec_engine_init()
+intent_engine_init()
 comms_engine_init()
 main()

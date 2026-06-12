@@ -60,3 +60,8 @@
 - Added methods for skipping __ pycache __ folders, so that they don't get loaded as skills and crash the system.
 - Removed `process()` from `communicative_engine.py` again, and added it to `execution_engine.py`. 
 - Added a testing environment.
+
+### Thursday 11.06.2026
+
+- Added `DAY_DEV_PLAN.md` for noting daily development plans.
+- Added `match_rev2()` and a new intent engine architecture for a score-based query classification system.

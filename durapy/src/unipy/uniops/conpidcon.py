@@ -1,7 +1,3 @@
-"""
-The `DuraPy` `UniOps` module for Control and Operations tasks.
-`UniOps` is built for mechatronics control and operation tasks for robotics - either semi- or fully autonomous.
-"""
 
 import time
 
@@ -36,4 +32,5 @@ class ContinuousPIDController:
         self.prev_error = error
         self.prev_time = now
 
-        return P + I + D 
+        return P + I + D  
+
